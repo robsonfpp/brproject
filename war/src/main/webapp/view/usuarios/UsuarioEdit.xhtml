@@ -71,7 +71,8 @@
 					</h:inputText>
 				</s:decorate>
 
-				<s:decorate id="senhaField" template="/layout/edit.xhtml" rendered="#{!usuarioHome.managed}">
+				<s:decorate id="senhaField" template="/layout/edit.xhtml"
+					rendered="#{!usuarioHome.managed}">
 					<ui:define name="label">Senha</ui:define>
 					<h:inputSecret id="senha" required="true" size="12" maxlength="12"
 						value="#{usuarioHome.instance.senha}">
@@ -95,9 +96,7 @@
 				<h:commandButton id="update" value="Salvar"
 					action="#{usuarioHome.update}" rendered="#{usuarioHome.managed}" />
 
-				<s:button id="cancel" value="Cancelar" propagation="end"
-					view="/view/usuarios/UsuarioList.xhtml" />
-
+				<input type="button" onclick="history.go(-1)" value="Cancelar" />
 			</div>
 		</h:form>
 

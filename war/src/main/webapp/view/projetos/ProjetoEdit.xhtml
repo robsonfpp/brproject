@@ -121,9 +121,7 @@
 						<h:commandButton id="save" value="Salvar"
 							action="#{novoProjeto.salvarProjeto()}" />
 
-						<s:button id="cancelAdd" value="Cancelar" propagation="end"
-							view="/view/home.xhtml" />
-
+						<input type="button" onclick="history.go(-1)" value="Cancelar" />
 					</div>
 				</h:form>
 

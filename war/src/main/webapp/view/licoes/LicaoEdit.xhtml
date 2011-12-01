@@ -27,7 +27,7 @@
 					<ui:define name="label">Titulo</ui:define>
 					<h:inputText id="titulo" size="45" required="true"
 						value="#{licaoHome.instance.titulo}">
-						<a4j:support event="onblur" reRender="tituloField"/>
+						<a4j:support event="onblur" reRender="tituloField" />
 					</h:inputText>
 				</s:decorate>
 
@@ -35,23 +35,25 @@
 					<ui:define name="label">Descricao</ui:define>
 					<h:inputTextarea id="descricao" cols="80" rows="5" required="true"
 						value="#{licaoHome.instance.descricao}">
-						<a4j:support event="onblur" reRender="descricaoField"/>
+						<a4j:support event="onblur" reRender="descricaoField" />
 					</h:inputTextarea>
 				</s:decorate>
 
 				<s:decorate id="areaimpactadaField" template="/layout/edit.xhtml">
 					<ui:define name="label">Área Impactada</ui:define>
-					<h:selectOneMenu value="#{areaimpactadaHome.areaimpactadaId}" required="true">
+					<h:selectOneMenu value="#{areaimpactadaHome.areaimpactadaId}"
+						required="true">
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems
 							value="#{areaimpactadaList.areaimpactadaSelectItem}" />
-						<a4j:support event="onchange" reRender="licoes"/>
+						<a4j:support event="onchange" reRender="licoes" />
 					</h:selectOneMenu>
 				</s:decorate>
 
 				<s:decorate id="impactoField" template="/layout/edit.xhtml">
 					<ui:define name="label">Tipo Impacto</ui:define>
-					<h:selectOneMenu value="#{impactolicaoHome.impactolicaoId}" required="true">
+					<h:selectOneMenu value="#{impactolicaoHome.impactolicaoId}"
+						required="true">
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems value="#{impactolicaoList.impactolicaoSelectItem}" />
 						<a4j:support event="onchange" reRender="licoes" />
@@ -65,7 +67,7 @@
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems
 							value="#{prioridadelicaoList.prioridadelicaoSelectItem}" />
-						<a4j:support event="onchange" reRender="licoes"/>
+						<a4j:support event="onchange" reRender="licoes" />
 					</h:selectOneMenu>
 				</s:decorate>
 
@@ -78,15 +80,13 @@
 				<div class="actionButtons">
 
 					<h:commandButton id="save" value="Salvar"
-						action="#{licaoHome.persist}" 
-						disabled="#{!licaoHome.wired}"
+						action="#{licaoHome.persist}" disabled="#{!licaoHome.wired}"
 						rendered="#{!licaoHome.managed}" />
 
 					<h:commandButton id="update" value="Salvar"
 						action="#{licaoHome.update}" rendered="#{licaoHome.managed}" />
 
-					<s:button id="cancel" value="Cancelar" propagation="end"
-						view="/view/licoes/LicaoList.xhtml" />
+					<input type="button" onclick="history.go(-1)" value="Cancelar" />
 
 				</div>
 			</a4j:outputPanel>

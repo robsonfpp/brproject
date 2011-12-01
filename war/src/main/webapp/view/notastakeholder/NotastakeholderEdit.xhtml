@@ -61,12 +61,10 @@
 
 			<div class="actionButtons">
 
-				<h:commandButton id="save" value="Save"
+				<h:commandButton id="save" value="Salvar"
 					action="#{avaliacao.salvarNotaStakeholder()}" />
 
-				<s:button id="cancelEdit" value="Cancel" propagation="end"
-					view="/view/home.xhtml" />
-
+				<input type="button" onclick="history.go(-1)" value="Cancelar" />
 			</div>
 		</h:form>
 

@@ -77,14 +77,11 @@
 					rendered="#{!solicitacaomudancaHome.managed}" />
 
 				<h:commandButton id="update" value="Salvar"
-					action=" #{solicitacaomudancaHome.update}"
+					action="#{solicitacaomudancaHome.update}"
 					disabled="#{!projetoHome.wired}"
 					rendered="#{solicitacaomudancaHome.managed}" />
 
-				<s:button id="cancel" value="Cancelar" 
-					view="/view/projeto.xhtml" propagation="end">
-					<f:param name="projetoId" value="#{projetoHome.projetoId}"/>
-				</s:button>
+				<input type="button" onclick="history.go(-1)" value="Cancelar"/>
 
 			</div>
 		</h:form>
