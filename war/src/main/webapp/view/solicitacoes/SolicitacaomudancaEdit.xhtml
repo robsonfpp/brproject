@@ -1,0 +1,94 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<h1>#{!solicitacaomudancaHome.managed?'Nova':'Editar'}
+			Solicitação</h1>
+		<h:form id="solicitacaomudanca" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">Cadastro da Solicitação de Mudanca</f:facet>
+
+				<s:decorate id="projetoField" template="/layout/display.xhtml">
+					<ui:define name="label">Projeto</ui:define>
+					<h:outputText id="projeto"
+						value="#{solicitacaomudancaHome.instance.projeto.nome}" />
+				</s:decorate>
+
+				<s:decorate id="statusField" template="/layout/display.xhtml">
+					<ui:define name="label">Ação</ui:define>
+					<h:outputText
+						style="font-weight:bold; font-size:16px"
+						value="#{solicitacaomudancaHome.instance.statusmudanca.nome.equals('Aprovado')?'APROVAR':'REPROVAR'}" />
+				</s:decorate>
+
+				<s:decorate id="tituloField" template="/layout/edit.xhtml">
+					<ui:define name="label">Título</ui:define>
+					<h:inputText id="titulo" size="45" required="true"
+					disabled="#{solicitacaomudancaHome.instance.statusmudanca.id gt 1}"
+						value="#{solicitacaomudancaHome.instance.titulo}">
+						<a4j:support event="onblur" reRender="tituloField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="descricaoField" template="/layout/edit.xhtml">
+					<ui:define name="label">Descrição da Mudança</ui:define>
+					<h:inputTextarea id="descricao" cols="85" rows="6" required="true"
+						disabled="#{solicitacaomudancaHome.instance.statusmudanca.id gt 1}"
+						value="#{solicitacaomudancaHome.instance.descricao}">
+						<a4j:support event="onblur" reRender="descricaoField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputTextarea>
+				</s:decorate>
+
+
+				<s:decorate id="justificativaField" template="/layout/edit.xhtml"
+					rendered="#{loggedUser.gp &amp;&amp; solicitacaomudancaHome.instance.statusmudanca.id gt 1}">
+					<ui:define name="label">Justificativa</ui:define>
+					<h:inputTextarea id="justificativa" cols="85" rows="6"
+						required="true"
+						value="#{solicitacaomudancaHome.instance.justificativa}">
+						<a4j:support event="onblur" reRender="descricaoField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputTextarea>
+				</s:decorate>
+
+
+				<div style="clear: both">
+					<span class="required">*</span> required fields
+				</div>
+
+			</rich:panel>
+
+			<div class="actionButtons">
+
+				<h:commandButton id="save" value="Salvar"
+					action="#{solicitacaomudancaHome.persist}"
+					disabled="#{!projetoHome.wired}"
+					rendered="#{!solicitacaomudancaHome.managed}" />
+
+				<h:commandButton id="update" value="Salvar"
+					action=" #{solicitacaomudancaHome.update}"
+					disabled="#{!projetoHome.wired}"
+					rendered="#{solicitacaomudancaHome.managed}" />
+
+				<s:button id="cancel" value="Cancelar" 
+					view="/view/projeto.xhtml" propagation="end">
+					<f:param name="projetoId" value="#{projetoHome.projetoId}"/>
+				</s:button>
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

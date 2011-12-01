@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{usuarioList.firstResult}"/>
+   <param name="sort" value="#{usuarioList.orderColumn}"/>
+   <param name="dir" value="#{usuarioList.orderDirection}"/>
+   <param name="logic" value="#{usuarioList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="ddd" value="#{usuarioList.usuario.ddd}"/>
+   <param name="email" value="#{usuarioList.usuario.email}"/>
+   <param name="endereco" value="#{usuarioList.usuario.endereco}"/>
+   <param name="login" value="#{usuarioList.usuario.login}"/>
+   <param name="nome" value="#{usuarioList.usuario.nome}"/>
+   <param name="senha" value="#{usuarioList.usuario.senha}"/>
+   <param name="telefone" value="#{usuarioList.usuario.telefone}"/>
+
+</page>

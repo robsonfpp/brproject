@@ -1,0 +1,174 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h1>Base de Usuários</h1>
+
+		<h:form id="usuariobuscar" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Filtros de Busca" switchType="ajax">
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Nome</ui:define>
+					<h:inputText id="nome" value="#{usuarioList.usuario.nome}" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Email</ui:define>
+					<h:inputText id="email" value="#{usuarioList.usuario.email}" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Endereco</ui:define>
+					<h:inputText id="endereco" value="#{usuarioList.usuario.endereco}" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Login</ui:define>
+					<h:inputText id="login" value="#{usuarioList.usuario.login}" />
+				</s:decorate>
+
+			</rich:simpleTogglePanel>
+
+			<div class="actionButtons">
+				<h:commandButton id="buscar" value="buscar"
+					action="/UsuarioList.xhtml" />
+				<s:button id="reset" value="Reset" includePageParams="false" />
+			</div>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Usuarios (#{empty usuarioList.resultList ? 0 : (usuarioList.paginated ? usuarioList.resultCount : usuarioList.resultList.size)})</f:facet>
+			<div class="results" id="usuarioList">
+
+				<h:outputText value="Nenhum usuário encontrado na pesquisa..."
+					rendered="#{empty usuarioList.resultList}" />
+
+				<rich:dataTable id="usuarioList" var="_usuario"
+					value="#{usuarioList.resultList}"
+					rendered="#{not empty usuarioList.resultList}">
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Id Usuário" />
+								<ui:param name="propertyPath" value="usuario.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Nome" />
+								<ui:param name="propertyPath" value="usuario.nome" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.nome}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Telefone" />
+								<ui:param name="propertyPath" value="usuario.telefone" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="(#{_usuario.ddd}) " />
+						<h:outputText value="#{_usuario.telefone}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Email" />
+								<ui:param name="propertyPath" value="usuario.email" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.email}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Endereco" />
+								<ui:param name="propertyPath" value="usuario.endereco" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.endereco}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Papel" />
+								<ui:param name="propertyPath" value="usuario.gp" />
+							</ui:include>
+						</f:facet>
+						<h:outputText
+							value="#{_usuario.gp?'Gerente de Projetos':'Stakeholder'}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Login" />
+								<ui:param name="propertyPath" value="usuario.login" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.login}" />
+					</h:column>
+					<rich:column styleClass="action">
+						<f:facet name="header">Ação</f:facet>
+						<s:link view="/view/usuarios/UsuarioEdit.xhtml" value="Editar" propagation="none"
+							id="usuarioEdit" rendered="#{empty from}">
+							<f:param name="usuarioId" value="#{_usuario.id}" />
+						</s:link>
+					</rich:column>
+				</rich:dataTable>
+
+			</div>
+		</rich:panel>
+
+		<div class="tableControl">
+			<s:link view="/view/usuarios/UsuarioList.xhtml"
+				rendered="#{usuarioList.previousExists}"
+				value="#{messages.left}#{messages.left} Primeira Pagina" id="firstPage">
+				<f:param name="firstResult" value="0" />
+			</s:link>
+
+			<s:link view="/view/usuarios/UsuarioList.xhtml"
+				rendered="#{usuarioList.previousExists}"
+				value="#{messages.left} Pagina Anterior" id="previousPage">
+				<f:param name="firstResult"
+					value="#{usuarioList.previousFirstResult}" />
+			</s:link>
+
+			<s:link view="/view/usuarios/UsuarioList.xhtml"
+				rendered="#{usuarioList.nextExists}"
+				value="Proxima pagina #{messages.right}" id="nextPage">
+				<f:param name="firstResult" value="#{usuarioList.nextFirstResult}" />
+			</s:link>
+
+			<s:link view="/view/usuarios/UsuarioList.xhtml"
+				rendered="#{usuarioList.nextExists}"
+				value="Ultima Pagina #{messages.right}#{messages.right}" id="lastPage">
+				<f:param name="firstResult" value="#{usuarioList.lastFirstResult}" />
+			</s:link>
+
+		</div>
+
+	</ui:define>
+
+</ui:composition>

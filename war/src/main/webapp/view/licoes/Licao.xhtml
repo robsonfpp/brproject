@@ -1,0 +1,62 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">Lição Aprendida</f:facet>
+
+			<s:decorate id="projeto" template="/layout/display.xhtml">
+				<ui:define name="label">Projeto</ui:define>
+				<h:outputText value="#{licaoHome.instance.projeto.nome}" />
+			</s:decorate>
+
+			<s:decorate id="titulo" template="/layout/display.xhtml">
+				<ui:define name="label">Título</ui:define>
+				<h:outputText value="#{licaoHome.instance.titulo}" />
+			</s:decorate>
+
+
+			<s:decorate id="descricao" template="/layout/display.xhtml">
+				<ui:define name="label">Descrição</ui:define>
+				<h:outputText value="#{licaoHome.instance.descricao}" />
+			</s:decorate>
+
+			<s:decorate id="areaimpactada" template="/layout/display.xhtml">
+				<ui:define name="label">Área Impactada</ui:define>
+				<h:outputText value="#{licaoHome.instance.areaimpactada.nome}" />
+			</s:decorate>
+
+			<s:decorate id="impacto" template="/layout/display.xhtml">
+				<ui:define name="label">Impacto</ui:define>
+				<h:outputText value="#{licaoHome.instance.impactolicao.nome}" />
+			</s:decorate>
+
+			<s:decorate id="prioridade" template="/layout/display.xhtml">
+				<ui:define name="label">Prioridade</ui:define>
+				<h:outputText value="#{licaoHome.instance.prioridadelicao.nome}" />
+			</s:decorate>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+			<h:panelGrid columns="2">
+				<s:button view="/view/licoes/LicaoEdit.xhtml" id="edit"
+					value="Editar" />
+
+				<s:button view="/view/licoes/LicaoList.xhtml" id="done" value="OK" />
+			</h:panelGrid>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

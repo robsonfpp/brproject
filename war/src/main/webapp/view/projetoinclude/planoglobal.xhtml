@@ -1,0 +1,45 @@
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<h1>Plano Global do Projeto</h1>
+
+	<h:form>
+		<a4j:jsFunction name="initvisao_detalhada"
+			data="#{gantt.getTarefas(projeto.projeto.id,'visao_detalhada')}"
+			oncomplete="document.visao_detalhada.loadChart(data)" />
+	</h:form>
+
+	<h:panelGrid columns="2">
+		<s:decorate template="/layout/display.xhtml">
+			<ui:define name="label">Inicio do Projeto</ui:define>
+		</s:decorate>
+
+		<s:decorate template="/layout/display.xhtml">
+			<ui:define name="label">Fim do Projeto</ui:define>
+		</s:decorate>
+
+		<s:decorate template="/layout/display.xhtml">
+			<ui:define name="label">Custo do Projeto</ui:define>
+		</s:decorate>
+
+		<h:form>
+			<a4j:commandButton value="Adicionar Tarefa" />
+		</h:form>
+
+	</h:panelGrid>
+
+	<applet id="visao_detalhada" name="visao_detalhada" height="1000" width="1100" codebase="/brProject/applet/"
+		archive="brProject-chart-0.1.jar,gson-1.7.1.jar,jcommon-1.0.16.jar,plugin-1.0.jar"
+		code="br/edu/eseg/chart/GanttApplet.class" MAYSCRIPT="MAYSCRIPT">
+		Seu Navegador não suporta Applets!
+		<param name="action" value="visao_detalhada" />
+		<param name="width" value="1100"/>
+		<param name="heigth" value="1000"/>
+	</applet>
+
+</h:panelGrid>

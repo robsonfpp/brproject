@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>no.knowit.seam</groupId>
+		<artifactId>root</artifactId>
+		<version>2.2.1-SNAPSHOT</version>
+		<relativePath></relativePath> <!-- To avoid m3 warning -->
+	</parent>
+
+	<groupId>br.edu.eseg</groupId>
+	<artifactId>brProject</artifactId> <!-- m2eclipse does not like: ${app.context} -->
+	<version>0.1</version>
+	<name>${project.artifactId} : ${project.version}</name>
+	<description>Ferramenta para gerenciamento de projetos</description>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>ejb</module>
+		<module>war</module>
+		<module>ear</module>
+		<module>chart</module>
+	</modules>
+
+	<properties>
+		<env>dev</env> <!-- The default setting if no profile is specified -->
+
+		<app>brProject</app>
+		<app.context>brProject</app.context>  <!-- hint: same value as artifactId -->
+		<app.web.context>${app.context}</app.web.context>
+		<app.display.name>brProject - Gestão de Projetos</app.display.name>
+		<app.description>
+			O brProject é uma ferramenta web para o gerenciamento
+			de projetos que
+			implementa os processos de gerenciamento de integração
+			conforme o
+			recomendado pelo PMBOK Guide 4th Edition. Os modelos de
+			documentos
+			implementados na ferramenta seguem as recomendações de um
+			especialista na área, Ricardo Viana Vargas, através de seu mais
+			recente livro: Manual Prático do Plano de projeto: utilizando o PMBOK
+			Guide 4th Edition.
+    </app.description>
+		<app.distributable>true</app.distributable>
+		<app.jndi.pattern>${app.context}-ear/#{ejbName}/local</app.jndi.pattern> <!-- JBoss JNDI Pattern -->
+		<app.jndi.pattern.test>/#{ejbName}/Local</app.jndi.pattern.test>         <!-- OpenEJB JNDI Pattern -->
+
+		<!-- Properties for production are located in src/main/filters/filter-prod.properties 
+			Properties to be modified by developer are located in src/main/filters/filter-dev.properties 
+			To set up your own dev profile: * Copy filter-prod.properties to filter-dev.properties 
+			and add filter-dev.properties to svn:ignore * Execute maven commands with 
+			the dev profile, e.g. mvn install -Penv-dev -->
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- project modules -->
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>${app.context}-ear</artifactId>
+				<version>${project.version}</version>
+				<type>ear</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>${app.context}-war</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>${app.context}-ejb</artifactId>
+				<version>${project.version}</version>
+				<type>ejb</type>
+			</dependency>
+
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>${app.context}-chart</artifactId>
+				<version>${project.version}</version>
+				<type>jar</type>
+			</dependency>
+
+			<!-- other project modules <dependency> <groupId>${project.groupId}</groupId> 
+				<artifactId>${app.context}-jar</artifactId> <version>${project.version}</version> 
+				<type>jar</type> </dependency> -->
+
+			<!-- "Useful" utilities. If you find anything of interest in this module 
+				just refactor it into your own project. -->
+			<dependency>
+				<groupId>no.knowit.seam</groupId>
+				<artifactId>seam-utils-ejb</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<type>ejb</type>
+			</dependency>
+
+			<!-- For running Seam tests with OpenEJB embedded container -->
+			<dependency>
+				<groupId>no.knowit.seam</groupId>
+				<artifactId>seam-utils-openejb</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<type>ejb</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- All provided, shared and test dependencies goes into parent pom -->
+	<dependencies>
+
+		<!-- seam -->
+		<dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-seam</artifactId>
+			<scope>provided</scope>
+			<type>ejb</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.el</groupId>
+			<artifactId>jboss-el</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- richfaces -->
+		<dependency>
+			<groupId>org.richfaces.framework</groupId>
+			<artifactId>richfaces-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- hibernate -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-annotations</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-commons-annotations</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- jee -->
+		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>el-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>persistence-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- commons -->
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<!-- JBoss Rules. Needed to be listed here if you have drools integration 
+			tests, e.g. Seam Identity see: samples/jboss-seam/examples/seamspace -->
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-compiler</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-decisiontables</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>drools-templates</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>xpp3</groupId>
+			<artifactId>xpp3_min</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- rules + groovy -->
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr-runtime</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- JBoss jBPM -->
+		<dependency>
+			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-jpdl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- log4j -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+
+		<!-- ******** TEST DEPENDECIES ******** -->
+
+		<!-- spec apis such as javax.persistence -->
+		<dependency>
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- OpenEJB embedded container for running tests -->
+		<dependency>
+			<groupId>org.apache.openejb</groupId>
+			<artifactId>openejb-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- logging, for OpenEJB -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- For in-memory database -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- databases -->
+		<!-- <dependency> -->
+		<!-- <groupId>com.h2database</groupId> -->
+		<!-- <artifactId>h2</artifactId> -->
+		<!-- <scope>test</scope> -->
+		<!-- </dependency> -->
+
+
+		<!-- <dependency> -->
+		<!-- <groupId>org.hsqldb</groupId> -->
+		<!-- <artifactId>hsqldb</artifactId> -->
+		<!-- <scope>test</scope> -->
+		<!-- </dependency> -->
+
+
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
+		<!-- unit test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<!-- e.g: mvn initialize -Pshow-properties -->
+			<id>show-properties</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.gmaven</groupId>
+						<artifactId>gmaven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>g-show-properties</id>
+								<phase>initialize</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<source>
+                  <![CDATA[
+                    def profiles = project.getActiveProfiles();
+                    log.info "========================================================================"
+                    log.info "Active profiles:"
+                    log.info "========================================================================"
+                    if(profiles.size > 0) {
+                      profiles.each{ profile ->
+                        log.info profile.id;
+                      }
+                    }
+                    else {
+                      log.info "No active profiles"
+                    }
+                    
+                    // Pattern to match ${property} placeholders
+                    def placeholderPattern = ~/\$\{(.*?)\}/;  
+                    log.info ""
+                    log.info "========================================================================"
+                    log.info "Maven project.properties:"
+                    log.info "========================================================================"
+                    if (project.parent) log.info "project.parent.basedir  = $project.parent.basedir";
+                    log.info "project.basedir         = $project.basedir";
+                    log.info "project.artifactId      = $project.artifactId";
+                    log.info "project.build.directory = $project.build.directory";
+                    log.info "project.build.finalName = $project.build.finalName";
+                    
+                    project.properties.sort{it.key}.each { key, value ->
+                      def matcher = placeholderPattern.matcher(value);
+                      if(matcher)
+                        log.warn "NON EXISTING PROPERTY IN PLACEHOLDER: $key = $value"
+                      else
+                        log.info "$key = $value";
+                    }
+                    log.info "========================================================================"
+                  ]]>
+									</source>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${jdk.source}</source>
+					<target>${jdk.target}</target>
+					<encoding>ISO-8859-1</encoding>
+					<debug>${jdk.debug}</debug>
+					<optimize>${jdk.optimize}</optimize>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<configuration>
+					<!-- Comment out the format- and items tags if you want the implementation 
+						build number fom scm, see e.g. the m2m example project. -->
+					<format>{0,date,yyyy-MM-dd HH:mm:ss}</format>
+					<items>
+						<item>timestamp</item>
+					</items>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<scm>
+		<connection>scm:svn:http://brproject.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://brproject.googlecode.com/svn/trunk</developerConnection>
+		<url>http://code.google.com/p/brproject</url>
+	</scm>
+
+	<!-- <organization> <name>Know IT Objectnet AS</name> <url>http://www.knowit.no/</url> 
+		</organization> <developers> <developer> <id>loo@knowit.no</id> <name>Leif 
+		Olsen</name> <email>loo@knowit.no</email> <organization>Know IT Objectnet 
+		Kristiansand</organization> <organizationUrl>http://www.knowit.no</organizationUrl> 
+		<roles> <role>Developer</role> </roles> <timezone>GMT +1</timezone> </developer> 
+		<developer> <id>krg@knowit.no</id> <name>Ken Gullaksen</name> <email>krg@knowit.no</email> 
+		<organization>Know IT Objectnet Oslo</organization> <organizationUrl>http://www.knowit.no</organizationUrl> 
+		<roles> <role>Developer</role> </roles> <timezone>GMT +1</timezone> </developer> 
+		</developers> <distributionManagement> <repository> <id></id> <name></name> 
+		<url></url> </repository> </distributionManagement> <licenses> <license> 
+		<name></name> <url></url> </license> </licenses> <issueManagement> <system></system> 
+		<url></url> </issueManagement> -->
+
+</project>

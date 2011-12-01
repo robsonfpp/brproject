@@ -1,0 +1,141 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">Projeto</f:facet>
+
+			<h:panelGrid columns="2" width="100%" columnClasses="top,top,top,top">
+
+				<a4j:outputPanel>
+					<h:panelGrid columns="2">
+						<s:decorate id="nomeField" template="/layout/display.xhtml">
+							<ui:define name="label">Nome do Projeto</ui:define>
+							<h:outputText id="nome" value="#{novoProjeto.projeto.nome}" />
+						</s:decorate>
+
+						<s:decorate id="clienteField" template="/layout/display.xhtml">
+							<ui:define name="label">Cliente</ui:define>
+							<h:outputText id="cliente" value="#{novoProjeto.projeto.cliente}" />
+						</s:decorate>
+
+						<s:decorate id="orcamentoField" template="/layout/display.xhtml">
+							<ui:define name="label">Orcamento Previsto</ui:define>
+							<h:outputText id="orcamento"
+								value="#{novoProjeto.projeto.orcamento}" />
+						</s:decorate>
+
+						<s:decorate id="inicioField" template="/layout/display.xhtml">
+							<ui:define name="label">Inicio Previsto</ui:define>
+							<h:outputText value="#{novoProjeto.projeto.inicio}">
+								<s:convertDateTime type="both" dateStyle="short" locale="pt-BR" />
+							</h:outputText>
+						</s:decorate>
+
+						<s:decorate id="fimprevistoField" template="/layout/display.xhtml">
+							<ui:define name="label">Fim Previsto</ui:define>
+							<h:outputText value="#{novoProjeto.projeto.fimprevisto}">
+								<s:convertDateTime type="both" dateStyle="short" locale="pt-BR" />
+							</h:outputText>
+						</s:decorate>
+
+					</h:panelGrid>
+
+					<s:decorate id="resumoField" template="/layout/display.xhtml">
+						<ui:define name="label">Resumo das condições do projeto</ui:define>
+						<h:outputText id="resumo" value="#{novoProjeto.projeto.resumo}" />
+					</s:decorate>
+
+					<s:decorate id="justificativaField"
+						template="/layout/display.xhtml">
+						<ui:define name="label">Justificativa do projeto</ui:define>
+						<h:outputText id="justificativa"
+							value="#{novoProjeto.projeto.justificativa}" />
+					</s:decorate>
+
+					<s:decorate id="necessidadesField" template="/layout/display.xhtml">
+						<ui:define name="label">Necessidades básicas do trabalho a ser realizado</ui:define>
+						<h:outputText id="necessidades"
+							value="#{novoProjeto.projeto.necessidades}" />
+					</s:decorate>
+
+					<s:decorate id="premissasField" template="/layout/display.xhtml">
+						<ui:define name="label">Premissas iniciais</ui:define>
+						<h:outputText id="premissas"
+							value="#{novoProjeto.projeto.premissas}" />
+					</s:decorate>
+
+					<s:decorate id="restricoesField" template="/layout/display.xhtml">
+						<ui:define name="label">Restrições iniciais</ui:define>
+						<h:outputText id="restricoes"
+							value="#{novoProjeto.projeto.restricoes}" />
+					</s:decorate>
+
+					<s:decorate id="produtoField" template="/layout/display.xhtml">
+						<ui:define name="label">Descrição do produto</ui:define>
+						<h:outputText id="produto" value="#{novoProjeto.projeto.produto}" />
+					</s:decorate>
+
+					<s:decorate id="responsabilidadesgpField"
+						template="/layout/display.xhtml">
+						<ui:define name="label">Responsabilidades do gerente de projetos</ui:define>
+						<h:outputText id="responsabilidadesgp"
+							value="#{novoProjeto.projeto.responsabilidadesgp}" />
+					</s:decorate>
+
+					<div style="clear: both">
+						<span class="required">*</span> Campos obrigatórios
+					</div>
+				</a4j:outputPanel>
+
+				<s:decorate id="stakeholdersField" template="/layout/display.xhtml">
+					<ui:define name="label">Stakeholders</ui:define>
+					<h:outputText value="Nenhum Stakeholder ..."
+						rendered="#{novoProjeto.projeto.stakeholders.size() == 0}" />
+					<rich:panel bodyClass="stkPanel"
+						rendered="#{novoProjeto.projeto.stakeholders.size() gt 0}">
+						<rich:dataTable
+							value="#{novoProjeto.projeto.stakeholders.toArray()}" var="stk">
+							<rich:column>
+								<f:facet name="header">Nome</f:facet>
+								<h:outputText value="#{stk.usuario.nome}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">Papel</f:facet>
+								<h:outputText value="#{stk.papel}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">CCB?</f:facet>
+								<h:outputText value="#{stk.ccb?'Sim':'Não'}" />
+							</rich:column>
+						</rich:dataTable>
+					</rich:panel>
+				</s:decorate>
+
+			</h:panelGrid>
+
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+
+			<s:button view="/view/projetos/ProjetoEdit.xhtml" id="edit"
+				value="Editar" />
+
+			<s:button view="/view/home.xhtml" id="done" value="OK" />
+
+		</div>
+
+	</ui:define>
+
+</ui:composition>

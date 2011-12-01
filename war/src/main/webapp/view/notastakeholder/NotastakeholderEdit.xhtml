@@ -1,0 +1,75 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h1>Avaliação de prioridade das partes interessadas</h1>
+
+		<h:form id="notastakeholder" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">Prioridade Stakeholder</f:facet>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Projeto</ui:define>
+					<s:link value="#{avaliacao.projeto.nome}"
+						view="/view/projeto.xhtml">
+						<f:param name="projetoId" value="#{avaliacao.projeto.id}" />
+					</s:link>
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml"
+					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() == 0}">
+					<ui:define name="label">Obrigado!</ui:define>
+					<h:outputText
+						value="Você já avaliou a prioridade de todos os stakeholders deste projeto." />
+				</s:decorate>
+
+
+				<s:decorate template="/layout/edit.xhtml"
+					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() gt 0}">
+					<ui:define name="label">Stakeholder</ui:define>
+					<h:selectOneMenu value="#{avaliacao.avaliadoId}" required="true">
+						<f:selectItem itemLabel="Selecione..." />
+						<f:selectItems
+							value="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id)}" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate template="/layout/edit.xhtml"
+					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() gt 0}">
+					<ui:define name="label">Prioridade</ui:define>
+					<h:selectOneMenu value="#{avaliacao.notaid}" required="true">
+						<f:selectItem itemLabel="Selecione..." />
+						<f:selectItems value="#{notaList.notaSelectItem}" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<div style="clear: both">
+					<span class="required">*</span> Campos obrigatórios
+				</div>
+
+			</rich:panel>
+
+			<div class="actionButtons">
+
+				<h:commandButton id="save" value="Save"
+					action="#{avaliacao.salvarNotaStakeholder()}" />
+
+				<s:button id="cancelEdit" value="Cancel" propagation="end"
+					view="/view/home.xhtml" />
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

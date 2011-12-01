@@ -1,0 +1,140 @@
+<rich:toolBar
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:rich="http://richfaces.org/rich">
+    <rich:toolBarGroup>
+        <h:outputText value="#{projectName}:"/>
+        <s:link id="menuHomeId" view="/home.xhtml" value="Home" propagation="none"/>
+    </rich:toolBarGroup>
+    <rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none">
+        <f:facet name="label">Browse data</f:facet>
+	<rich:menuItem>
+    	<s:link view="/UtilizacaorecursoList.xhtml"
+           	value="Utilizacaorecurso List"
+           	id="UtilizacaorecursoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/ProjetoList.xhtml"
+           	value="Projeto List"
+           	id="ProjetoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/TipocustoList.xhtml"
+           	value="Tipocusto List"
+           	id="TipocustoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/NotastakeholderList.xhtml"
+           	value="Notastakeholder List"
+           	id="NotastakeholderId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/StakeholderList.xhtml"
+           	value="Stakeholder List"
+           	id="StakeholderId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/AreaimpactadaList.xhtml"
+           	value="Areaimpactada List"
+           	id="AreaimpactadaId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/NotaList.xhtml"
+           	value="Nota List"
+           	id="NotaId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/StatusprojetoList.xhtml"
+           	value="Statusprojeto List"
+           	id="StatusprojetoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/RecursoList.xhtml"
+           	value="Recurso List"
+           	id="RecursoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/TarefaList.xhtml"
+           	value="Tarefa List"
+           	id="TarefaId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/PrioridadelicaoList.xhtml"
+           	value="Prioridadelicao List"
+           	id="PrioridadelicaoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/SolicitacaomudancaList.xhtml"
+           	value="Solicitacaomudanca List"
+           	id="SolicitacaomudancaId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/TiporecursoList.xhtml"
+           	value="Tiporecurso List"
+           	id="TiporecursoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/StatusmudancaList.xhtml"
+           	value="Statusmudanca List"
+           	id="StatusmudancaId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/UsuarioList.xhtml"
+           	value="Usuario List"
+           	id="UsuarioId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/ImpactolicaoList.xhtml"
+           	value="Impactolicao List"
+           	id="ImpactolicaoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+	<rich:menuItem>
+    	<s:link view="/LicaoList.xhtml"
+           	value="Licao List"
+           	id="LicaoId"
+			includePageParams="false"
+     		propagation="none"/>
+     </rich:menuItem>
+    </rich:dropDownMenu>
+    <!-- @newMenuItem@ -->
+    <rich:toolBarGroup location="right">
+        <h:outputText id="menuWelcomeId" value="signed in as: #{credentials.username}" rendered="#{identity.loggedIn}"/>
+        <s:link id="menuLoginId" view="/login.xhtml" value="Login" rendered="#{not identity.loggedIn}" propagation="none"/>
+        <s:link id="menuLogoutId" view="/home.xhtml" action="#{identity.logout}" value="Logout" rendered="#{identity.loggedIn}" propagation="none"/>
+    </rich:toolBarGroup>
+</rich:toolBar>

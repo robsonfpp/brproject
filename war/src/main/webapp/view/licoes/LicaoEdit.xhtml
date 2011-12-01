@@ -1,0 +1,97 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h1>#{licaoHome.managed ? 'Editar' : 'Nova'} Lição Aprendida</h1>
+
+		<h:form id="licoes" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">Cadastro da Lição Aprendida</f:facet>
+
+				<s:decorate id="projetoField" template="/layout/display.xhtml">
+					<ui:define name="label">Projeto</ui:define>
+					<h:outputText value="#{licaoHome.instance.projeto.nome}" />
+				</s:decorate>
+
+				<s:decorate id="tituloField" template="/layout/edit.xhtml">
+					<ui:define name="label">Titulo</ui:define>
+					<h:inputText id="titulo" size="45" required="true"
+						value="#{licaoHome.instance.titulo}">
+						<a4j:support event="onblur" reRender="tituloField"/>
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="descricaoField" template="/layout/edit.xhtml">
+					<ui:define name="label">Descricao</ui:define>
+					<h:inputTextarea id="descricao" cols="80" rows="5" required="true"
+						value="#{licaoHome.instance.descricao}">
+						<a4j:support event="onblur" reRender="descricaoField"/>
+					</h:inputTextarea>
+				</s:decorate>
+
+				<s:decorate id="areaimpactadaField" template="/layout/edit.xhtml">
+					<ui:define name="label">Área Impactada</ui:define>
+					<h:selectOneMenu value="#{areaimpactadaHome.areaimpactadaId}" required="true">
+						<f:selectItem itemLabel="selecione ..." />
+						<f:selectItems
+							value="#{areaimpactadaList.areaimpactadaSelectItem}" />
+						<a4j:support event="onchange" reRender="licoes"/>
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="impactoField" template="/layout/edit.xhtml">
+					<ui:define name="label">Tipo Impacto</ui:define>
+					<h:selectOneMenu value="#{impactolicaoHome.impactolicaoId}" required="true">
+						<f:selectItem itemLabel="selecione ..." />
+						<f:selectItems value="#{impactolicaoList.impactolicaoSelectItem}" />
+						<a4j:support event="onchange" reRender="licoes" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="prioridadeField" template="/layout/edit.xhtml">
+					<ui:define name="label">Prioridade</ui:define>
+					<h:selectOneMenu value="#{prioridadelicaoHome.prioridadelicaoId}"
+						required="true">
+						<f:selectItem itemLabel="selecione ..." />
+						<f:selectItems
+							value="#{prioridadelicaoList.prioridadelicaoSelectItem}" />
+						<a4j:support event="onchange" reRender="licoes"/>
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<div style="clear: both">
+					<span class="required">*</span> Campos Obrigadórios
+				</div>
+
+			</rich:panel>
+			<a4j:outputPanel ajaxRendered="true" id="buttons">
+				<div class="actionButtons">
+
+					<h:commandButton id="save" value="Salvar"
+						action="#{licaoHome.persist}" 
+						disabled="#{!licaoHome.wired}"
+						rendered="#{!licaoHome.managed}" />
+
+					<h:commandButton id="update" value="Salvar"
+						action="#{licaoHome.update}" rendered="#{licaoHome.managed}" />
+
+					<s:button id="cancel" value="Cancelar" propagation="end"
+						view="/view/licoes/LicaoList.xhtml" />
+
+				</div>
+			</a4j:outputPanel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

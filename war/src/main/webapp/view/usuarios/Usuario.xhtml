@@ -1,0 +1,71 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">Usuario</f:facet>
+
+			<s:decorate id="nome" template="/layout/display.xhtml">
+				<ui:define name="label">Nome</ui:define>
+				<h:outputText value="#{usuarioHome.instance.nome}" />
+			</s:decorate>
+
+			<s:decorate id="gp" template="/layout/display.xhtml">
+				<ui:define name="label">Papel</ui:define>
+				<h:outputText
+					value="#{usuarioHome.instance.gp?'Gerente de Proejtos':'Stakeholder'}" />
+			</s:decorate>
+
+			<s:decorate id="telefone" template="/layout/display.xhtml">
+				<ui:define name="label">Telefone</ui:define>
+				<h:outputText value="#{usuarioHome.instance.telefone}" />
+			</s:decorate>
+
+			<s:decorate id="email" template="/layout/display.xhtml">
+				<ui:define name="label">Email</ui:define>
+				<s:div>
+					<h:outputText value="#{usuarioHome.instance.ddd}" />
+					<h:outputText value="#{usuarioHome.instance.email}" />
+				</s:div>
+			</s:decorate>
+
+			<s:decorate id="endereco" template="/layout/display.xhtml">
+				<ui:define name="label">Endereco</ui:define>
+				<h:outputText value="#{usuarioHome.instance.endereco}" />
+			</s:decorate>
+
+			<s:decorate id="login" template="/layout/display.xhtml">
+				<ui:define name="label">Login</ui:define>
+				<h:outputText value="#{usuarioHome.instance.login}" />
+			</s:decorate>
+
+			<s:decorate id="senha" template="/layout/display.xhtml">
+				<ui:define name="label">Senha</ui:define>
+				<h:outputText value="#{usuarioHome.instance.senha}" />
+			</s:decorate>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+			<h:panelGrid columns="2">
+				<s:button view="/view/usuarios/UsuarioEdit.xhtml" id="edit"
+					value="Editar" />
+
+				<s:button view="/view/usuarios/UsuarioList.xhtml" id="done"
+					value="OK" />
+			</h:panelGrid>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib" contentType="text/html">
+	<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>brProject - Uma ferramenta para gestão de projetos</title>
+<link rel="shortcut icon" href="#{request.contextPath}/favicon.ico" />
+<a:loadStyle src="resource:///stylesheet/theme.xcss" />
+<a:loadStyle src="/stylesheet/theme.css" />
+<a:loadScript src="/javascript/scripts.js"/>
+<ui:insert name="head" />
+<style>
+.firstcol {
+	vertical-align: top;
+	width: 130px;
+}
+</style>
+</head>
+<body style="height: 100%">
+	<ui:include src="header.xhtml" />
+	<h:panelGrid columns="2" columnClasses="firstcol,top" width="100%"
+		style="height:100%">
+		<h:panelGrid>
+			<ui:include src="mainMenu.xhtml" />
+		</h:panelGrid>
+		<h:panelGrid style="float:left; width : 100%;" class="body">
+			<a:outputPanel ajaxRendered="true">
+				<h:messages id="messages" globalOnly="true" styleClass="message"
+					errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
+					rendered="#{showGlobalMessages != 'false'}" />
+			</a:outputPanel>
+			<ui:insert name="body" />
+		</h:panelGrid>
+	</h:panelGrid>
+	<div class="footer">
+		<p>
+			Powered by <a href="http://seamframework.org">Seam</a>
+			#{org.jboss.seam.version} and <a
+				href="http://www.jboss.org/jbossrichfaces">RichFaces</a>
+		</p>
+	</div>
+</body>
+	</html>
+</f:view>

@@ -1,0 +1,68 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="/layout/template.xhtml">
+	<ui:define name="body">
+		<style>
+.value {
+	font-size: 14px;
+}
+
+.label {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+</style>
+		<h1>Projeto: #{projeto.projeto.nome}</h1>
+		<h:panelGrid id="topInfo" columns="2" columnClasses="top,top">
+			<h:panelGrid columns="2" columnClasses="label,value">
+				<h:outputText value="Criado em: " />
+				<h:outputText value="#{projeto.projeto.datacriacao}" />
+				<h:outputText value="Encerrado em: "
+					rendered="#{projeto.projeto.statusprojeto.id eq 5}" />
+				<h:outputText value="#{projeto.projeto.fim}"
+					rendered="#{projeto.projeto.statusprojeto.id eq 5}" />
+			</h:panelGrid>
+			<h:panelGrid columns="2" columnClasses="label,value">
+				<h:outputText value="Gerente de Projetos: " />
+				<h:outputText value="#{projeto.projeto.usuario.nome}" />
+			</h:panelGrid>
+		</h:panelGrid>
+
+		<a4j:include viewId="/view/projetoinclude/projectPhases.xhtml" />		
+
+
+		<ui:remove>
+			<rich:simpleTogglePanel id="projectCharter" switchType="client"
+				ajaxSingle="true" opened="true">
+				<f:facet name="header">Termo de Abertura do Projeto</f:facet>
+				<ui:include src="/view/projetoinclude/aberturaprojeto.xhtml" />
+			</rich:simpleTogglePanel>
+
+			<rich:tabPanel id="tabs" switchType="client">
+				<rich:tab id="vg" label="Visão Geral">
+					<ui:include src="/view/projetoinclude/visaogeral.xhtml" />
+				</rich:tab>
+				<rich:tab id="pg" label="Plano Global">
+					<ui:include src="/view/projetoinclude/planoglobal.xhtml" />
+				</rich:tab>
+				<rich:tab id="mp" label="Matriz de Prioridades">
+					<ui:include src="/view/projetoinclude/matriz.xhtml" />
+				</rich:tab>
+				<rich:tab id="sm" label="Solicitacoes de Mudanca">
+					<ui:include src="/view/projetoinclude/mudancas.xhtml" />
+				</rich:tab>
+				<rich:tab id="la" label="Lições Aprendidas">
+					<ui:include src="/view/projetoinclude/licoes.xhtml" />
+				</rich:tab>
+			</rich:tabPanel>
+		</ui:remove>
+
+	</ui:define>
+</ui:composition>

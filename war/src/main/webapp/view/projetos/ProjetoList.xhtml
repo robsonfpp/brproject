@@ -1,0 +1,239 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h1>Base de Projetos</h1>
+
+		<h:form id="projetobuscar" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Filtros de Busca" switchType="ajax">
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Cliente</ui:define>
+					<h:inputText id="cliente" value="#{projetoList.projeto.cliente}" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Nome do Projeto</ui:define>
+					<h:inputText id="nome" value="#{projetoList.projeto.nome}" />
+				</s:decorate>
+
+				<s:decorate template="/layout/display.xhtml">
+					<ui:define name="label">Nome do Gerente de Projeto</ui:define>
+					<h:inputText id="nomeGp"
+						value="#{projetoList.projeto.usuario.nome}" />
+				</s:decorate>
+
+			</rich:simpleTogglePanel>
+
+			<div class="actionButtons">
+				<h:commandButton id="buscar" value="buscar"
+					action="/ProjetoList.xhtml" />
+				<s:button id="reset" value="Reset" includePageParams="false" />
+			</div>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">Projetos (#{empty projetoList.resultList ? 0 : (projetoList.paginated ? projetoList.resultCount : projetoList.resultList.size)})</f:facet>
+			<div class="results" id="projetoList">
+
+				<h:outputText value="Nenhum projeto encontrado na pesquisa..."
+					rendered="#{empty projetoList.resultList}" />
+
+				<rich:dataTable id="projetoList" var="_projeto"
+					value="#{projetoList.resultList}"
+					rendered="#{not empty projetoList.resultList}">
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Id do Projeto" />
+								<ui:param name="propertyPath" value="projeto.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Nome" />
+								<ui:param name="propertyPath" value="projeto.nome" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.nome}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Status do Projeto" />
+								<ui:param name="propertyPath" value="projeto.statusprojeto.nome" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.statusprojeto.nome}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Gerente do Projeto" />
+								<ui:param name="propertyPath" value="projeto.usuario.nome" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.usuario.nome}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Cliente" />
+								<ui:param name="propertyPath" value="projeto.cliente" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.cliente}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Custo Previsto" />
+								<ui:param name="propertyPath" value="projeto.custoprevisto" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.custoprevisto}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Data Criação" />
+								<ui:param name="propertyPath" value="projeto.datacriacao" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.datacriacao}">
+							<s:convertDateTime type="both" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Inicio Previsto" />
+								<ui:param name="propertyPath" value="projeto.inicio" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.inicio}">
+							<s:convertDateTime type="both" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Data Término" />
+								<ui:param name="propertyPath" value="projeto.fim" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.fim}">
+							<s:convertDateTime type="both" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Término Previsto" />
+								<ui:param name="propertyPath" value="projeto.fimprevisto" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.fimprevisto}">
+							<s:convertDateTime type="both" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projetoList}" />
+								<ui:param name="propertyLabel" value="Orçamento" />
+								<ui:param name="propertyPath" value="projeto.orcamento" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projeto.orcamento}" />
+					</h:column>
+					<rich:column styleClass="action">
+						<f:facet name="header">Ação</f:facet>
+						<s:link view="/view/projeto.xhtml" value="Ver Detalhes"
+							propagation="none" id="projetoViewId">
+							<f:param name="projetoId" value="#{_projeto.id}" />
+						</s:link>
+						<br />
+						<br />
+						<s:link view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
+							value="Nova Solicitação de Mudança" includePageParams="false"
+							propagation="none" id="novaSolicitacaoId">
+							<f:param name="projetoId" value="#{_projeto.id}" />
+							<f:param name="statusmudancaId" value="1" />
+							<f:param name="usuarioId" value="#{loggedUser.id}" />
+						</s:link>
+						<br />
+						<br />
+						<s:link view="/view/licoes/LicaoEdit.xhtml"
+							value="Nova Lição Aprendida" includePageParams="false"
+							propagation="none" id="novalicaoId">
+							<f:param name="projetoId" value="#{_projeto.id}" />
+						</s:link>
+					</rich:column>
+				</rich:dataTable>
+
+			</div>
+		</rich:panel>
+
+		<div class="tableControl">
+
+			<s:link view="/view/projetos/ProjetoList.xhtml"
+				rendered="#{projetoList.previousExists}"
+				value="#{messages.left}#{messages.left} Primeira Pagina" id="firstPage">
+				<f:param name="firstResult" value="0" />
+			</s:link>
+
+			<s:link view="/view/projetos/ProjetoList.xhtml"
+				rendered="#{projetoList.previousExists}"
+				value="#{messages.left} Pagina Anterior" id="previousPage">
+				<f:param name="firstResult"
+					value="#{projetoList.previousFirstResult}" />
+			</s:link>
+
+			<s:link view="/view/projetos/ProjetoList.xhtml"
+				rendered="#{projetoList.nextExists}"
+				value="Proxima Pagina #{messages.right}" id="nextPage">
+				<f:param name="firstResult" value="#{projetoList.nextFirstResult}" />
+			</s:link>
+
+			<s:link view="/view/projetos/ProjetoList.xhtml"
+				rendered="#{projetoList.nextExists}"
+				value="Ultima Pagina #{messages.right}#{messages.right}" id="lastPage">
+				<f:param name="firstResult" value="#{projetoList.lastFirstResult}" />
+			</s:link>
+
+		</div>
+
+		<s:div styleClass="actionButtons" rendered="#{empty from}">
+			<s:button view="/view/projetos/ProjetoEdit.xhtml" id="create"
+				propagation="none" value="Novo Projeto">
+				<f:param name="projetoId" />
+			</s:button>
+		</s:div>
+
+	</ui:define>
+
+</ui:composition>

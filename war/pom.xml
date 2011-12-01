@@ -1,0 +1,273 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>br.edu.eseg</groupId>
+		<artifactId>brProject</artifactId>
+		<version>0.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>brProject-war</artifactId> <!-- m2eclipse does not like: ${app.context}-ear -->
+	<name>${project.artifactId} : ${project.version}</name>
+	<description>Módulo WAR do brProject</description>
+	<packaging>war</packaging>
+
+	<profiles>
+		<!-- More than one profile can be active at once. Since profiles can contain 
+			the same types of configuration there can be clashes. If two profiles clash 
+			the last to be activated will override configurations in those activated 
+			earlier. Note: Any activeByDefault profile will be deactivated if you activate 
+			another profile. E.g. running "mvn install -Penv-dev" deactivates the "prod" 
+			profile. -->
+		<profile>
+			<id>env-dev</id>
+			<properties>
+				<env>dev</env>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>env-prod</id>
+			<properties>
+				<env>prod</env>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>explode</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>war-process-classes</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<property name="deploy-path" value="${as.deploy}/${app.context}-ear.ear" />
+										<copy todir="${deploy-path}/${project.build.finalName}.war"
+											verbose="true">
+											<fileset dir="src/main/webapp">
+												<include name="**/*" />
+												<exclude name="WEB-INF/*" />
+												<exclude name="META-INF/context.xml" />
+											</fileset>
+										</copy>
+										<copy
+											todir="${deploy-path}/${project.build.finalName}.war/WEB-INF/classes"
+											verbose="true">
+											<fileset dir="${project.build.outputDirectory}">
+												<include name="**/*.class" />
+											</fileset>
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencies>
+
+		<!-- seam -->
+		<dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-seam-ui</artifactId>
+		</dependency>
+
+		<!-- optional, but a reasonable requirement for a newly created project -->
+		<dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-seam-debug</artifactId>
+		</dependency>
+
+		<!-- add more Seam modules as needed <dependency> <groupId>org.jboss.seam</groupId> 
+			<artifactId>jboss-seam-remoting</artifactId> </dependency> <dependency> <groupId>org.jboss.seam</groupId> 
+			<artifactId>jboss-seam-mail</artifactId> </dependency> <dependency> <groupId>org.jboss.seam</groupId> 
+			<artifactId>jboss-seam-pdf</artifactId> </dependency> <dependency> <groupId>org.jboss.seam</groupId> 
+			<artifactId>jboss-seam-excel</artifactId> </dependency> -->
+
+		<!-- richfaces -->
+		<dependency>
+			<groupId>org.richfaces.framework</groupId>
+			<artifactId>richfaces-impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.richfaces.ui</groupId>
+			<artifactId>richfaces-ui</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.richfaces.samples</groupId>
+			<artifactId>glassX</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.richfaces.samples</groupId>
+			<artifactId>darkX</artifactId>
+		</dependency>
+
+		<!-- jee -->
+		<dependency>
+			<groupId>com.sun.facelets</groupId>
+			<artifactId>jsf-facelets</artifactId>
+		</dependency>
+
+		<!-- url rewrite filter, There are two rewrite options in Seam, you can 
+			choose to either use the org.tuckey UrlRewriteFilter or the native Seam rewriting. 
+			You should not attempt to use both. The native Seam rewriting does not use 
+			the org.tuckey rewrite engine at all. If you are going to use Seam's native 
+			rewriting, then remove the org.tuckey UrlRewriteFilter from web.xml and nuke 
+			the urlrewrite.xml file. With Seam 2.1 or newer it is recommend to use Seam's 
+			native rewrite engine. <dependency> <groupId>org.tuckey</groupId> <artifactId>urlrewritefilter</artifactId> 
+			</dependency> -->
+
+
+		<!-- For Eclipse and JBoss Tools: List all other modules you are interested 
+			to browse into (ctrl+click) from xhtml pages with scope provided -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${app.context}-ejb</artifactId>
+			<type>ejb</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${app.context}-chart</artifactId>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<!-- Maven filter properties are ony visible to resources and can not be 
+			accessed from the POM. <filters> <filter>../src/main/filters/filter-${env}.properties</filter> 
+			</filters> -->
+
+		<plugins>
+			<!-- Maven filter properties are ony visible to resources and can not 
+				be accessed from the POM. This is where the Properties Maven Plugin makes 
+				our life a little easier when dealing with properties that we need to access 
+				inside our POM. It provides goals to read and write properties from and to 
+				files, and also to set system properties. It's main use-case is loading properties 
+				from files instead of declaring them in pom.xml, something that comes in 
+				handy when dealing with different environments. The plugin is configured 
+				to read properties during the "validate" phase and the properties are then 
+				accessible from the pom. -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<configuration>
+							<files>
+								<file>${basedir}/../src/main/filters/filter-${env}.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<webResources>
+						<webResource>
+							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
+							<targetPath>WEB-INF</targetPath>
+							<filtering>true</filtering>
+						</webResource>
+					</webResources>
+					<archive>
+						<manifestEntries>
+							<Build-Date>${timestamp}</Build-Date>
+							<Build-Revision>${buildNumber}</Build-Revision>
+							<Mode>${env}</Mode>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>copy_chart</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${app.context}-chart</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>br.robson</groupId>
+									<artifactId>plugin</artifactId>
+									<version>1.0</version>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>br.robson</groupId>
+									<artifactId>jcommon</artifactId>
+									<version>1.0.16</version>
+									<type>jar</type>
+								</artifactItem>
+								<artifactItem>
+									<groupId>br.robson</groupId>
+									<artifactId>gson</artifactId>
+									<version>1.7.1</version>
+									<type>jar</type>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/applet</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jarsigner-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>sign</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<archiveDirectory>${project.build.directory}/${project.artifactId}-${project.version}/applet/</archiveDirectory>
+					<keystore>src/main/keystore/brProject-keystore</keystore>
+					<alias>brProject-chart</alias>
+					<storepass>bio7802</storepass>
+					<keypass>bio7802</keypass>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+	</build>
+</project>

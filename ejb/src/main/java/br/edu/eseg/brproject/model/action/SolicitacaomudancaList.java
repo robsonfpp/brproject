@@ -1,0 +1,26 @@
+package br.edu.eseg.brproject.model.action;
+
+import br.edu.eseg.brproject.model.*;
+import org.jboss.seam.annotations.Name;
+import org.jboss.seam.framework.EntityQuery;
+import java.util.Arrays;
+
+@Name("solicitacaomudancaList")
+public class SolicitacaomudancaList extends EntityQuery<Solicitacaomudanca> {
+
+	private static final String EJBQL = "select solicitacaomudanca from Solicitacaomudanca solicitacaomudanca";
+
+	private static final String[] RESTRICTIONS = { "lower(solicitacaomudanca.titulo) like lower(concat(#{solicitacaomudancaList.solicitacaomudanca.titulo},'%'))", };
+
+	private Solicitacaomudanca solicitacaomudanca = new Solicitacaomudanca();
+
+	public SolicitacaomudancaList() {
+		setEjbql(EJBQL);
+		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
+		setMaxResults(25);
+	}
+
+	public Solicitacaomudanca getSolicitacaomudanca() {
+		return solicitacaomudanca;
+	}
+}

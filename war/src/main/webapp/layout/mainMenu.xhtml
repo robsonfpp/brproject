@@ -1,0 +1,64 @@
+<rich:panel style="height:100%;width:100%" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich">
+	<f:facet name="header">Menu</f:facet>
+	<h:panelGrid cellpadding="3" style="margin-top:10px" width="100%">
+		<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none"
+			style="border:1px solid #{a4jSkin.panelBorderColor}"
+			direction="bottom-right" jointPoint="tr">
+			<f:facet name="label">
+				<s:link id="menuHomeId" view="/view/home.xhtml" value="Home"
+					propagation="none" />
+			</f:facet>
+		</rich:dropDownMenu>
+		<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none"
+			style="border:1px solid #{a4jSkin.panelBorderColor}"
+			direction="bottom-right" jointPoint="tr">
+			<f:facet name="label">
+				Novo
+			</f:facet>
+			<rich:menuItem>
+				<s:link id="menuNovoProjetoId" includePageParams="false"
+					view="/view/projetos/ProjetoEdit.xhtml" value="Projeto"
+					propagation="none">
+					<f:param name="usuarioId" value="#{loggedUser.id}" />
+					<f:param name="statusprojetoId" value="1" />
+				</s:link>
+			</rich:menuItem>
+			<rich:menuItem>
+				<s:link id="menuNovoUsuarioId"
+					view="/view/usuarios/UsuarioEdit.xhtml" value="Usuário"
+					includePageParams="false" propagation="none" />
+			</rich:menuItem>
+		</rich:dropDownMenu>
+		<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none"
+			style="border:1px solid #{a4jSkin.panelBorderColor}"
+			direction="bottom-right" jointPoint="tr">
+			<f:facet name="label">
+			Registros
+			</f:facet>
+			<rich:menuItem>
+				<s:link id="menuBaseProjetosId"
+					view="/view/projetos/ProjetoList.xhtml" value="Projetos"
+					propagation="none" />
+			</rich:menuItem>
+			<rich:menuItem>
+				<s:link id="menuBaseUsuariosId"
+					view="/view/usuarios/UsuarioList.xhtml" value="Usuários"
+					propagation="none" />
+			</rich:menuItem>
+			<rich:menuItem>
+				<s:link id="menuBaseSolicitacoesId"
+					view="/view/solicitacoes/SolicitacaomudancaList.xhtml"
+					value="Solicitações de Mudanças" propagation="none" />
+			</rich:menuItem>
+			<rich:menuItem>
+				<s:link id="menuBaseLicoesId" view="/view/licoes/LicaoList.xhtml"
+					value="Lições Aprendidas" propagation="none" />
+			</rich:menuItem>
+		</rich:dropDownMenu>
+	</h:panelGrid>
+</rich:panel>

@@ -1,0 +1,88 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">Solicitação de mudança</f:facet>
+
+
+			<s:decorate id="solicitante" template="/layout/display.xhtml">
+				<ui:define name="label">Solicitante</ui:define>
+				<h:outputText
+					value="#{solicitacaomudancaHome.instance.usuario.nome}" />
+			</s:decorate>
+
+			<s:decorate id="projeto" template="/layout/display.xhtml">
+				<ui:define name="label">Projeto</ui:define>
+				<h:outputText
+					value="#{solicitacaomudancaHome.instance.projeto.nome}" />
+			</s:decorate>
+
+			<s:decorate id="status" template="/layout/display.xhtml">
+				<ui:define name="label">Status da Solicitação</ui:define>
+				<h:outputText
+					value="#{solicitacaomudancaHome.instance.statusmudanca.nome}" />
+			</s:decorate>
+
+			<s:decorate id="titulo" template="/layout/display.xhtml">
+				<ui:define name="label">Titulo</ui:define>
+				<h:outputText value="#{solicitacaomudancaHome.instance.titulo}" />
+			</s:decorate>
+
+
+			<s:decorate id="dataabertura" template="/layout/display.xhtml">
+				<ui:define name="label">Data Abertura</ui:define>
+				<h:outputText
+					value="#{solicitacaomudancaHome.instance.dataabertura}">
+					<s:convertDateTime type="both" dateStyle="short" locale="pt-BR" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="datafechamento" template="/layout/display.xhtml"
+				rendered="#{loggedUser.gp}">
+				<ui:define name="label">Data Fechamento</ui:define>
+				<h:outputText
+					value="#{solicitacaomudancaHome.instance.datafechamento}">
+					<s:convertDateTime type="both" dateStyle="short" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="descricao" template="/layout/display.xhtml">
+				<ui:define name="label">Descricao</ui:define>
+				<h:outputText value="#{solicitacaomudancaHome.instance.descricao}" />
+			</s:decorate>
+
+
+			<s:decorate id="justificativa" template="/layout/display.xhtml"
+				rendered="#{loggedUser.gp}">
+				<ui:define name="label">Justificativa da Aprovação/reprovação</ui:define>
+				<h:outputText
+					value="#{solicitacaomudancaHome.instance.justificativa}" />
+			</s:decorate>
+
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+			<h:panelGrid columns="2">
+				<s:button view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
+					id="edit" value="Editar" />
+
+				<s:button view="/view/solicitacoes/SolicitacaomudancaList.xhtml"
+					id="done" value="OK" />
+			</h:panelGrid>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

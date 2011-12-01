@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>br.edu.eseg</groupId>
+		<artifactId>brProject</artifactId>
+		<version>0.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>brProject-ear</artifactId> <!-- m2eclipse does not like: ${app.context}-ear -->
+	<name>${project.artifactId} : ${project.version}</name>
+	<description>Módulo EAR do brProject</description>
+	<packaging>ear</packaging>
+
+	<profiles>
+		<!-- More than one profile can be active at once. Since profiles can contain 
+			the same types of configuration there can be clashes. If two profiles clash 
+			the last to be activated will override configurations in those activated 
+			earlier. Note: Any activeByDefault profile will be deactivated if you activate 
+			another profile. E.g. running "mvn install -Penv-dev" deactivates the "prod" 
+			profile. -->
+		<profile>
+			<id>env-dev</id>
+			<properties>
+				<env>dev</env>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>env-prod</id>
+			<properties>
+				<env>prod</env>
+			</properties>
+		</profile>
+
+		<profile>
+			<!-- Explode ear to appserver deploy folder. Execute e.g."mvn package 
+				-Pexplode" -->
+			<id>explode</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>package</id>
+								<phase>package</phase>
+								<configuration>
+									<tasks>
+										<property name="deploy-path" value="${as.deploy}/${app.context}-ear.ear" />
+										<echo>Exploding to ${deploy-path}</echo>
+										<delete file="${deploy-path}" quiet="true" />
+										<mkdir dir="${deploy-path}" />
+										<sync todir="${deploy-path}" verbose="true">
+											<fileset
+												dir="${project.build.directory}/${project.build.finalName}" />
+										</sync>
+										<!-- Uncomment this tag if you want to deploy the *-ds.xml file 
+											to the appserver's deploy folder <copy todir="${as.deploy}" file="${project.build.directory}/${ds.xml}" 
+											verbose="true" /> -->
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<!-- Unexplode ear. Remove project from appserver deploy folder. Execute 
+				e.g. "mvn clean -Punexplode" -->
+			<id>unexplode</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>clean</id>
+								<phase>clean</phase>
+								<configuration>
+									<tasks>
+										<property name="deploy-path" value="${as.deploy}/${app.context}-ear.ear" />
+
+										<echo>Unexploding: ${deploy-path}</echo>
+
+										<delete file="${deploy-path}" quiet="true" />
+										<delete dir="${deploy-path}" quiet="true" />
+										<!-- Uncomment this tag if you have deployed the *-ds.xml file 
+											to the appserver's deploy folder <delete file="${as.deploy}/${ds.xml}" quiet="true" 
+											/> -->
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencies>
+		<!-- project modules -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${app.context}-war</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${app.context}-ejb</artifactId>
+			<type>ejb</type>
+		</dependency>
+
+		<!-- other project modules <dependency> <groupId>${project.groupId}</groupId> 
+			<artifactId>${app.context}-jar</artifactId> </dependency> -->
+
+		<!-- seam -->
+		<dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-seam</artifactId>
+			<type>ejb</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.el</groupId>
+			<artifactId>jboss-el</artifactId>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>br.robson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.7.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.seam</groupId>
+			<artifactId>jboss-seam-resteasy</artifactId>
+			<version>2.2.1.Final</version>
+			<type>jar</type>
+		</dependency>
+
+		<!-- richfaces -->
+		<dependency>
+			<groupId>org.richfaces.framework</groupId>
+			<artifactId>richfaces-api</artifactId>
+			<type>jar</type>
+		</dependency>
+
+		<!-- hibernate -->
+		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-commons-annotations</artifactId> 
+			<scope>provided</scope> </dependency> -->
+
+		<!-- commons -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils-core</artifactId>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<type>jar</type>
+		</dependency>
+
+		<!-- JBoss Rules. Needed if you implement drools functionality, e.g. Seam 
+			Idendity see: samples/jboss-seam/examlpes/seamspace -->
+		<!-- <dependency> <groupId>org.drools</groupId> <artifactId>drools-core</artifactId> 
+			</dependency> <dependency> <groupId>org.drools</groupId> <artifactId>drools-compiler</artifactId> 
+			</dependency> <dependency> <groupId>org.drools</groupId> <artifactId>drools-api</artifactId> 
+			</dependency> <dependency> <groupId>org.drools</groupId> <artifactId>drools-decisiontables</artifactId> 
+			</dependency> <dependency> <groupId>org.drools</groupId> <artifactId>drools-templates</artifactId> 
+			</dependency> <dependency> <groupId>com.thoughtworks.xstream</groupId> <artifactId>xstream</artifactId> 
+			</dependency> <dependency> <groupId>xpp3</groupId> <artifactId>xpp3_min</artifactId> 
+			</dependency> -->
+
+		<!-- rules + groovy -->
+		<!-- <dependency> <groupId>org.antlr</groupId> <artifactId>antlr-runtime</artifactId> 
+			</dependency> -->
+
+		<!-- Added transient by JBoss Rules <dependency> <groupId>org.mvel</groupId> 
+			<artifactId>mvel2</artifactId> </dependency> <dependency> <groupId>janino</groupId> 
+			<artifactId>janino</artifactId> </dependency> <dependency> <groupId>org.eclipse.jdt</groupId> 
+			<artifactId>core</artifactId> </dependency> -->
+
+		<!-- JBoss jBPM -->
+		<!-- <dependency> <groupId>org.jbpm</groupId> <artifactId>jbpm-jpdl</artifactId> 
+			</dependency> -->
+	</dependencies>
+
+	<build>
+		<!-- Maven filter properties are ony visible to resources and can not be 
+			accessed from the POM. <filters> <filter>../src/main/filters/filter-${env}.properties</filter> 
+			</filters> -->
+
+		<plugins>
+			<!-- Maven filter properties are ony visible to resources and can not 
+				be accessed from the POM. This is where the Properties Maven Plugin makes 
+				our life a little easier when dealing with properties that we need to access 
+				inside our POM. It provides goals to read and write properties from and to 
+				files, and also to set system properties. It's main use-case is loading properties 
+				from files instead of declaring them in pom.xml, something that comes in 
+				handy when dealing with different environments. The plugin is configured 
+				to read properties during the "validate" phase and the properties are then 
+				accessible from the pom. -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<configuration>
+							<files>
+								<file>${basedir}/../src/main/filters/filter-${env}.properties</file>
+							</files>
+						</configuration>
+					</execution>
+					<execution>
+						<!-- Properties needed by unexplode profile -->
+						<id>pre-clean</id>
+						<phase>pre-clean</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/../src/main/filters/filter-${env}.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Maven resources plugin The default resources folder for ear is the 
+				src/main/application folder. Stuff in this folder will go into the target 
+				ear folder. The projects *-ds.xml file is placed in the src/main/resources 
+				folder, so we'll have to use the maven-resources-plugin to copy the *-ds.xml 
+				file. The reason for this is that we need to control where to copy the *-ds.xml 
+				is in the target build. If we want to deploy the *-ds.xml file embedded into 
+				the ear project then the file is located in the target/ear root folder. If 
+				the *-ds.xml file should be deployed as a separate service, then the file 
+				is located the target folder. The explode profile will then copy the *-ds.xml 
+				file to the application server's deploy folder. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-app-ds-xml</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+
+							<!-- Comment out this tag if you have deployed the *-ds.xml file to 
+								the appserver's deploy folder -->
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/META-INF/ds</outputDirectory>
+
+							<!-- Uncomment this tag if you have deployed the *-ds.xml file to 
+								the appserver's deploy folder <outputDirectory>${project.build.directory}</outputDirectory> -->
+							<resources>
+								<resource>
+									<directory>src/main/resources</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>${ds.xml}</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Maven EAR plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<configuration>
+					<finalName>${app.context}-ear</finalName>
+					<displayName>${app.display.name}</displayName>
+					<description>${app.description}</description>
+					<jboss>
+						<!-- To trigger the generation of the jboss-app.xml file you need to 
+							configure the 'jboss' element. see: http://maven.apache.org/plugins/maven-ear-plugin/usage.html 
+							and: http://maven.apache.org/plugins/maven-ear-plugin/examples/generating-jboss-app.html -->
+						<version>${as.version}</version>
+
+						<loader-repository>
+							<!-- seam.jboss.org is a Seam-specific scoped classloader. It acts 
+								as a way for Seam to disassociate artifacts bundled with the application 
+								from those that exist within the JBoss application server's shared artifacts 
+								or JARs (for example, those that reside in the default server's lib directory 
+								or in JBoss's general lib directory). The classloader is referenced in jboss-app.xml 
+								for EAR deployment and and in jboss-web.xml for WAR deployment (SiA-2.5.3-p63). 
+								see: http://www.jboss.org/community/wiki/classloadingconfiguration see: http://www.mastertheboss.com/en/jboss-application-server/141-jboss-classloader.html -->
+							seam.jboss.org:loader=${app.context}-ear
+						</loader-repository>
+
+						<!-- Comment out this tag if you have deployed the *-ds.xml file to 
+							the appserver's deploy folder -->
+						<data-sources>
+							<data-source>META-INF/ds/${ds.xml}</data-source>
+						</data-sources>
+					</jboss>
+
+					<archive>
+						<manifestEntries>
+							<Build-Date>${timestamp}</Build-Date>
+							<Build-Revision>${buildNumber}</Build-Revision>
+							<Mode>${env}</Mode>
+						</manifestEntries>
+					</archive>
+
+					<modules>
+						<webModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${app.context}-war</artifactId>
+							<contextRoot>/${app.web.context}</contextRoot>
+							<unpack>${app.unpack.modules}</unpack>
+						</webModule>
+
+						<ejbModule>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${app.context}-ejb</artifactId>
+							<unpack>${app.unpack.modules}</unpack>
+						</ejbModule>
+
+						<!-- <jarModule> <groupId>${project.groupId}</groupId> <artifactId>${app.context}-jar</artifactId> 
+							<unpack>${app.unpack.modules}</unpack> <includeInApplicationXml>true</includeInApplicationXml> 
+							</jarModule> -->
+
+						<ejbModule>
+							<groupId>org.jboss.seam</groupId>
+							<artifactId>jboss-seam</artifactId>
+						</ejbModule>
+
+					</modules>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+</project>

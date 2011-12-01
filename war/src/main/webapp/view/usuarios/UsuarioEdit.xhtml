@@ -1,0 +1,106 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<h1>#{!usuarioHome.managed?'Novo':'Editar'} Usuário</h1>
+		<h:form id="usuario" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">Cadastro do Usuário</f:facet>
+				<s:decorate id="nomeField" template="/layout/edit.xhtml">
+					<ui:define name="label">Nome</ui:define>
+					<h:inputText id="nome" size="15"
+						value="#{usuarioHome.instance.nome}">
+						<a4j:support event="onblur" reRender="nomeField" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="gpField" template="/layout/edit.xhtml">
+					<ui:define name="label">Papel</ui:define>
+					<h:selectOneRadio value="#{usuarioHome.instance.gp}"
+						required="true">
+						<f:selectItem itemLabel="Gerente de Projetos" itemValue="true" />
+						<f:selectItem itemLabel="Stakeholder" itemValue="false" />
+						<a4j:support event="onblur" reRender="gpField" ajaxSingle="true" />
+					</h:selectOneRadio>
+				</s:decorate>
+
+
+				<s:decorate id="telefoneField" template="/layout/edit.xhtml">
+					<ui:define name="label">Telefone</ui:define>
+					<s:div>
+						<h:inputText id="ddd" size="2" maxlength="2"
+							value="#{usuarioHome.instance.ddd}">
+							<a:support event="onblur" reRender="dddField"
+								bypassUpdates="true" ajaxSingle="true" />
+						</h:inputText>
+						<h:inputText id="telefone" size="8" maxlength="8"
+							value="#{usuarioHome.instance.telefone}">
+							<a:support event="onblur" reRender="telefoneField"
+								bypassUpdates="true" ajaxSingle="true" />
+						</h:inputText>
+					</s:div>
+				</s:decorate>
+
+				<s:decorate id="emailField" template="/layout/edit.xhtml">
+					<ui:define name="label">Email</ui:define>
+					<h:inputText id="email" size="45"
+						value="#{usuarioHome.instance.email}" />
+				</s:decorate>
+
+				<s:decorate id="enderecoField" template="/layout/edit.xhtml">
+					<ui:define name="label">Endereco</ui:define>
+					<h:inputText id="endereco" size="50"
+						value="#{usuarioHome.instance.endereco}" />
+				</s:decorate>
+
+				<s:decorate id="loginField" template="/layout/edit.xhtml">
+					<ui:define name="label">Login</ui:define>
+					<h:inputText id="login" required="true" size="45" maxlength="45"
+						value="#{usuarioHome.instance.login}">
+						<a:support event="onblur" reRender="loginField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="senhaField" template="/layout/edit.xhtml" rendered="#{!usuarioHome.managed}">
+					<ui:define name="label">Senha</ui:define>
+					<h:inputSecret id="senha" required="true" size="12" maxlength="12"
+						value="#{usuarioHome.instance.senha}">
+						<a:support event="onblur" reRender="senhaField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputSecret>
+				</s:decorate>
+
+				<div style="clear: both">
+					<span class="required">*</span> required fields
+				</div>
+
+			</rich:panel>
+
+			<div class="actionButtons">
+
+				<h:commandButton id="save" value="Salvar"
+					action="#{usuarioHome.persist}" disabled="#{!usuarioHome.wired}"
+					rendered="#{!usuarioHome.managed}" />
+
+				<h:commandButton id="update" value="Salvar"
+					action="#{usuarioHome.update}" rendered="#{usuarioHome.managed}" />
+
+				<s:button id="cancel" value="Cancelar" propagation="end"
+					view="/view/usuarios/UsuarioList.xhtml" />
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

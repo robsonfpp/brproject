@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      login-required="true">
+
+   <param name="firstResult" value="#{solicitacaomudancaList.firstResult}"/>
+   <param name="sort" value="#{solicitacaomudancaList.orderColumn}"/>
+   <param name="dir" value="#{solicitacaomudancaList.orderDirection}"/>
+   <param name="logic" value="#{solicitacaomudancaList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="descricao" value="#{solicitacaomudancaList.solicitacaomudanca.descricao}"/>
+   <param name="justificativa" value="#{solicitacaomudancaList.solicitacaomudanca.justificativa}"/>
+   <param name="titulo" value="#{solicitacaomudancaList.solicitacaomudanca.titulo}"/>
+   <param name="solicitante" value="#{solicitacaomudancaList.solicitacaomudanca.usuario.nome}"/>
+   <param name="nomeprojeto" value="#{solicitacaomudancaList.solicitacaomudanca.projeto.nome}"/>
+   <param name="status" value="#{solicitacaomudancaList.solicitacaomudanca.statusmudanca.nome}"/>
+
+</page>

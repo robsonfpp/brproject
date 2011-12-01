@@ -1,0 +1,103 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j"
+	template="/layout/template.xhtml">
+	<ui:define name="body">
+		<h1>Home</h1>
+		<rich:simpleTogglePanel switchType="client">
+			<f:facet name="header">Projetos em Andamento</f:facet>
+			<h:outputText value="Nenhum projeto em andamento..."
+				rendered="#{home.projetos.size() == 0}" />
+			<rich:dataTable id="projetos" value="#{home.projetos}" var="_p"
+				rendered="#{home.projetos.size() gt 0}" width="100%">
+				<rich:column>
+					<f:facet name="header">Projeto</f:facet>
+					<h:form>
+						<s:link id="verprojeto" value="#{_p.nome}"
+							view="/view/projeto.xhtml">
+							<f:param name="projetoId" value="#{_p.id}" />
+						</s:link>
+					</h:form>
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Cliente</f:facet>
+					<h:outputText value="#{_p.cliente}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Data Criação</f:facet>
+					<h:outputText value="#{_p.datacriacao}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Inicio</f:facet>
+					<h:outputText value="#{_p.inicio}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Fim Previsto</f:facet>
+					<h:outputText value="#{_p.fimprevisto}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Status</f:facet>
+					<h:outputText value="#{_p.statusprojeto.nome}" />
+				</rich:column>
+			</rich:dataTable>
+		</rich:simpleTogglePanel>
+
+		<rich:simpleTogglePanel switchType="client">
+			<f:facet name="header">Avaliações de Prioridade de Stakeholder Pendentes</f:facet>
+			<h:outputText value="Nenhuma avaliação de prioridade pendente..."
+				rendered="#{home.avaliacoes.size() == 0}" />
+			<rich:dataTable id="avaliacoes" value="#{home.avaliacoes}" var="_a"
+				rendered="#{home.avaliacoes.size() gt 0}">
+				<rich:column>
+					<f:facet name="header">Id</f:facet>
+					<s:link value="#{_a[0]}"
+						view="/view/notastakeholder/NotastakeholderEdit.xhtml">
+						<f:param name="projetoId" value="#{_a[0]}" />
+					</s:link>
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Projeto</f:facet>
+					<s:link value="#{_a[1]}"
+						view="/view/notastakeholder/NotastakeholderEdit.xhtml">
+						<f:param name="projetoId" value="#{_a[0]}" />
+					</s:link>
+				</rich:column>
+			</rich:dataTable>
+		</rich:simpleTogglePanel>
+
+		<rich:simpleTogglePanel switchType="client">
+			<f:facet name="header">Solicitações de mudança em aberto</f:facet>
+			<h:outputText value="Nenhuma solicitação em aberto..."
+				rendered="#{home.solicitacoes.size() == 0}" />
+			<rich:dataTable id="solicitacoes" value="#{home.solicitacoes}"
+				rendered="#{home.solicitacoes.size() gt 0}" var="_s" width="100%">
+				<rich:column>
+					<f:facet name="header">Título</f:facet>
+					<s:link id="versolicitacao" value="#{_s.titulo}"
+						view="/view/projeto.xhtml">
+						<f:param name="projetoId" value="#{_s.projeto.id}" />
+						<f:param name="solicitacaomudancaId" value="#{_s.id}" />
+					</s:link>
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Projeto</f:facet>
+					<h:outputText value="#{_s.projeto.nome}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Data Abertura</f:facet>
+					<h:outputText value="#{_s.dataabertura}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Solicitante</f:facet>
+					<h:outputText value="#{_s.usuario.nome}" />
+				</rich:column>
+			</rich:dataTable>
+		</rich:simpleTogglePanel>
+	</ui:define>
+</ui:composition>
