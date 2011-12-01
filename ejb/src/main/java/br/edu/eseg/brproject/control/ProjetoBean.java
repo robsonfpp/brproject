@@ -2,7 +2,6 @@ package br.edu.eseg.brproject.control;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -19,18 +18,17 @@ import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.Log;
 
 import br.edu.eseg.brproject.control.transactions.ProjetoTx;
-import br.edu.eseg.brproject.model.Arquivo;
 import br.edu.eseg.brproject.model.Licao;
 import br.edu.eseg.brproject.model.Nota;
 import br.edu.eseg.brproject.model.Notastakeholder;
 import br.edu.eseg.brproject.model.Projeto;
 import br.edu.eseg.brproject.model.Solicitacaomudanca;
 import br.edu.eseg.brproject.model.Stakeholder;
-import br.edu.eseg.brproject.model.Statusprojeto;
 import br.edu.eseg.brproject.model.action.ArquivoList;
 import br.edu.eseg.brproject.model.action.NotaList;
 import br.edu.eseg.brproject.model.action.NotastakeholderList;
 import br.edu.eseg.brproject.model.action.ProjetoHome;
+import br.edu.eseg.brproject.model.action.StatusprojetoHome;
 
 @Name("projeto")
 @Scope(ScopeType.CONVERSATION)
@@ -48,6 +46,8 @@ public class ProjetoBean implements Serializable {
 	NotaList notaList;
 	@In(create = true)
 	ProjetoHome projetoHome;
+	@In(create = true)
+	StatusprojetoHome statusprojetoHome;
 	@In(create = true)
 	NotastakeholderList notastakeholderList;
 	@In(create = true)
@@ -136,7 +136,9 @@ public class ProjetoBean implements Serializable {
 	}
 
 	public void changeStatus() {
-		projetoTx.changeStatus(projeto.getId(), changeStatusId);
+		statusprojetoHome.setStatusprojetoId(changeStatusId);
+		projetoHome.getDefinedInstance().setStatusprojeto(statusprojetoHome.find());
+		projetoHome.update();
 		projetoHome.load();
 		projeto = projetoHome.getDefinedInstance();
 		statusMessages.add(Severity.INFO, "Status alterado com sucesso!");
