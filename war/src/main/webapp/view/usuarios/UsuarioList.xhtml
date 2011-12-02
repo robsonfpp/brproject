@@ -40,7 +40,7 @@
 
 			<div class="actionButtons">
 				<h:commandButton id="buscar" value="buscar"
-					action="/UsuarioList.xhtml" />
+					action="/view/usuarios/UsuarioList.xhtml" />
 				<s:button id="reset" value="Reset" includePageParams="false" />
 			</div>
 
@@ -168,6 +168,13 @@
 			</s:link>
 
 		</div>
+		
+		<s:div styleClass="actionButtons" >
+			<s:button view="/view/usuarios/UsuarioEdit.xhtml" id="create"
+				propagation="none" value="Novo Usuário">
+				<f:param name="usuarioId" />
+			</s:button>
+		</s:div>
 
 	</ui:define>
 

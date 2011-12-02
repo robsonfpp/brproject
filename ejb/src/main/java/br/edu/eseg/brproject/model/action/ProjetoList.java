@@ -12,11 +12,13 @@ public class ProjetoList extends EntityQuery<Projeto> {
 
 	private static final String[] RESTRICTIONS = {
 			"lower(projeto.cliente) like lower(concat(#{projetoList.projeto.cliente},'%'))",
-			"lower(projeto.nome) like lower(concat(#{projetoList.projeto.nome},'%'))", };
+			"lower(projeto.nome) like lower(concat(#{projetoList.projeto.nome},'%'))",
+			"lower(projeto.usuario.nome) like lower(concat(#{projetoList.projeto.usuario.nome},'%'))"};
 
 	private Projeto projeto = new Projeto();
 
 	public ProjetoList() {
+		projeto.setUsuario(new Usuario());
 		setEjbql(EJBQL);
 		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
 		setMaxResults(25);

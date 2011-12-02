@@ -82,7 +82,7 @@ public class Solicitacaomudanca implements java.io.Serializable,
 	}
 
 	public void setStatusmudanca(Statusmudanca statusmudanca) {
-		if(statusmudanca.getId()>1){
+		if(statusmudanca.getId()!=null && statusmudanca.getId()>1){
 			setDatafechamento(new Date());
 		}
 		this.statusmudanca = statusmudanca;

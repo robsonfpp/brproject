@@ -36,7 +36,7 @@
 
 			<div class="actionButtons">
 				<h:commandButton id="buscar" value="buscar"
-					action="/ProjetoList.xhtml" />
+					action="/view/projetos/ProjetoList.xhtml" />
 				<s:button id="reset" value="Reset" includePageParams="false" />
 			</div>
 
@@ -227,7 +227,7 @@
 
 		</div>
 
-		<s:div styleClass="actionButtons" rendered="#{empty from}">
+		<s:div styleClass="actionButtons" >
 			<s:button view="/view/projetos/ProjetoEdit.xhtml" id="create"
 				propagation="none" value="Novo Projeto">
 				<f:param name="projetoId" />
