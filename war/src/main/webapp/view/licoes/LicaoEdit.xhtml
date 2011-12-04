@@ -18,9 +18,14 @@
 			<rich:panel>
 				<f:facet name="header">Cadastro da Lição Aprendida</f:facet>
 
-				<s:decorate id="projetoField" template="/layout/display.xhtml">
+				<s:decorate id="projetoField" template="/layout/edit.xhtml">
 					<ui:define name="label">Projeto</ui:define>
-					<h:outputText value="#{licaoHome.instance.projeto.nome}" />
+					<h:selectOneMenu id="projeto"
+						value="#{projetoHome.projetoId}">
+						<f:selectItem itemLabel="Selecione ..." />
+						<f:selectItems value="#{projetoList.projetoSelectItem}" />
+						<a4j:support event="onchange" reRender="projetoField" />
+					</h:selectOneMenu>
 				</s:decorate>
 
 				<s:decorate id="tituloField" template="/layout/edit.xhtml">
@@ -46,7 +51,7 @@
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems
 							value="#{areaimpactadaList.areaimpactadaSelectItem}" />
-						<a4j:support event="onchange" reRender="licoes" />
+						<a4j:support event="onchange" reRender="areaimpactadaField" />
 					</h:selectOneMenu>
 				</s:decorate>
 
@@ -56,7 +61,7 @@
 						required="true">
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems value="#{impactolicaoList.impactolicaoSelectItem}" />
-						<a4j:support event="onchange" reRender="licoes" />
+						<a4j:support event="onchange" reRender="impactoField" />
 					</h:selectOneMenu>
 				</s:decorate>
 
@@ -67,7 +72,7 @@
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems
 							value="#{prioridadelicaoList.prioridadelicaoSelectItem}" />
-						<a4j:support event="onchange" reRender="licoes" />
+						<a4j:support event="onchange" reRender="prioridadeField" />
 					</h:selectOneMenu>
 				</s:decorate>
 

@@ -17,23 +17,30 @@
 			<rich:panel>
 				<f:facet name="header">Cadastro da Solicitação de Mudanca</f:facet>
 
-				<s:decorate id="projetoField" template="/layout/display.xhtml">
+				<s:decorate id="projetoField" template="/layout/edit.xhtml">
 					<ui:define name="label">Projeto</ui:define>
-					<h:outputText id="projeto"
-						value="#{solicitacaomudancaHome.instance.projeto.nome}" />
+					<h:selectOneMenu value="#{projetoHome.projetoId}">
+						<f:selectItem itemLabel="selecione ..." />
+						<f:selectItems value="#{projetoList.projetoSelectItem}" />
+						<a4j:support event="onchange" reRender="projetoField,buttons" ajaxSingle="true" />
+					</h:selectOneMenu>
 				</s:decorate>
 
-				<s:decorate id="statusField" template="/layout/display.xhtml">
+				<s:decorate id="statusField" template="/layout/edit.xhtml"
+					rendered="#{solicitacaomudancaHome.managed}">
 					<ui:define name="label">Ação</ui:define>
-					<h:outputText
-						style="font-weight:bold; font-size:16px"
-						value="#{solicitacaomudancaHome.instance.statusmudanca.nome.equals('Aprovado')?'APROVAR':'REPROVAR'}" />
+					<h:selectOneMenu value="#{statusmudancaHome.statusmudancaId}">
+						<f:selectItem itemLabel="selecione ..." />
+						<f:selectItems
+							value="#{statusmudancaList.statusmudancaSelectItem}" />
+						<a4j:support event="onchange" reRender="statusField,buttons" ajaxSingle="true" />
+					</h:selectOneMenu>
 				</s:decorate>
 
 				<s:decorate id="tituloField" template="/layout/edit.xhtml">
 					<ui:define name="label">Título</ui:define>
 					<h:inputText id="titulo" size="45" required="true"
-					disabled="#{solicitacaomudancaHome.instance.statusmudanca.id gt 1}"
+						disabled="#{solicitacaomudancaHome.managed}"
 						value="#{solicitacaomudancaHome.instance.titulo}">
 						<a4j:support event="onblur" reRender="tituloField"
 							bypassUpdates="true" ajaxSingle="true" />
@@ -43,7 +50,7 @@
 				<s:decorate id="descricaoField" template="/layout/edit.xhtml">
 					<ui:define name="label">Descrição da Mudança</ui:define>
 					<h:inputTextarea id="descricao" cols="85" rows="6" required="true"
-						disabled="#{solicitacaomudancaHome.instance.statusmudanca.id gt 1}"
+						disabled="#{solicitacaomudancaHome.managed}"
 						value="#{solicitacaomudancaHome.instance.descricao}">
 						<a4j:support event="onblur" reRender="descricaoField"
 							bypassUpdates="true" ajaxSingle="true" />
@@ -52,13 +59,12 @@
 
 
 				<s:decorate id="justificativaField" template="/layout/edit.xhtml"
-					rendered="#{loggedUser.gp &amp;&amp; solicitacaomudancaHome.instance.statusmudanca.id gt 1}">
+					rendered="#{loggedUser.gp &amp;&amp; solicitacaomudancaHome.managed}">
 					<ui:define name="label">Justificativa</ui:define>
 					<h:inputTextarea id="justificativa" cols="85" rows="6"
 						required="true"
 						value="#{solicitacaomudancaHome.instance.justificativa}">
-						<a4j:support event="onblur" reRender="descricaoField"
-							bypassUpdates="true" ajaxSingle="true" />
+						<a4j:support event="onblur" reRender="justificativaField" />
 					</h:inputTextarea>
 				</s:decorate>
 
@@ -68,22 +74,23 @@
 				</div>
 
 			</rich:panel>
+			<a4j:outputPanel ajaxRendered="true" id="buttons">
+				<div class="actionButtons">
 
-			<div class="actionButtons">
+					<h:commandButton id="save" value="Salvar"
+						action="#{solicitacaomudancaHome.persist}"
+						disabled="#{!projetoHome.wired}"
+						rendered="#{!solicitacaomudancaHome.managed}" />
 
-				<h:commandButton id="save" value="Salvar"
-					action="#{solicitacaomudancaHome.persist}"
-					disabled="#{!projetoHome.wired}"
-					rendered="#{!solicitacaomudancaHome.managed}" />
+					<h:commandButton id="update" value="Salvar"
+						action="#{solicitacaomudancaHome.update}"
+						disabled="#{!projetoHome.wired || statusmudancaHome.statusmudancaId == null}"
+						rendered="#{solicitacaomudancaHome.managed}" />
 
-				<h:commandButton id="update" value="Salvar"
-					action="#{solicitacaomudancaHome.update}"
-					disabled="#{!projetoHome.wired}"
-					rendered="#{solicitacaomudancaHome.managed}" />
+					<input type="button" onclick="history.go(-1)" value="Cancelar" />
 
-				<input type="button" onclick="history.go(-1)" value="Cancelar"/>
-
-			</div>
+				</div>
+			</a4j:outputPanel>
 		</h:form>
 
 	</ui:define>

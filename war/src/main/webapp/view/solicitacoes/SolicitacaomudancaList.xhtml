@@ -151,23 +151,21 @@
 						<br />
 						<br />
 						<s:link view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
-							
-							value="Aprovar Solicitação" propagation="none"
-							id="solicitacaomudancaAprovado" rendered="#{loggedUser.gp &amp;&amp; _solicitacaomudanca.statusmudanca.id == 1 }">
-							<f:param name="solicitacaomudancaId" value="#{_solicitacaomudanca.id}" />
-							<f:param name="statusmudancaId" value="2" />
-							<f:param name="usuarioId" value="#{loggedUser.id}"/>
-							<f:param name ="projetoId" value="#{_solicitacaomudanca.projeto.id}"/>
+							rendered="#{loggedUser.gp &amp;&amp; _solicitacaomudanca.statusmudanca.id == 1}"
+							value="Ver Solicitação" propagation="none"
+							id="solicitacaomudancaAprovado">
+							<f:param name="solicitacaomudancaId"
+								value="#{_solicitacaomudanca.id}" />
+							<f:param name="usuarioId" value="#{loggedUser.id}" />
+							<f:param name="projetoId"
+								value="#{_solicitacaomudanca.projeto.id}" />
 						</s:link>
-						<br />
-						<br />
-						<s:link view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
-							value="Reprovar Solicitação" propagation="none"
-							id="solicitacaomudancaReprovado" rendered="#{loggedUser.gp &amp;&amp; _solicitacaomudanca.statusmudanca.id == 1}">
-							<f:param name="solicitacaomudancaId" value="#{_solicitacaomudanca.id}" />
-							<f:param name="statusmudancaId" value="3" />
-							<f:param name="usuarioId" value="#{loggedUser.id}"/>
-							<f:param name ="projetoId" value="#{_solicitacaomudanca.projeto.id}"/>
+						<s:link view="/view/solicitacoes/Solicitacaomudanca.xhtml"
+							rendered="#{not loggedUser.gp || _solicitacaomudanca.statusmudanca.id gt 1}"
+							value="Ver Solicitação" propagation="none"
+							id="solicitacaomudancaReprovado">
+							<f:param name="solicitacaomudancaId"
+								value="#{_solicitacaomudanca.id}" />
 						</s:link>
 					</rich:column>
 				</rich:dataTable>
@@ -179,7 +177,8 @@
 
 			<s:link view="/view/solicitacoes/SolicitacaomudancaList.xhtml"
 				rendered="#{solicitacaomudancaList.previousExists}"
-				value="#{messages.left}#{messages.left} Primeira Pagina" id="firstPage">
+				value="#{messages.left}#{messages.left} Primeira Pagina"
+				id="firstPage">
 				<f:param name="firstResult" value="0" />
 			</s:link>
 
@@ -199,12 +198,22 @@
 
 			<s:link view="/view/solicitacoes/SolicitacaomudancaList.xhtml"
 				rendered="#{solicitacaomudancaList.nextExists}"
-				value="Ultima Pagina #{messages.right}#{messages.right}" id="lastPage">
+				value="Ultima Pagina #{messages.right}#{messages.right}"
+				id="lastPage">
 				<f:param name="firstResult"
 					value="#{solicitacaomudancaList.lastFirstResult}" />
 			</s:link>
 
 		</div>
+
+		<s:div styleClass="actionButtons">
+			<s:button view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
+				id="create" propagation="none" includePageParams="false"
+				value="Nova Solicitação">
+				<f:param name="usuarioId" value="#{loggedUser.id}" />
+				<f:param name="statusmudancaId" value="1" />
+			</s:button>
+		</s:div>
 
 	</ui:define>
 

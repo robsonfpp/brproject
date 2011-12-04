@@ -17,8 +17,12 @@
 			<rich:simpleTogglePanel label="licao buscar Filter" switchType="ajax">
 
 				<s:decorate template="/layout/display.xhtml">
-					<ui:define name="label">Nome do Projeto</ui:define>
-					<h:inputText id="projeto" value="#{licaoList.licao.projeto.nome}" />
+					<ui:define name="label">Projeto</ui:define>
+					<h:selectOneMenu id="areaimpactada"
+						value="#{licaoList.licao.projeto.id}">
+						<f:selectItem itemLabel="Selecione ..." />
+						<f:selectItems value="#{projetoList.projetoSelectItem}" />
+					</h:selectOneMenu>
 				</s:decorate>
 
 				<s:decorate template="/layout/display.xhtml">
@@ -58,7 +62,7 @@
 
 			</rich:simpleTogglePanel>
 
- 			<div class="actionButtons">
+			<div class="actionButtons">
 				<h:commandButton id="buscar" value="buscar"
 					action="/view/licoes/LicaoList.xhtml" />
 				<s:button id="reset" value="Reset" includePageParams="false" />
@@ -156,6 +160,12 @@
             <s:link view="/view/licoes/LicaoEdit.xhtml" value="Editar"
 							propagation="none" id="licaoEdit" rendered="#{empty from}">
 							<f:param name="licaoId" value="#{_licao.id}" />
+							<f:param name="prioridadelicaoId"
+								value="#{_licao.prioridadelicao.id}" />
+							<f:param name="impactolicaoId" value="#{_licao.impactolicao.id}" />
+							<f:param name="areaimpactadaId"
+								value="#{_licao.areaimpactada.id}" />
+							<f:param name="projetoId" value="#{_licao.projeto.id}" />
 						</s:link>
 					</rich:column>
 				</rich:dataTable>
@@ -167,7 +177,8 @@
 
 			<s:link view="/view/licoes/LicaoList.xhtml"
 				rendered="#{licaoList.previousExists}"
-				value="#{messages.left}#{messages.left} primeira Pagina" id="firstPage">
+				value="#{messages.left}#{messages.left} primeira Pagina"
+				id="firstPage">
 				<f:param name="firstResult" value="0" />
 			</s:link>
 
@@ -185,12 +196,18 @@
 
 			<s:link view="/view/licoes/LicaoList.xhtml"
 				rendered="#{licaoList.nextExists}"
-				value="Ultima Pagina #{messages.right}#{messages.right}" id="lastPage">
+				value="Ultima Pagina #{messages.right}#{messages.right}"
+				id="lastPage">
 				<f:param name="firstResult" value="#{licaoList.lastFirstResult}" />
 			</s:link>
 
 		</div>
-
+		<s:div styleClass="actionButtons">
+			<s:button view="/view/licoes/LicaoEdit.xhtml"
+				id="create" propagation="none" includePageParams="false"
+				value="Nova Lição Aprendida">
+			</s:button>
+		</s:div>
 	</ui:define>
 
 </ui:composition>

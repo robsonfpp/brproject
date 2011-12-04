@@ -33,6 +33,19 @@
 					view="/view/usuarios/UsuarioEdit.xhtml" value="Usuário"
 					includePageParams="false" propagation="none" />
 			</rich:menuItem>
+			<rich:menuItem>
+				<s:link id="menuNovaSolicitacaoId" includePageParams="false"
+					view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml" value="Solicitação de Mudança"
+					propagation="none">
+					<f:param name="usuarioId" value="#{loggedUser.id}" />
+					<f:param name="statusmudancaId" value="1" />
+				</s:link>
+			</rich:menuItem>
+			<rich:menuItem>
+				<s:link id="menuNovaLicaoId"
+					view="/view/licoes/LicaoEdit.xhtml" value="Lição Aprendida"
+					includePageParams="false" propagation="none" />
+			</rich:menuItem>
 		</rich:dropDownMenu>
 		<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none"
 			style="border:1px solid #{a4jSkin.panelBorderColor}"

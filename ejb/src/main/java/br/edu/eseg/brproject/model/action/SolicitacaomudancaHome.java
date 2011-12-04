@@ -1,9 +1,15 @@
 package br.edu.eseg.brproject.model.action;
 
-import br.edu.eseg.brproject.model.*;
+import java.util.Date;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.framework.EntityHome;
+
+import br.edu.eseg.brproject.model.Projeto;
+import br.edu.eseg.brproject.model.Solicitacaomudanca;
+import br.edu.eseg.brproject.model.Statusmudanca;
+import br.edu.eseg.brproject.model.Usuario;
 
 @Name("solicitacaomudancaHome")
 public class SolicitacaomudancaHome extends EntityHome<Solicitacaomudanca> {
@@ -27,6 +33,14 @@ public class SolicitacaomudancaHome extends EntityHome<Solicitacaomudanca> {
 	protected Solicitacaomudanca createInstance() {
 		Solicitacaomudanca solicitacaomudanca = new Solicitacaomudanca();
 		return solicitacaomudanca;
+	}
+
+	@Override
+	public String update() {
+		if(isIdDefined() && getInstance().getStatusmudanca().getId() > 1){
+			getInstance().setDatafechamento(new Date());
+		}
+		return super.update();
 	}
 
 	public void load() {

@@ -1,9 +1,15 @@
 package br.edu.eseg.brproject.model.action;
 
 import br.edu.eseg.brproject.model.*;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.framework.EntityQuery;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 @Name("solicitacaomudancaList")
 public class SolicitacaomudancaList extends EntityQuery<Solicitacaomudanca> {

@@ -1,9 +1,15 @@
 package br.edu.eseg.brproject.model.action;
 
 import br.edu.eseg.brproject.model.*;
+
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.framework.EntityQuery;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 @Name("projetoList")
 public class ProjetoList extends EntityQuery<Projeto> {
@@ -24,6 +30,18 @@ public class ProjetoList extends EntityQuery<Projeto> {
 		setMaxResults(25);
 	}
 
+	public List<SelectItem> getProjetoSelectItem(){
+		List<SelectItem> result = new ArrayList<SelectItem>();
+		projeto.setStatusprojeto(new Statusprojeto(new Long(5)));
+		getRestrictionExpressionStrings().add("projeto.statusprojeto.id <> #{projetoList.projeto.statusprojeto.id}");
+		//getRestrictionExpressionStrings().add("exists(select stakeholder from Stakeholder stakeholder where stakeholder.projeto = projeto and stakeholder.id = #{usuarioHome.usuarioId})");
+		setMaxResults(1000);
+		for(Projeto p: getResultList()){
+			result.add(new SelectItem(p.getId(),p.getNome()));
+		}
+		return result;
+	}
+	
 	public Projeto getProjeto() {
 		return projeto;
 	}
