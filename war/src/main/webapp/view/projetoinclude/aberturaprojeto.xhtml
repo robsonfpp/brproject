@@ -11,7 +11,11 @@
 	overflow: auto;
 }
 .stkPanel {
-	height: 350px;
+	height: 250px;
+	overflow: auto;
+}
+.panelBody{
+	height: 160px;
 	overflow: auto;
 }
 </style>
@@ -70,7 +74,7 @@
 
 				<rich:panel bodyClass="panelBody">
 					<rich:dataTable var="_usuario" value="#{usuarioList.resultList}"
-						rendered="#{not empty usuarioList.resultList}">
+						rendered="#{not empty usuarioList.resultList}" style="FONT-SIZE: small;">
 						<h:column>
 							<f:facet name="header">
 								<ui:include src="/layout/sort.xhtml">
@@ -114,10 +118,13 @@
 		</h:panelGrid>
 
 
-		<h:panelGrid>
+		<h:panelGrid width="100%">
 			<rich:spacer height="10" />
-			<s:link value="Ver Template do Termo de Abertura"
-				style="font-size:16px;" action="#{fileManager.download(1)}" />
+			<s:link
+				style="font-size:16px;" action="#{fileManager.download(1)}" >
+				<h:graphicImage value="/img/word_icon.png" width="8%"/>
+				<h:outputText value="Ver Template do Termo de Abertura" />
+				</s:link>
 			<rich:spacer height="10" />
 		</h:panelGrid>
 
