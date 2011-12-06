@@ -10,6 +10,10 @@
 	height: 304px;
 	overflow: auto;
 }
+.stkPanel {
+	height: 350px;
+	overflow: auto;
+}
 </style>
 <h:panelGrid width="100%" columnClasses="sameWidth,sameWidth">
 
@@ -17,6 +21,99 @@
 
 	<rich:panel>
 		<f:facet name="header">Termo de Abertura do Projeto</f:facet>
+
+		<h:panelGrid columns="2" columnClasses="top,top">
+			<rich:panel bodyClass="stkPanel">
+			<f:facet name="header">Stakeholders do Projeto</f:facet>
+				<h:outputText value="Nenhum stakeholder ..."
+					rendered="#{projeto.projeto.stakeholders.size() == 0}" />
+				<rich:dataTable
+					rendered="#{projeto.projeto.stakeholders.size() gt 0}"
+					value="#{projeto.projeto.stakeholders.toArray()}" var="stk">
+					<rich:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{stk.usuario.nome}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Papel</f:facet>
+						<h:outputText value="#{stk.papel}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Ação</f:facet>
+						<h:form>
+							<a4j:commandLink value="Remover" reRender="stakeholdersField">
+							</a4j:commandLink>
+						</h:form>
+					</rich:column>
+				</rich:dataTable>
+			</rich:panel>
+
+			<a4j:outputPanel id="usuarioList" ajaxRendered="true">
+				<h:form id="usrForm">
+					<rich:simpleTogglePanel switchType="client">
+						<f:facet name="header">Adicionar um stakeholder</f:facet>
+						<h:panelGrid columns="2">
+							<s:decorate template="/layout/display.xhtml">
+								<ui:define name="label">Email</ui:define>
+								<h:inputText id="email" value="#{usuarioList.usuario.email}" />
+							</s:decorate>
+
+							<s:decorate template="/layout/display.xhtml">
+								<ui:define name="label">Login</ui:define>
+								<h:inputText id="login" value="#{usuarioList.usuario.login}" />
+							</s:decorate>
+						</h:panelGrid>
+						<a4j:commandButton id="buscar" value="Filtrar"
+							reRender="usuarioList" />
+					</rich:simpleTogglePanel>
+				</h:form>
+
+				<rich:panel bodyClass="panelBody">
+					<rich:dataTable var="_usuario" value="#{usuarioList.resultList}"
+						rendered="#{not empty usuarioList.resultList}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="/layout/sort.xhtml">
+									<ui:param name="entityList" value="#{usuarioList}" />
+									<ui:param name="propertyLabel" value="Nome" />
+									<ui:param name="propertyPath" value="usuario.nome" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_usuario.nome}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="/layout/sort.xhtml">
+									<ui:param name="entityList" value="#{usuarioList}" />
+									<ui:param name="propertyLabel" value="Login" />
+									<ui:param name="propertyPath" value="usuario.login" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_usuario.login}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="/layout/sort.xhtml">
+									<ui:param name="entityList" value="#{usuarioList}" />
+									<ui:param name="propertyLabel" value="Email" />
+									<ui:param name="propertyPath" value="usuario.email" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_usuario.email}" />
+						</h:column>
+						<rich:column styleClass="action">
+							<f:facet name="header">Action</f:facet>
+							<h:form>
+								<a4j:commandButton value="Adicionar" reRender="stkForm" />
+							</h:form>
+						</rich:column>
+					</rich:dataTable>
+				</rich:panel>
+			</a4j:outputPanel>
+		</h:panelGrid>
+
+
 		<h:panelGrid>
 			<rich:spacer height="10" />
 			<s:link value="Ver Template do Termo de Abertura"
@@ -24,7 +121,8 @@
 			<rich:spacer height="10" />
 		</h:panelGrid>
 
-		<h:panelGrid columns="2" columnClasses="sameWidth,sameWidth" width="100%">
+		<h:panelGrid columns="2" columnClasses="sameWidth,sameWidth"
+			width="100%">
 			<f:facet name="header">
 				<rich:panel>
 					<h:outputText value="Upload de arquivos" />
@@ -34,7 +132,8 @@
 				<rich:fileUpload fileUploadListener="#{fileManager.upload}"
 					maxFilesQuantity="10" id="upload" immediateUpload="false"
 					acceptedTypes="jpg, gif, png, bmp, pdf, doc, docx"
-					allowFlash="true" listWidth="100%" noDuplicate="true" listHeight="300">
+					allowFlash="true" listWidth="100%" noDuplicate="true"
+					listHeight="300">
 					<a4j:support event="onuploadcomplete" reRender="info" />
 				</rich:fileUpload>
 			</h:form>

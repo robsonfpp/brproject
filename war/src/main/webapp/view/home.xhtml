@@ -80,9 +80,10 @@
 				<rich:column>
 					<f:facet name="header">Título</f:facet>
 					<s:link id="versolicitacao" value="#{_s.titulo}"
-						view="/view/projeto.xhtml">
+						view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml">
 						<f:param name="projetoId" value="#{_s.projeto.id}" />
 						<f:param name="solicitacaomudancaId" value="#{_s.id}" />
+						<f:param name="usuarioId" value="#{loggedUser.id}" />
 					</s:link>
 				</rich:column>
 				<rich:column>
