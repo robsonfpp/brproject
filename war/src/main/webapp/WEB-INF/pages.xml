@@ -9,7 +9,7 @@
 			<redirect view-id="/login.xhtml" />
 		</navigation>
 
-		<navigation> 
+		<navigation>
 			<rule if-outcome="home">
 				<redirect view-id="/view/home.xhtml" />
 			</rule>
