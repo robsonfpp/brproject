@@ -94,9 +94,8 @@ public class Arquivo implements java.io.Serializable {
 		this.dados = dados;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "projetoid", nullable = false)
-	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY,optional=true)
+	@JoinColumn(name = "projetoid",nullable=true)
 	public Projeto getProjeto() {
 		return projeto;
 	}
@@ -105,9 +104,8 @@ public class Arquivo implements java.io.Serializable {
 		this.projeto = projeto;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "statusprojetoid", nullable = false)
-	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY,optional=true)
+	@JoinColumn(name = "statusprojetoid",nullable=true)
 	public Statusprojeto getStatusprojeto() {
 		return statusprojeto;
 	}

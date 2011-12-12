@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+
+<h:panelGrid columns="2" columnClasses="sameWidth,sameWidth"
+	width="100%">
+	<f:facet name="header">
+		<rich:panel>
+			<h:outputText value="Upload de arquivos" />
+		</rich:panel>
+	</f:facet>
+	<h:form id="upload">
+		<rich:fileUpload fileUploadListener="#{fileManager.upload}"
+			maxFilesQuantity="10" id="upload" immediateUpload="false"
+			acceptedTypes="jpg, gif, png, bmp, pdf, doc, docx" allowFlash="true"
+			listWidth="100%" noDuplicate="true" listHeight="300">
+			<a4j:support event="onuploadcomplete" reRender="info" />
+		</rich:fileUpload>
+	</h:form>
+	<a4j:outputPanel layout="block" ajaxRendered="true" id="info">
+		<rich:panel bodyClass="arquivos">
+			<f:facet name="header">Documentos da etapa</f:facet>
+			<h:outputText value="Nenhum documento registrado."
+				rendered="#{fileManager.arquivos.size() == 0}" />
+			<rich:dataGrid rendered="#{fileManager.arquivos.size() gt 0}"
+				columns="1" value="#{fileManager.arquivos}" var="arquivo">
+				<rich:panel>
+					<h:panelGrid columns="2">
+						<h:outputText value="Arquivo:" />
+						<h:form>
+							<h:commandLink value="#{arquivo.nome}"
+								action="#{fileManager.download(arquivo.id)}" />
+						</h:form>
+						<h:outputText value="Tipo:" />
+						<h:outputText value="#{arquivo.tipo}" />
+						<h:outputText value="Tamanho:" />
+						<h:outputText value="#{arquivo.tamanho/1024} KB">
+							<f:convertNumber pattern="#0.0" />
+						</h:outputText>
+					</h:panelGrid>
+				</rich:panel>
+			</rich:dataGrid>
+		</rich:panel>
+	</a4j:outputPanel>
+</h:panelGrid>
+
+</html>

@@ -53,7 +53,7 @@ public class NovoProjetoBean implements Serializable {
 	public void addStakeholder() {
 		try {
 			Stakeholder stk = new Stakeholder(projeto,
-					stakeholder.getUsuario(), stakeholder.getCcb(),
+					stakeholder.getUsuario(),
 					stakeholder.getPapel(), new HashSet(), new HashSet());
 			if (!projeto.getStakeholders().contains(stk)) {
 				projeto.getStakeholders().add(stk);

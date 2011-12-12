@@ -31,7 +31,6 @@ public class Stakeholder implements java.io.Serializable {
 	private Long id;
 	private Projeto projeto;
 	private Usuario usuario;
-	private Boolean ccb;
 	private String papel;
 	private Set<Notastakeholder> notaavaliadores = new HashSet<Notastakeholder>(
 			0);
@@ -45,12 +44,11 @@ public class Stakeholder implements java.io.Serializable {
 		this.usuario = usuario;
 	}
 
-	public Stakeholder(Projeto projeto, Usuario usuario, Boolean ccb,
+	public Stakeholder(Projeto projeto, Usuario usuario,
 			String papel, Set<Notastakeholder> notaavaliadores,
 			Set<Notastakeholder> notaavaliados) {
 		this.projeto = projeto;
 		this.usuario = usuario;
-		this.ccb = ccb;
 		this.papel = papel;
 		this.notaavaliadores = notaavaliadores;
 		this.notaavaliados = notaavaliados;
@@ -87,15 +85,6 @@ public class Stakeholder implements java.io.Serializable {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	@Column(name = "ccb")
-	public Boolean getCcb() {
-		return this.ccb;
-	}
-
-	public void setCcb(Boolean ccb) {
-		this.ccb = ccb;
 	}
 
 	@Column(name = "papel")

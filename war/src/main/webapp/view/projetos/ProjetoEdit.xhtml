@@ -124,166 +124,167 @@
 						<input type="button" onclick="history.go(-1)" value="Cancelar" />
 					</div>
 				</h:form>
+				<ui:remove>
+					<s:decorate id="stakeholdersField" template="/layout/display.xhtml">
+						<ui:define name="label">Stakeholders</ui:define>
+						<h:form>
+							<a4j:commandLink value="Adicionar"
+								action="#{novoProjeto.cleanStakeholder()}"
+								oncomplete="#{rich:component('usuarioSearch')}.show()"
+								reRender="usuarioSearch" rendered="#{!projetoHome.managed}" />
+						</h:form>
+						<h:outputText value="Nenhum Stakeholder ..."
+							rendered="#{novoProjeto.projeto.stakeholders.size() == 0}" />
+						<rich:panel bodyClass="stkPanel"
+							rendered="#{novoProjeto.projeto.stakeholders.size() gt 0}">
+							<rich:dataTable
+								value="#{novoProjeto.projeto.stakeholders.toArray()}" var="stk">
+								<rich:column>
+									<f:facet name="header">Nome</f:facet>
+									<h:outputText value="#{stk.usuario.nome}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">Papel</f:facet>
+									<h:outputText value="#{stk.papel}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">CCB?</f:facet>
+									<h:outputText value="#{stk.ccb?'Sim':'Não'}" />
+								</rich:column>
+								<rich:column rendered="#{!projetoHome.managed}">
+									<f:facet name="header">Ação</f:facet>
+									<h:form>
+										<a4j:commandLink value="Remover" reRender="stakeholdersField"
+											action="#{novoProjeto.removeStakeholder(stk)}">
+										</a4j:commandLink>
+									</h:form>
+								</rich:column>
+							</rich:dataTable>
+						</rich:panel>
+					</s:decorate>
+				</ui:remove>
+			</h:panelGrid>
 
-				<s:decorate id="stakeholdersField" template="/layout/display.xhtml">
-					<ui:define name="label">Stakeholders</ui:define>
-					<h:form>
-						<a4j:commandLink value="Adicionar"
-							action="#{novoProjeto.cleanStakeholder()}"
-							oncomplete="#{rich:component('usuarioSearch')}.show()"
-							reRender="usuarioSearch" rendered="#{!projetoHome.managed}" />
-					</h:form>
-					<h:outputText value="Nenhum Stakeholder ..."
-						rendered="#{novoProjeto.projeto.stakeholders.size() == 0}" />
-					<rich:panel bodyClass="stkPanel"
-						rendered="#{novoProjeto.projeto.stakeholders.size() gt 0}">
-						<rich:dataTable
-							value="#{novoProjeto.projeto.stakeholders.toArray()}" var="stk">
-							<rich:column>
-								<f:facet name="header">Nome</f:facet>
-								<h:outputText value="#{stk.usuario.nome}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">Papel</f:facet>
-								<h:outputText value="#{stk.papel}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">CCB?</f:facet>
-								<h:outputText value="#{stk.ccb?'Sim':'Não'}" />
-							</rich:column>
-							<rich:column rendered="#{!projetoHome.managed}">
-								<f:facet name="header">Ação</f:facet>
+		</rich:panel>
+		<ui:remove>
+			<rich:modalPanel id="usuarioSearch" autosized="true">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="Criar Stakeholder"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/img/close.png" styleClass="hidelink"
+							id="hidelink" />
+						<rich:componentControl for="usuarioSearch" attachTo="hidelink"
+							operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<h:form id="stkForm">
+					<rich:simpleTogglePanel switchType="client">
+						<f:facet name="header">Adicionar Stakeholder</f:facet>
+						<h:panelGrid>
+							<s:decorate template="/layout/display.xhtml">
+								<ui:define name="label">Usuário Selecionado</ui:define>
+								<h:outputText value="#{novoProjeto.stakeholder.usuario.nome}" />
+							</s:decorate>
+
+							<s:decorate id="papelField" template="/layout/edit.xhtml">
+								<ui:define name="label">Papel</ui:define>
+								<h:inputText value="#{novoProjeto.stakeholder.papel}"
+									required="true">
+									<a4j:support event="onblur" reRender="papelField"
+										bypassUpdates="true" ajaxSingle="true" />
+								</h:inputText>
+							</s:decorate>
+
+							<s:decorate id="ccbField" template="/layout/edit.xhtml">
+								<ui:define name="label">CCB</ui:define>
+
+								<h:selectBooleanCheckbox value="#{novoProjeto.stakeholder.ccb}"
+									required="true">
+									<a4j:support event="onblur" reRender="ccbField"
+										bypassUpdates="true" ajaxSingle="true" />
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+
+							<h:panelGrid columns="2" columnClasses="actionButtons">
+								<a4j:commandButton id="addButon" value="Adicionar"
+									rendered="#{novoProjeto.stakeholder.usuario != null}"
+									action="#{novoProjeto.addStakeholder()}"
+									reRender="stkForm,stakeholdersField,stkMsg" />
+								<h:messages id="stkMsg" styleClass="message"
+									errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</rich:simpleTogglePanel>
+				</h:form>
+				<h:form id="usrForm">
+					<rich:simpleTogglePanel switchType="client">
+						<f:facet name="header">Busca de usuários</f:facet>
+						<h:panelGrid columns="2">
+							<s:decorate template="/layout/display.xhtml">
+								<ui:define name="label">Email</ui:define>
+								<h:inputText id="email" value="#{usuarioList.usuario.email}" />
+							</s:decorate>
+
+							<s:decorate template="/layout/display.xhtml">
+								<ui:define name="label">Login</ui:define>
+								<h:inputText id="login" value="#{usuarioList.usuario.login}" />
+							</s:decorate>
+						</h:panelGrid>
+						<a4j:commandButton id="buscar" value="buscar"
+							reRender="usuarioList" />
+					</rich:simpleTogglePanel>
+				</h:form>
+
+				<a4j:outputPanel id="usuarioList" ajaxRendered="true">
+					<rich:panel bodyClass="panelBody">
+						<rich:dataTable var="_usuario" value="#{usuarioList.resultList}"
+							rendered="#{not empty usuarioList.resultList}">
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="/layout/sort.xhtml">
+										<ui:param name="entityList" value="#{usuarioList}" />
+										<ui:param name="propertyLabel" value="Nome" />
+										<ui:param name="propertyPath" value="usuario.nome" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_usuario.nome}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="/layout/sort.xhtml">
+										<ui:param name="entityList" value="#{usuarioList}" />
+										<ui:param name="propertyLabel" value="Login" />
+										<ui:param name="propertyPath" value="usuario.login" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_usuario.login}" />
+							</h:column>
+
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="/layout/sort.xhtml">
+										<ui:param name="entityList" value="#{usuarioList}" />
+										<ui:param name="propertyLabel" value="Email" />
+										<ui:param name="propertyPath" value="usuario.email" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_usuario.email}" />
+							</h:column>
+							<rich:column styleClass="action">
+								<f:facet name="header">Action</f:facet>
 								<h:form>
-									<a4j:commandLink value="Remover" reRender="stakeholdersField"
-										action="#{novoProjeto.removeStakeholder(stk)}">
-									</a4j:commandLink>
+									<a4j:commandButton value="Selecionar" reRender="stkForm"
+										action="#{novoProjeto.addUsuario(_usuario)}" />
 								</h:form>
 							</rich:column>
 						</rich:dataTable>
 					</rich:panel>
-				</s:decorate>
-			</h:panelGrid>
-
-		</rich:panel>
-
-		<rich:modalPanel id="usuarioSearch" autosized="true">
-			<f:facet name="header">
-				<h:panelGroup>
-					<h:outputText value="Criar Stakeholder"></h:outputText>
-				</h:panelGroup>
-			</f:facet>
-			<f:facet name="controls">
-				<h:panelGroup>
-					<h:graphicImage value="/img/close.png" styleClass="hidelink"
-						id="hidelink" />
-					<rich:componentControl for="usuarioSearch" attachTo="hidelink"
-						operation="hide" event="onclick" />
-				</h:panelGroup>
-			</f:facet>
-			<h:form id="stkForm">
-				<rich:simpleTogglePanel switchType="client">
-					<f:facet name="header">Adicionar Stakeholder</f:facet>
-					<h:panelGrid>
-						<s:decorate template="/layout/display.xhtml">
-							<ui:define name="label">Usuário Selecionado</ui:define>
-							<h:outputText value="#{novoProjeto.stakeholder.usuario.nome}" />
-						</s:decorate>
-
-						<s:decorate id="papelField" template="/layout/edit.xhtml">
-							<ui:define name="label">Papel</ui:define>
-							<h:inputText value="#{novoProjeto.stakeholder.papel}"
-								required="true">
-								<a4j:support event="onblur" reRender="papelField"
-									bypassUpdates="true" ajaxSingle="true" />
-							</h:inputText>
-						</s:decorate>
-
-						<s:decorate id="ccbField" template="/layout/edit.xhtml">
-							<ui:define name="label">CCB</ui:define>
-
-							<h:selectBooleanCheckbox value="#{novoProjeto.stakeholder.ccb}"
-								required="true">
-								<a4j:support event="onblur" reRender="ccbField"
-									bypassUpdates="true" ajaxSingle="true" />
-							</h:selectBooleanCheckbox>
-						</s:decorate>
-
-						<h:panelGrid columns="2" columnClasses="actionButtons">
-							<a4j:commandButton id="addButon" value="Adicionar"
-								rendered="#{novoProjeto.stakeholder.usuario != null}"
-								action="#{novoProjeto.addStakeholder()}"
-								reRender="stkForm,stakeholdersField,stkMsg" />
-							<h:messages id="stkMsg" styleClass="message"
-								errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg" />
-						</h:panelGrid>
-					</h:panelGrid>
-				</rich:simpleTogglePanel>
-			</h:form>
-			<h:form id="usrForm">
-				<rich:simpleTogglePanel switchType="client">
-					<f:facet name="header">Busca de usuários</f:facet>
-					<h:panelGrid columns="2">
-						<s:decorate template="/layout/display.xhtml">
-							<ui:define name="label">Email</ui:define>
-							<h:inputText id="email" value="#{usuarioList.usuario.email}" />
-						</s:decorate>
-
-						<s:decorate template="/layout/display.xhtml">
-							<ui:define name="label">Login</ui:define>
-							<h:inputText id="login" value="#{usuarioList.usuario.login}" />
-						</s:decorate>
-					</h:panelGrid>
-					<a4j:commandButton id="buscar" value="buscar"
-						reRender="usuarioList" />
-				</rich:simpleTogglePanel>
-			</h:form>
-
-			<a4j:outputPanel id="usuarioList" ajaxRendered="true">
-				<rich:panel bodyClass="panelBody">
-					<rich:dataTable var="_usuario" value="#{usuarioList.resultList}"
-						rendered="#{not empty usuarioList.resultList}">
-						<h:column>
-							<f:facet name="header">
-								<ui:include src="/layout/sort.xhtml">
-									<ui:param name="entityList" value="#{usuarioList}" />
-									<ui:param name="propertyLabel" value="Nome" />
-									<ui:param name="propertyPath" value="usuario.nome" />
-								</ui:include>
-							</f:facet>
-							<h:outputText value="#{_usuario.nome}" />
-						</h:column>
-						<h:column>
-							<f:facet name="header">
-								<ui:include src="/layout/sort.xhtml">
-									<ui:param name="entityList" value="#{usuarioList}" />
-									<ui:param name="propertyLabel" value="Login" />
-									<ui:param name="propertyPath" value="usuario.login" />
-								</ui:include>
-							</f:facet>
-							<h:outputText value="#{_usuario.login}" />
-						</h:column>
-
-						<h:column>
-							<f:facet name="header">
-								<ui:include src="/layout/sort.xhtml">
-									<ui:param name="entityList" value="#{usuarioList}" />
-									<ui:param name="propertyLabel" value="Email" />
-									<ui:param name="propertyPath" value="usuario.email" />
-								</ui:include>
-							</f:facet>
-							<h:outputText value="#{_usuario.email}" />
-						</h:column>
-						<rich:column styleClass="action">
-							<f:facet name="header">Action</f:facet>
-							<h:form>
-								<a4j:commandButton value="Selecionar" reRender="stkForm"
-									action="#{novoProjeto.addUsuario(_usuario)}" />
-							</h:form>
-						</rich:column>
-					</rich:dataTable>
-				</rich:panel>
-			</a4j:outputPanel>
-		</rich:modalPanel>
-
+				</a4j:outputPanel>
+			</rich:modalPanel>
+		</ui:remove>
 	</ui:define>
 </ui:composition>

@@ -57,13 +57,12 @@ public class ProjetoTxImpl implements ProjetoTx {
 		for (Stakeholder s : p.getStakeholders()) {
 			sql = new StringBuilder();
 			sql.append("insert into stakeholder")
-					.append("(projetoid,usuarioid,papel,ccb)")
-					.append("values(?,?,?,?)");
+					.append("(projetoid,usuarioid,papel)")
+					.append("values(?,?,?)");
 			q = em.createNativeQuery(sql.toString());
 			q.setParameter(1, projetoId);
 			q.setParameter(2, s.getUsuario().getId());
 			q.setParameter(3, s.getPapel());
-			q.setParameter(4, s.getCcb());
 			q.executeUpdate();
 		}
 		return new Long(projetoId);
@@ -98,6 +97,22 @@ public class ProjetoTxImpl implements ProjetoTx {
 		q.setParameter(14, p.getFimprevisto());
 		q.setParameter(15, p.getOrcamento());
 		q.setParameter(16, p.getId());
+		q.executeUpdate();
+	}
+
+	@Override
+	public void removeStakeholder(Long stakeholderId) {
+		Query q = em.createNativeQuery("delete from stakeholder where id = ?");
+		q.setParameter(1, stakeholderId);
+		q.executeUpdate();
+	}
+
+	@Override
+	public void addStakeholder(Long projetoId, Long usuarioId) {
+		Query q = em
+				.createNativeQuery("insert into stakeholder(projetoid,usuarioid) values(?,?)");
+		q.setParameter(1, projetoId);
+		q.setParameter(2, usuarioId);
 		q.executeUpdate();
 	}
 

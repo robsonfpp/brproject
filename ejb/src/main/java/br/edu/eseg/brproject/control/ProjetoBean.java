@@ -28,7 +28,9 @@ import br.edu.eseg.brproject.model.action.ArquivoList;
 import br.edu.eseg.brproject.model.action.NotaList;
 import br.edu.eseg.brproject.model.action.NotastakeholderList;
 import br.edu.eseg.brproject.model.action.ProjetoHome;
+import br.edu.eseg.brproject.model.action.StakeholderHome;
 import br.edu.eseg.brproject.model.action.StatusprojetoHome;
+import br.edu.eseg.brproject.model.action.UsuarioHome;
 
 @Name("projeto")
 @Scope(ScopeType.CONVERSATION)
@@ -51,8 +53,12 @@ public class ProjetoBean implements Serializable {
 	@In(create = true)
 	NotastakeholderList notastakeholderList;
 	@In(create = true)
+	StakeholderHome stakeholderHome;
+	@In(create = true)
+	UsuarioHome usuarioHome;
+	@In(create = true)
 	ProjetoTx projetoTx;
-	@In(create=true)
+	@In(create = true)
 	ArquivoList arquivoList;
 
 	private Long solicitacaoId;
@@ -65,7 +71,7 @@ public class ProjetoBean implements Serializable {
 	private List<Nota> legenda;
 
 	@Create
-	@Begin(join=true)
+	@Begin(join = true)
 	public void start() {
 		if (projetoHome.getProjetoId() != null) {
 			projetoHome.load();
@@ -95,9 +101,45 @@ public class ProjetoBean implements Serializable {
 				}
 				linha.add(ns);
 			}
-			Collections.sort(licoes); 
+			Collections.sort(licoes);
 			Collections.sort(solicitacaomudancas);
 		}
+	}
+
+	public void updateStakeholder(Long id) {
+		stakeholderHome.setStakeholderId(id);
+		for (Stakeholder s : projeto.getStakeholders()) {
+			if (id == s.getId()) {
+				stakeholderHome.getInstance().setPapel(s.getPapel());
+				stakeholderHome.update();
+				stakeholderHome.clearInstance();
+				statusMessages.clear();
+				return;
+			}
+		}
+	}
+
+	public void removeStakeholder(Stakeholder s) {
+		stakeholderHome.setInstance(s);
+		stakeholderHome.load();
+		stakeholderHome.remove();
+		projetoHome.getInstance().getStakeholders().remove(s);
+	}
+
+	public void addStakeholder(Long usuarioId) {
+		for (Stakeholder s : projeto.getStakeholders()) {
+			if (s.getUsuario().getId() == usuarioId) {
+				statusMessages.add(Severity.INFO, "Stakeholder já adicionado!");
+				return;
+			}
+		}
+		Stakeholder s = stakeholderHome.getInstance();
+		usuarioHome.setUsuarioId(usuarioId);
+		s.setProjeto(projeto);
+		s.setUsuario(usuarioHome.find());
+		projeto.getStakeholders().add(s);
+		stakeholderHome.persist();
+		stakeholderHome.clearInstance();
 	}
 
 	public double calculaTotal(Long idAvaliado) {
@@ -137,13 +179,13 @@ public class ProjetoBean implements Serializable {
 
 	public void changeStatus() {
 		statusprojetoHome.setStatusprojetoId(changeStatusId);
-		projetoHome.getDefinedInstance().setStatusprojeto(statusprojetoHome.find());
+		projetoHome.getDefinedInstance().setStatusprojeto(
+				statusprojetoHome.find());
 		projetoHome.update();
 		projetoHome.load();
 		projeto = projetoHome.getDefinedInstance();
 		statusMessages.add(Severity.INFO, "Status alterado com sucesso!");
 	}
-	
 
 	public void setSolicitacaoId(Long solicitacaoId) {
 		this.solicitacaoId = solicitacaoId;
