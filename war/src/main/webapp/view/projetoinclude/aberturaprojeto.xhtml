@@ -6,11 +6,6 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 <style>
-.arquivos {
-	height: 304px;
-	overflow: auto;
-}
-
 .stkPanel {
 	height: 245px;
 	overflow: auto;
@@ -21,140 +16,130 @@
 	overflow: auto;
 }
 </style>
-<h:panelGrid width="100%">
+<s:decorate template="/layout/projetoInclude.xhtml">
+	<ui:define name="title">Desenvolver o Termo de Abertura do Projeto</ui:define>
 
-	<s:link value="&lt;&lt; Voltar para as Fases do Projeto" action="voltar" />
-	<rich:spacer height="10"/>
-	<rich:panel>
-		<f:facet name="header"><h:outputText value="Termo de Abertura do Projeto" style="font-weight: bold;font-size: 16px"/></f:facet>
+	<h:panelGrid columns="2" columnClasses="top,top" width="100%">
+		<rich:panel bodyClass="stkPanel" id="stakeholdersPanel">
+			<f:facet name="header">Stakeholders do Projeto</f:facet>
+			<h:outputText value="Nenhum stakeholder ..."
+				rendered="#{projeto.projeto.stakeholders.size() == 0}" />
+			<h:form>
+				<rich:dataTable id="stakeholdersTable"
+					rendered="#{projeto.projeto.stakeholders.size() gt 0}"
+					value="#{projeto.projeto.stakeholders.toArray()}" var="stk">
+					<rich:column>
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{stk.usuario.nome}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Papel</f:facet>
+						<rich:inplaceInput defaultLabel="Clique duplo para editar"
+							value="#{stk.papel}" showControls="true" layout="block"
+							controlsHorizontalPosition="left"
+							controlsVerticalPosition="bottom" editEvent="ondblclick"
+							id="inplaceInput">
+							<a4j:support event="onviewactivated"
+								action="#{projeto.updateStakeholder(stk.id)}"
+								reRender="stakeholdersTable" />
+							<f:facet name="controls">
+								<a4j:outputPanel>
+									<a4j:commandButton value="Salvar"
+										oncomplete="#{rich:component('inplaceInput')}.save();"
+										type="button" />
+									<a4j:commandButton value="Cancelar"
+										oncomplete="#{rich:component('inplaceInput')}.cancel();"
+										type="button" />
+								</a4j:outputPanel>
+							</f:facet>
+						</rich:inplaceInput>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Ação</f:facet>
+						<a4j:commandLink value="Remover" reRender="stakeholdersPanel"
+							rendered="#{stk.notaavaliadores.size() == 0 &amp;&amp; stk.notaavaliados.size() == 0}"
+							action="#{projeto.removeStakeholder(stk)}">
+						</a4j:commandLink>
+					</rich:column>
+				</rich:dataTable>
+			</h:form>
+		</rich:panel>
 
-		<h:panelGrid columns="2" columnClasses="top,top" width="100%">
-			<rich:panel bodyClass="stkPanel" id="stakeholdersPanel">
-				<f:facet name="header">Stakeholders do Projeto</f:facet>
-				<h:outputText value="Nenhum stakeholder ..."
-					rendered="#{projeto.projeto.stakeholders.size() == 0}" />
-				<h:form>
-					<rich:dataTable id="stakeholdersTable"
-						rendered="#{projeto.projeto.stakeholders.size() gt 0}"
-						value="#{projeto.projeto.stakeholders.toArray()}" var="stk">
-						<rich:column>
-							<f:facet name="header">Nome</f:facet>
-							<h:outputText value="#{stk.usuario.nome}" />
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">Papel</f:facet>
-							<rich:inplaceInput defaultLabel="Clique duplo para editar"
-								value="#{stk.papel}" showControls="true" layout="block"
-								controlsHorizontalPosition="left"
-								controlsVerticalPosition="bottom" editEvent="ondblclick"
-								id="inplaceInput">
-								<a4j:support event="onviewactivated"
-									action="#{projeto.updateStakeholder(stk.id)}"
-									reRender="stakeholdersTable" />
-								<f:facet name="controls">
-									<a4j:outputPanel>
-										<a4j:commandButton value="Salvar"
-											oncomplete="#{rich:component('inplaceInput')}.save();"
-											type="button" />
-										<a4j:commandButton value="Cancelar"
-											oncomplete="#{rich:component('inplaceInput')}.cancel();"
-											type="button" />
-									</a4j:outputPanel>
-								</f:facet>
-							</rich:inplaceInput>
-						</rich:column>
-						<rich:column>
-							<f:facet name="header">Ação</f:facet>
-							<a4j:commandLink value="Remover" reRender="stakeholdersPanel"
-								rendered="#{stk.notaavaliadores.size() == 0 &amp;&amp; stk.notaavaliados.size() == 0}"
-								action="#{projeto.removeStakeholder(stk)}">
-							</a4j:commandLink>
-						</rich:column>
-					</rich:dataTable>
-				</h:form>
+		<a4j:outputPanel id="usuarioList" ajaxRendered="true">
+			<h:form id="usrForm">
+				<rich:simpleTogglePanel switchType="client">
+					<f:facet name="header">Adicionar um stakeholder</f:facet>
+					<h:panelGrid columns="2">
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">Email</ui:define>
+							<h:inputText id="email" value="#{usuarioList.usuario.email}" />
+						</s:decorate>
+
+						<s:decorate template="/layout/display.xhtml">
+							<ui:define name="label">Login</ui:define>
+							<h:inputText id="login" value="#{usuarioList.usuario.login}" />
+						</s:decorate>
+					</h:panelGrid>
+					<a4j:commandButton id="buscar" value="Filtrar"
+						reRender="usuarioList" />
+				</rich:simpleTogglePanel>
+			</h:form>
+
+			<rich:panel bodyClass="panelBody">
+				<rich:dataTable var="_usuario" value="#{usuarioList.resultList}"
+					rendered="#{not empty usuarioList.resultList}"
+					style="FONT-SIZE: small;">
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Nome" />
+								<ui:param name="propertyPath" value="usuario.nome" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.nome}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Login" />
+								<ui:param name="propertyPath" value="usuario.login" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.login}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="/layout/sort.xhtml">
+								<ui:param name="entityList" value="#{usuarioList}" />
+								<ui:param name="propertyLabel" value="Email" />
+								<ui:param name="propertyPath" value="usuario.email" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_usuario.email}" />
+					</h:column>
+					<rich:column styleClass="action">
+						<f:facet name="header">Action</f:facet>
+						<h:form>
+							<a4j:commandButton value="Adicionar" reRender="stakeholdersPanel"
+								action="#{projeto.addStakeholder(_usuario.id)}" />
+						</h:form>
+					</rich:column>
+				</rich:dataTable>
 			</rich:panel>
-
-			<a4j:outputPanel id="usuarioList" ajaxRendered="true">
-				<h:form id="usrForm">
-					<rich:simpleTogglePanel switchType="client">
-						<f:facet name="header">Adicionar um stakeholder</f:facet>
-						<h:panelGrid columns="2">
-							<s:decorate template="/layout/display.xhtml">
-								<ui:define name="label">Email</ui:define>
-								<h:inputText id="email" value="#{usuarioList.usuario.email}" />
-							</s:decorate>
-
-							<s:decorate template="/layout/display.xhtml">
-								<ui:define name="label">Login</ui:define>
-								<h:inputText id="login" value="#{usuarioList.usuario.login}" />
-							</s:decorate>
-						</h:panelGrid>
-						<a4j:commandButton id="buscar" value="Filtrar"
-							reRender="usuarioList" />
-					</rich:simpleTogglePanel>
-				</h:form>
-
-				<rich:panel bodyClass="panelBody">
-					<rich:dataTable var="_usuario" value="#{usuarioList.resultList}"
-						rendered="#{not empty usuarioList.resultList}"
-						style="FONT-SIZE: small;">
-						<h:column>
-							<f:facet name="header">
-								<ui:include src="/layout/sort.xhtml">
-									<ui:param name="entityList" value="#{usuarioList}" />
-									<ui:param name="propertyLabel" value="Nome" />
-									<ui:param name="propertyPath" value="usuario.nome" />
-								</ui:include>
-							</f:facet>
-							<h:outputText value="#{_usuario.nome}" />
-						</h:column>
-						<h:column>
-							<f:facet name="header">
-								<ui:include src="/layout/sort.xhtml">
-									<ui:param name="entityList" value="#{usuarioList}" />
-									<ui:param name="propertyLabel" value="Login" />
-									<ui:param name="propertyPath" value="usuario.login" />
-								</ui:include>
-							</f:facet>
-							<h:outputText value="#{_usuario.login}" />
-						</h:column>
-
-						<h:column>
-							<f:facet name="header">
-								<ui:include src="/layout/sort.xhtml">
-									<ui:param name="entityList" value="#{usuarioList}" />
-									<ui:param name="propertyLabel" value="Email" />
-									<ui:param name="propertyPath" value="usuario.email" />
-								</ui:include>
-							</f:facet>
-							<h:outputText value="#{_usuario.email}" />
-						</h:column>
-						<rich:column styleClass="action">
-							<f:facet name="header">Action</f:facet>
-							<h:form>
-								<a4j:commandButton value="Adicionar"
-									reRender="stakeholdersPanel"
-									action="#{projeto.addStakeholder(_usuario.id)}" />
-							</h:form>
-						</rich:column>
-					</rich:dataTable>
-				</rich:panel>
-			</a4j:outputPanel>
-		</h:panelGrid>
+		</a4j:outputPanel>
+	</h:panelGrid>
 
 
-		<h:panelGrid width="100%">
-			<rich:spacer height="10" />
-			<s:link style="font-size:16px;" action="#{fileManager.download(1)}">
-				<h:graphicImage value="/img/word_icon.png" width="35px" />
-				<h:outputText value="Ver Template do Termo de Abertura" />
-			</s:link>
-			<rich:spacer height="10" />
-		</h:panelGrid>
+	<h:panelGrid width="100%">
+		<rich:spacer height="10" />
+		<s:link style="font-size:16px;" action="#{fileManager.download(1)}">
+			<h:graphicImage value="/img/word_icon.png" width="35px" />
+			<h:outputText value="Ver Template do Termo de Abertura" />
+		</s:link>
+	</h:panelGrid>
 
-		<ui:include src="/view/projetoinclude/fileManager.xhtml" />
-		
-	</rich:panel>
-
-</h:panelGrid>
+</s:decorate>
 </html>

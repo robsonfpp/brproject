@@ -19,6 +19,7 @@ public class GanttBean {
 
 	@In(create = true)
 	GanttTx GantTxImpl;
+	public String tarefaId;
 
 	public String getTarefas(String projeto_id, String tipo) {
 
@@ -57,6 +58,14 @@ public class GanttBean {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+
+	public String getTarefaId() {
+		return tarefaId;
+	}
+
+	public void setTarefaId(String tarefaId) {
+		this.tarefaId = tarefaId;
 	}
 
 	private class Task {

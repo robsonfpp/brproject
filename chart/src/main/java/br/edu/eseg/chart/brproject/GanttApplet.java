@@ -168,7 +168,7 @@ public class GanttApplet extends JApplet implements MouseListener,
 
 			Task task = buscaTarefa(tarefas, mY);
 			if (task != null) {
-				jso.call("getTask", new Object[] { task.getId() });
+				jso.call(getParameter("script"), new Object[] { task.getId() });
 			}
 		}
 		repaint();

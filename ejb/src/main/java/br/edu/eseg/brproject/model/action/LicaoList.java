@@ -15,7 +15,8 @@ public class LicaoList extends EntityQuery<Licao> {
 		"lower(licao.descricao) like lower(concat(#{licaoList.licao.projeto.nome},'%'))",
 		"licao.areaimpactada.id = #{licaoList.licao.areaimpactada.id}",
 		"licao.impactolicao.id = #{licaoList.licao.impactolicao.id}",
-		"licao.prioridadelicao.id = #{licaoList.licao.prioridadelicao.id}"
+		"licao.prioridadelicao.id = #{licaoList.licao.prioridadelicao.id}",
+		"licao.projeto.id = #{licaoList.licao.projeto.id}"
 		};
 
 	private Licao licao = new Licao();
