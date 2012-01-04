@@ -36,11 +36,12 @@ public class StakeholderList extends EntityQuery<Stakeholder> {
 			Long usuarioid) {
 		List<SelectItem> result = new ArrayList<SelectItem>();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select s.id,u.nome from stakeholder s left join (	select n.* from notastakeholder n join stakeholder st on st.id = n.stakeholderavaliadorid where st.usuarioid = ?1) as sh on sh.stakeholderavaliadoid = s.id left join usuario u on u.id = s.usuarioid where s.usuarioid <> ?2 and sh.stakeholderavaliadoid is null and s.projetoid = ?3");
+		sql.append("select s.id, u.nome from stakeholder s join (select * from stakeholder where usuarioid = ?1) as s2 on s.projetoid = s2.projetoid join usuario u on u.id = s.usuarioid join projeto p on p.id = s.projetoid left join notastakeholder ns on ns.stakeholderavaliadoid = s.id where ns.id is null and s.usuarioid <> ?1 and s.projetoid = ?2");
 		Query q = getEntityManager().createNativeQuery(sql.toString());
 		q.setParameter(1, usuarioid);
-		q.setParameter(2, usuarioid);
-		q.setParameter(3, projetoid);
+		q.setParameter(2, projetoid);
+//		q.setParameter(3, projetoid);
+//		q.setParameter(4, projetoid);
 		List<Object[]> l = q.getResultList();
 		for (Object[] s : l) {
 			result.add(new SelectItem(s[0], s[1].toString()));

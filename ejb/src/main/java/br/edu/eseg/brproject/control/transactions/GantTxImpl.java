@@ -28,13 +28,15 @@ public class GantTxImpl implements GanttTx {
 
 	@Override
 	public List<Tarefa> getMacroTarefas(Long projetoId) {
-		Query q = tarefaList.getEntityManager().createNativeQuery("select * from tarefa t join projeto p on p.id = t.projetoid join subtarefa st on st.tarefaid = t.id or t.milestone group by t.id",Tarefa.class);
+		Query q = tarefaList.getEntityManager().createNativeQuery("select * from tarefa t join projeto p on p.id = t.projetoid join subtarefa st on st.tarefaid = t.id or t.milestone group by t.id where t.projetoid = ?",Tarefa.class);
+		q.setParameter(1, projetoId);
 		return q.getResultList();
 	}
 
 	@Override
 	public List<Tarefa> getTarefas(Long projetoId) {
-		Query q = tarefaList.getEntityManager().createNativeQuery("select * from tarefa t join projeto p on p.id = t.projetoid",Tarefa.class);
+		Query q = tarefaList.getEntityManager().createNativeQuery("select * from tarefa t join projeto p on p.id = t.projetoid where t.projetoid = ?",Tarefa.class);
+		q.setParameter(1, projetoId);
 		return q.getResultList();
 	}
 	

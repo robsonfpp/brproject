@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.seam.ScopeType;
@@ -142,6 +143,14 @@ public class ProjetoBean implements Serializable {
 		stakeholderHome.clearInstance();
 	}
 
+	
+	public void encerrarProjeto(){
+		statusprojetoHome.setStatusprojetoId(new Long(5));
+		projetoHome.getInstance().setStatusprojeto(statusprojetoHome.find());
+		projetoHome.getInstance().setFim(new Date());
+		projetoHome.update();
+	}
+	
 	public double calculaTotal(Long idAvaliado) {
 
 		double resultado = 0;

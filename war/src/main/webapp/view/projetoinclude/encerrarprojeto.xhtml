@@ -8,6 +8,42 @@
 
 <s:decorate template="/layout/projetoInclude.xhtml">
 	<ui:define name="title">Encerrar o Projeto ou Fase</ui:define>
+	<h:panelGrid>
+		<s:button value="Nova lição Aprendida"
+			view="/view/licoes/LicaoEdit.xhtml">
+			<f:param name="projetoId" value="#{projeto.projeto.id}" />
+		</s:button>
+		<rich:spacer height="20" />
+		<a4j:commandButton onclick="#{rich:component('encerrar')}.show()"
+			value="Encerrar Projeto" />
+		<rich:spacer height="20" />
+	</h:panelGrid>
 
 </s:decorate>
+<rich:modalPanel id="encerrar" height="100" resizeable="false">
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="Encerrar o Projeto?"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="/img/close.png" styleClass="hidelink"
+				id="hidelink" />
+			<rich:componentControl for="statusChange" attachTo="hidelink"
+				operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<h:outputText
+		value="Tem certeza que deseja encerrar o projeto '#{projeto.projeto.nome}'?"
+		style="font-size:14px" />
+	<h:form>
+		<div class="actionButtons">
+			<h:commandButton value="Sim" action="#{projeto.encerrarProjeto()}"
+				oncomplete="#{rich:component('encerrar')}.hide()" />
+			<a4j:commandButton value="Não"
+				onclick="#{rich:component('encerrar')}.hide()" />
+		</div>
+	</h:form>
+</rich:modalPanel>
 </html>

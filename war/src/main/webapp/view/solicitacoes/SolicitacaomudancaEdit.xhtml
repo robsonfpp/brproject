@@ -19,7 +19,7 @@
 
 				<s:decorate id="projetoField" template="/layout/edit.xhtml">
 					<ui:define name="label">Projeto</ui:define>
-					<h:selectOneMenu value="#{projetoHome.projetoId}">
+					<h:selectOneMenu value="#{projetoHome.projetoId}" disabled="#{solicitacaomudancaHome.managed}">
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems value="#{projetoList.projetoSelectItem}" />
 						<a4j:support event="onchange" reRender="projetoField,buttons" ajaxSingle="true" />

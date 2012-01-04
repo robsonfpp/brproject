@@ -58,14 +58,18 @@
 				</div>
 
 			</rich:panel>
-
-			<div class="actionButtons">
-
-				<h:commandButton id="save" value="Salvar"
+			<a:outputPanel styleClass="buttons"
+				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() gt 0}">
+				<a:commandButton id="save" value="Salvar"
+					reRender="notastakeholder"
 					action="#{avaliacao.salvarNotaStakeholder()}" />
 
-				<input type="button" onclick="history.go(-1)" value="Cancelar" />
-			</div>
+				<s:button value="Cancelar" view="/view/home.xhtml" />
+			</a:outputPanel>
+			<a:outputPanel styleClass="buttons"
+				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() == 0}">
+				<s:button value="Sair" view="/view/home.xhtml" />
+			</a:outputPanel>
 		</h:form>
 
 	</ui:define>
