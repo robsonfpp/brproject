@@ -8,6 +8,7 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.log.Log;
 
 import br.edu.eseg.brproject.model.Projeto;
@@ -33,18 +34,9 @@ public class HomeBean {
 	public List<Projeto> getProjetos() {
 		log.info("Fazendo query de projetos em aberto");
 
-		if (loggedUser.getGp()) {
-			projetoList
-					.setEjbql("select p from Projeto p join p.usuario u join p.statusprojeto s");
-			projetoList.setRestrictionExpressionStrings(Arrays.asList(
-					"s.id <> #{5}", "u.id = #{loggedUser.id}"));
-		} else {
-			projetoList
-					.setEjbql("select p from Projeto p join p.stakeholders s join s.usuario u");
-			projetoList.setRestrictionExpressionStrings(Arrays.asList(
-					"s.id <> #{5}", "u.id = #{loggedUser.id}"));
-		}
-		return projetoList.getResultList();
+		Query q = projetoList.getEntityManager().createNativeQuery("select p.* from projeto p join statusprojeto s on s.id = p.statusprojetoid where p.gerenteprojetoid= ?1 or exists (select * from stakeholder s where s.projetoid = p.id and s.usuarioid = ?1)", Projeto.class);
+		q.setParameter(1, loggedUser.getId());
+		return (List<Projeto>) q.getResultList();
 	}
 
 	public List<Solicitacaomudanca> getSolicitacoes() {

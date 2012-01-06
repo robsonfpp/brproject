@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jfree.util.ObjectUtilities;
@@ -11,14 +13,17 @@ import org.jfree.util.ObjectUtilities;
 import br.edu.eseg.brproject.control.transactions.GanttTx;
 import br.edu.eseg.brproject.model.Tarefa;
 import br.edu.eseg.brproject.model.Utilizacaorecurso;
+import br.edu.eseg.brproject.model.action.TarefaList;
 
 import com.google.gson.Gson;
 
 @Name("gantt")
 public class GanttBean {
 
+//	@In(create = true)
+//	GanttTx GantTxImpl;
 	@In(create = true)
-	GanttTx GantTxImpl;
+	TarefaList tarefaList;
 	public String tarefaId;
 
 	public String getTarefas(String projeto_id, String tipo) {
@@ -27,9 +32,9 @@ public class GanttBean {
 		try {
 			List<Tarefa> tarefas = null;
 			if (tipo.equals("visao_geral")) {
-				tarefas = GantTxImpl.getMacroTarefas(Long.valueOf(projeto_id));
+				tarefas = getMacroTarefas(Long.valueOf(projeto_id));
 			} else if (tipo.equals("visao_detalhada")) {
-				tarefas = GantTxImpl.getTarefas(Long.valueOf(projeto_id));
+				tarefas = getTarefas(Long.valueOf(projeto_id));
 			}
 			List<Task> tasks = new ArrayList<Task>();
 			for (Tarefa t : tarefas) {
@@ -58,6 +63,18 @@ public class GanttBean {
 			e.printStackTrace();
 		}
 		return ret;
+	}
+	
+	private List<Tarefa> getMacroTarefas(Long projetoId) {
+		Query q = tarefaList.getEntityManager().createNativeQuery("select t.* from tarefa t join projeto p on p.id = t.projetoid join subtarefa st on st.tarefaid = t.id or t.milestone where t.projetoid = ? group by t.id",Tarefa.class);
+		q.setParameter(1, projetoId);
+		return q.getResultList();
+	}
+
+	private List<Tarefa> getTarefas(Long projetoId) {
+		Query q = tarefaList.getEntityManager().createNativeQuery("select t.* from tarefa t join projeto p on p.id = t.projetoid where t.projetoid = ?",Tarefa.class);
+		q.setParameter(1, projetoId);
+		return q.getResultList();
 	}
 
 	public String getTarefaId() {
