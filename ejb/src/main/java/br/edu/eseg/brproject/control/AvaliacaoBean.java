@@ -26,24 +26,25 @@ public class AvaliacaoBean {
 	@In(create = true)
 	AvaliacaoTx avaliacaoTx;
 
-	private Projeto projeto;
+	private Projeto projeto = new Projeto();
 	private Long avaliadoId;
 	private Long notaid;
 
 	@Create
 	public void init() {
-		if (projetoHome.getProjetoId() != null) {
-			projetoHome.load();
-			projeto = projetoHome.getDefinedInstance();
-
-		}
+		projeto = projetoHome.find();
+//		if (projetoHome.getProjetoId() != null) {
+//			projetoHome.load();
+//			projeto = projetoHome.getInstance();
+//
+//		}
 	}
 
-	public String salvarNotaStakeholder() {
+	public void salvarNotaStakeholder() {
 		avaliacaoTx.salvarAvaliacao(loggedUser.getId(), avaliadoId,
 				projeto.getId(), notaid);
 		statusMessages.add(Severity.INFO,"Prioridade salva com sucesso!");
-		return "salvou";
+		//return "salvou";
 	}
 
 	public Projeto getProjeto() {

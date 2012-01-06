@@ -36,16 +36,22 @@ public class StakeholderList extends EntityQuery<Stakeholder> {
 			Long usuarioid) {
 		List<SelectItem> result = new ArrayList<SelectItem>();
 		StringBuilder sql = new StringBuilder();
-		sql.append("select s.id, u.nome from stakeholder s join (select * from stakeholder where usuarioid = ?1) as s2 on s.projetoid = s2.projetoid join usuario u on u.id = s.usuarioid join projeto p on p.id = s.projetoid left join notastakeholder ns on ns.stakeholderavaliadoid = s.id where ns.id is null and s.usuarioid <> ?1 and s.projetoid = ?2");
+		sql.append("select s1.id, u1.nome from stakeholder s1 join stakeholder s2 on s1.projetoid = s2.projetoid join usuario u1 on u1.id = s1.usuarioid join usuario u2 on u2.id = s2.usuarioid left join notastakeholder ns on ns.stakeholderavaliadoid = s1.id and ns.stakeholderavaliadorid = s2.id where u1.nome <> u2.nome and ns.id is null and u2.id = ?1 and s2.projetoid = ?2");
 		Query q = getEntityManager().createNativeQuery(sql.toString());
 		q.setParameter(1, usuarioid);
 		q.setParameter(2, projetoid);
-//		q.setParameter(3, projetoid);
-//		q.setParameter(4, projetoid);
 		List<Object[]> l = q.getResultList();
 		for (Object[] s : l) {
 			result.add(new SelectItem(s[0], s[1].toString()));
 		}
 		return result;
+	}
+	
+	public List<Stakeholder> getStakeholdersPendentes(Long projetoid){
+		StringBuilder sql = new StringBuilder();
+		sql.append("select s.* from stakeholder s join usuario u on s.usuarioid = u.id left join notastakeholder ns on ns.stakeholderavaliadorid = s.id where s.projetoid = ?1 group by s.id having count(ns.stakeholderavaliadoid) < (select count(*)-1 from stakeholder where projetoid = ?1)");
+		Query q = getEntityManager().createNativeQuery(sql.toString(),Stakeholder.class);
+		q.setParameter(1, projetoid);
+		return (List<Stakeholder>)q.getResultList();
 	}
 }

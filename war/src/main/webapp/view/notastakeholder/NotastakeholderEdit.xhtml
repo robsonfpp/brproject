@@ -27,7 +27,7 @@
 				</s:decorate>
 
 				<s:decorate template="/layout/display.xhtml"
-					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() == 0}">
+					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id).size() == 0}">
 					<ui:define name="label">Obrigado!</ui:define>
 					<h:outputText
 						value="Você já avaliou a prioridade de todos os stakeholders deste projeto." />
@@ -35,17 +35,17 @@
 
 
 				<s:decorate template="/layout/edit.xhtml"
-					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() gt 0}">
+					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id).size() gt 0}">
 					<ui:define name="label">Stakeholder</ui:define>
 					<h:selectOneMenu value="#{avaliacao.avaliadoId}" required="true">
 						<f:selectItem itemLabel="Selecione..." />
 						<f:selectItems
-							value="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id)}" />
+							value="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id)}" />
 					</h:selectOneMenu>
 				</s:decorate>
 
 				<s:decorate template="/layout/edit.xhtml"
-					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() gt 0}">
+					rendered="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id).size() gt 0}">
 					<ui:define name="label">Prioridade</ui:define>
 					<h:selectOneMenu value="#{avaliacao.notaid}" required="true">
 						<f:selectItem itemLabel="Selecione..." />
@@ -59,7 +59,7 @@
 
 			</rich:panel>
 			<a:outputPanel styleClass="buttons"
-				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() gt 0}">
+				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id).size() gt 0}">
 				<a:commandButton id="save" value="Salvar"
 					reRender="notastakeholder"
 					action="#{avaliacao.salvarNotaStakeholder()}" />
@@ -67,7 +67,7 @@
 				<s:button value="Cancelar" view="/view/home.xhtml" />
 			</a:outputPanel>
 			<a:outputPanel styleClass="buttons"
-				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projetoHome.projetoId,loggedUser.id).size() == 0}">
+				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id).size() == 0}">
 				<s:button value="Sair" view="/view/home.xhtml" />
 			</a:outputPanel>
 		</h:form>

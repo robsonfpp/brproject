@@ -9,6 +9,92 @@
 <s:decorate template="/layout/projetoInclude.xhtml">
 	<ui:define name="title">Monitorar e Controlar o Trabalho do Projeto</ui:define>
 
-</s:decorate>
+	<rich:panel>
+		<f:facet name="header">Matriz de priorização das partes interessadas</f:facet>
+		<h:panelGrid rendered="#{projeto.projeto.stakeholders.size() gt 0}">
+			<h:panelGrid
+				rendered="#{stakeholderList.getStakeholdersPendentes(projeto.projeto.id).size() gt 0}">
+				<h:outputText
+					value="As partes interessadas ainda não preencheram a priorização ..." />
 
+				<rich:panel>
+					<f:facet name="header">Pendentes</f:facet>
+					<rich:dataList
+						value="#{stakeholderList.getStakeholdersPendentes(projeto.projeto.id)}"
+						var="stk">
+						<h:outputText value="#{stk.usuario.nome}" />
+					</rich:dataList>
+				</rich:panel>
+
+				<div class="actionButtons">
+					<s:button value="Preencher sua priorização"
+						view="/view/notastakeholder/NotastakeholderEdit.xhtml"
+						rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projeto.projeto.id,loggedUser.id).size() gt 0}">
+						<f:param name="projetoId" value="#{projeto.projeto.id}" />
+					</s:button>
+				</div>
+			</h:panelGrid>
+			<a4j:outputPanel id="table"
+				rendered="#{stakeholderList.getStakeholdersPendentes(projeto.projeto.id).size() == 0}">
+				<table border="1" class="dr-table rich-table">
+					<thead class="dr-table-thead">
+						<tr class="dr-table-header rich-table-header">
+							<th class="dr-table-headercell rich-table-headercell"></th>
+							<a4j:repeat value="#{projeto.matriz}" var="nomes">
+								<th class="dr-table-headercell rich-table-headercell"><h:outputText
+										value="#{nomes.get(0).stakeholderavaliado.usuario.nome}" /></th>
+							</a4j:repeat>
+							<th class="dr-table-headercell rich-table-headercell">Total
+								da linha</th>
+							<th class="dr-table-headercell rich-table-headercell">Ranking
+								de <br />classificação</th>
+						</tr>
+					</thead>
+					<tbody>
+						<a4j:repeat value="#{projeto.matriz}" var="linha" rowKeyVar="row">
+							<tr>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:outputText
+										value="#{linha.get(0).stakeholderavaliado.usuario.nome}" /></td>
+								<a4j:repeat value="#{linha}" var="coluna" rowKeyVar="col">
+									<s:fragment rendered="#{row == col}">
+										<td align="center" class="dr-subtable-cell rich-subtable-cell"></td>
+										<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:outputText
+												value="#{coluna.nota.valor}" /></td>
+									</s:fragment>
+									<s:fragment rendered="#{row != col}">
+										<td align="center" class="dr-subtable-cell rich-subtable-cell"><h:outputText
+												value="#{coluna.nota.valor}" /></td>
+									</s:fragment>
+									<s:fragment
+										rendered="#{col == (linha.size()-1) &amp;&amp; row == (projeto.matriz.size()-1)}">
+										<td align="center" class="dr-subtable-cell rich-subtable-cell"></td>
+									</s:fragment>
+								</a4j:repeat>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell">
+									<h:outputFormat
+										value="#{projeto.calculaTotal(linha.get(0).stakeholderavaliado.id)}">
+										<f:convertNumber maxFractionDigits="2" />
+									</h:outputFormat>
+								</td>
+								<td align="center" class="dr-subtable-cell rich-subtable-cell">
+									<h:outputText
+										value="#{projeto.calculaClassificacao(linha.get(0).stakeholderavaliado.id)}°" />
+								</td>
+							</tr>
+						</a4j:repeat>
+					</tbody>
+				</table>
+				<br />
+				<h:panelGrid>
+					<f:facet name="header">Legenda da classificação</f:facet>
+					<rich:dataList value="#{projeto.legenda}" var="leg">
+						<h:outputText value="#{leg.valor}=#{leg.nome}" />
+					</rich:dataList>
+				</h:panelGrid>
+			</a4j:outputPanel>
+		</h:panelGrid>
+		<h:outputText rendered="#{projeto.projeto.stakeholders.size() == 0}"
+			value="Este projeto ainda não tem Stakeholders cadastrados." />
+	</rich:panel>
+</s:decorate>
 </html>

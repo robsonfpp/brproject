@@ -1,4 +1,5 @@
-<a4j:outputPanel ajaxRendered="true" xmlns="http://www.w3.org/1999/xhtml"
+<a4j:outputPanel ajaxRendered="true"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -6,7 +7,7 @@
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
 
-<style>
+	<style>
 .currentActive {
 	background-color: #FFEBDA;
 	font-weight: bold;
@@ -46,6 +47,7 @@
 	<h:form id="statusTable">
 		<table border="1" class="dr-table rich-table">
 			<thead class="dr-table-thead">
+
 				<tr class="dr-table-header rich-table-header">
 					<th class="dr-table-headercell rich-table-headercell" rowspan="2">Áreas
 						do conhecimento</th>
@@ -53,12 +55,13 @@
 						do projeto</th>
 				</tr>
 				<tr class="rich-table-header-continue">
+					<th class="dr-table-headercell rich-table-headercell">Monitoramento
+						e Controle</th>
 					<th class="dr-table-headercell rich-table-headercell">Iniciação
 						<div class="next"
 							style="#{projeto.projeto.statusprojeto.id==1?'':'display:none'}">
 							<a onclick="gotoStatus('2')" href="#">&gt;&gt;</a>
-						</div>
-					</th>
+						</div></th>
 					<th class="dr-table-headercell rich-table-headercell"><div
 							style="#{projeto.projeto.statusprojeto.id==2?'':'display:none'}"
 							class="previous">
@@ -68,8 +71,7 @@
 							style="#{projeto.projeto.statusprojeto.id==2?'':'display:none'}"
 							class="next">
 							<a onclick="gotoStatus('3')" href="#">&gt;&gt;</a>
-						</div>
-					</th>
+						</div></th>
 					<th class="dr-table-headercell rich-table-headercell"><div
 							style="#{projeto.projeto.statusprojeto.id==3?'':'display:none'}"
 							class="previous">
@@ -79,68 +81,87 @@
 							style="#{projeto.projeto.statusprojeto.id==3?'':'display:none'}"
 							class="next">
 							<a onclick="gotoStatus('4')" href="#">&gt;&gt;</a>
-						</div>
-					</th>
+						</div></th>
 					<th class="dr-table-headercell rich-table-headercell"><div
 							style="#{projeto.projeto.statusprojeto.id==4?'':'display:none'}"
 							class="previous">
 							<a onclick="gotoStatus('3')" href="#">&lt;&lt;</a>
 						</div>Encerramento</th>
-					<th class="dr-table-headercell rich-table-headercell">Monitoramento
-						e Controle</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Integração</td>
-					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"
-						style="color: blue"><a4j:commandLink action="#{fileManager.prepareArquivos('aberturaprojeto',projeto.projeto.id,1)}"  value="Desenvolver o Termo de Abertura do
-						Projeto"/></td>
-					<td align="left" class="dr-subtable-cell rich-subtable-cell 2"
-						style="color: blue"><a4j:commandLink disabled="#{projeto.projeto.statusprojeto.id lt 2}" action="#{fileManager.prepareArquivos('planoprojeto',projeto.projeto.id,2)}"  value="Desenvolver o Plano de Gerenciamento do
-						Projeto"/></td>
-					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"
-						style="color: blue"><a4j:commandLink disabled="#{projeto.projeto.statusprojeto.id lt 3}" action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"  value="Orientar e Gerenciar a Execução do
-						Projeto"/></td>
-					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"
-						style="color: blue"><a4j:commandLink disabled="#{projeto.projeto.statusprojeto.id lt 4}" action="#{fileManager.prepareArquivos('encerrarprojeto',projeto.projeto.id,4)}"  value="Encerrar o Projeto ou Fase"/></td>
+
 					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive"
-						style="color: blue"> 
-						<a4j:commandLink action="#{fileManager.prepareArquivos('monitoriacontrole',6,projeto.projeto.id)}"  value="Monitorar e Controlar o Trabalho do
-						Projeto"/>
-						<br />
-						<a4j:commandLink action="#{fileManager.prepareArquivos('controlemudanca',6,projeto.projeto.id)}"  value="Realizar o Controle Integrado de Mudanças"/></td>
+						class="dr-subtable-cell rich-subtable-cell"
+						style="color: blue"><a4j:commandLink
+							action="#{fileManager.prepareArquivos('monitoriacontrole',6,projeto.projeto.id)}"
+							value="Monitorar e Controlar o Trabalho do
+						Projeto" /> <br />
+						<a4j:commandLink
+							action="#{fileManager.prepareArquivos('controlemudanca',6,projeto.projeto.id)}"
+							value="Realizar o Controle Integrado de Mudanças" />
+					</td>
+					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"
+						style="color: blue"><a4j:commandLink
+							action="#{fileManager.prepareArquivos('aberturaprojeto',projeto.projeto.id,1)}"
+							value="Desenvolver o Termo de Abertura do
+						Projeto" />
+					</td>
+					<td align="left" class="dr-subtable-cell rich-subtable-cell 2"
+						style="color: blue"><a4j:commandLink
+							disabled="#{projeto.projeto.statusprojeto.id lt 2}"
+							action="#{fileManager.prepareArquivos('planoprojeto',projeto.projeto.id,2)}"
+							value="Desenvolver o Plano de Gerenciamento do
+						Projeto" />
+					</td>
+					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"
+						style="color: blue"><a4j:commandLink
+							disabled="#{projeto.projeto.statusprojeto.id lt 3}"
+							action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"
+							value="Orientar e Gerenciar a Execução do
+						Projeto" />
+					</td>
+					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"
+						style="color: blue"><a4j:commandLink
+							disabled="#{projeto.projeto.statusprojeto.id lt 4}"
+							action="#{fileManager.prepareArquivos('encerrarprojeto',projeto.projeto.id,4)}"
+							value="Encerrar o Projeto ou Fase" />
+					</td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Qualidade</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell">Realizar
+						o Controle da Qualidade</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Planejar
 						a Qualidade</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 3">Realizar
 						a Garantia da Qualidade</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"></td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive">Realizar
-						o Controle da Qualidade</td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Custos</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell">Controlar
+						os Custos</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Estimar
 						os Custos<br />Determinar o Orçamento</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"></td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive">Controlar
-						os Custos</td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Tempo</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell">Controlar
+						o Cronograma</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Definir
 						as Atividades<br />Sequenciar as Atividades<br />Estimar os
@@ -148,27 +169,26 @@
 						o Cronograma</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"></td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive">Controlar
-						o Cronograma</td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Escopo</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell">Verificar
+						o Escopo<br />Controlar o Escopo</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Coletar
 						os Requisitos<br />Definir o Escopo<br />Criar a EAP</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"></td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive">Verificar
-						o Escopo<br />Controlar o Escopo</td>
 				</tr>
 
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Recursos
 						Humanos</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Desenvolver
 						o Plano de Recursos Humanos</td>
@@ -176,12 +196,13 @@
 						a Equipe do Projeto<br />Desenvolver a Equipe do Projeto<br />Gerenciar
 						a Equipe do Projeto</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"></td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive"></td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Comunicação</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell">Reportar
+						o Desempenho</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1">Identificar
 						as Partes Interessadas</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Planejar
@@ -190,13 +211,13 @@
 						as Informações<br />Gerenciar as Espectativas das Partes
 						Interessadas</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"></td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive">Reportar
-						o Desempenho</td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Riscos</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell">Monitorar
+						e Controlar os Riscos</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Planejar
 						o Gerenciamento dos Riscos<br />Identificar os Riscos<br />Realizar
@@ -204,13 +225,13 @@
 						Quantitativa dos Riscos<br />Planejar as Respostas aos Riscos</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"></td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive">Monitorar
-						e Controlar os Riscos</td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Aquisições</td>
+					<td align="left"
+						class="dr-subtable-cell rich-subtable-cell">Administrar
+						as Aquisições</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Planejar
 						as Aquisições</td>
@@ -218,14 +239,11 @@
 						as Aquisições</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4">Encerrar
 						as Aquisições</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell currentActive">Administrar
-						as Aquisições</td>
 				</tr>
 			</tbody>
 		</table>
 	</h:form>
-	
+
 	<rich:jQuery selector="td.#{projeto.projeto.statusprojeto.id}"
 		query="addClass('currentActive')" />
 	<rich:jQuery selector=".next,.previous"
