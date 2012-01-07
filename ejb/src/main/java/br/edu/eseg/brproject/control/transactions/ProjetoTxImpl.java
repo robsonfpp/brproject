@@ -25,47 +25,48 @@ public class ProjetoTxImpl implements ProjetoTx {
 
 		sql.append("insert into projeto(").append("statusprojetoid,")
 				.append("gerenteprojetoid,nome,cliente,")
-				.append("resumo,justificativa,necessidades,")
-				.append("produto,premissas,restricoes,")
-				.append("responsabilidadesgp,datacriacao,inicio,")
-				.append("fimprevisto,orcamento)")
-				.append("values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				.append("datacriacao,inicio,fimprevisto)")
+				.append("values(?,?,?,?,?,?,?)");
 		Query q = em.createNativeQuery(sql.toString());
 		q.setParameter(1, p.getStatusprojeto().getId());
 		q.setParameter(2, p.getUsuario().getId());
 		q.setParameter(3, p.getNome());
 		q.setParameter(4, p.getCliente());
-		q.setParameter(5, p.getResumo());
-		q.setParameter(6, p.getJustificativa());
-		q.setParameter(7, p.getNecessidades());
-		q.setParameter(8, p.getProduto());
-		q.setParameter(9, p.getPremissas());
-		q.setParameter(10, p.getRestricoes());
-		q.setParameter(11, p.getResponsabilidadesgp());
-		q.setParameter(12, p.getDatacriacao());
-		q.setParameter(13, p.getInicio());
-		q.setParameter(14, p.getFimprevisto());
-		q.setParameter(15, p.getOrcamento());
+		q.setParameter(5, p.getDatacriacao());
+		q.setParameter(6, p.getInicio());
+		q.setParameter(7, p.getFimprevisto());
 		q.executeUpdate();
 
-		sql = new StringBuilder();
-		sql.append("select last_insert_id() from dual");
-		q = em.createNativeQuery(sql.toString());
-		Object r = q.getSingleResult();
-		Integer projetoId = Integer.parseInt(r.toString());
+		Long projetoId = getLastInsertedId();
 
-		for (Stakeholder s : p.getStakeholders()) {
-			sql = new StringBuilder();
-			sql.append("insert into stakeholder")
-					.append("(projetoid,usuarioid,papel)")
-					.append("values(?,?,?)");
-			q = em.createNativeQuery(sql.toString());
-			q.setParameter(1, projetoId);
-			q.setParameter(2, s.getUsuario().getId());
-			q.setParameter(3, s.getPapel());
-			q.executeUpdate();
-		}
-		return new Long(projetoId);
+		sql = new StringBuilder();
+		sql.append("insert into tarefa(projetoid,nome,inicio,fim,porcentcomp,milestone) values(?,?,?,?,0.0,0)");
+		q = em.createNativeQuery(sql.toString());
+		q.setParameter(1, projetoId);
+		q.setParameter(2, "Projeto: " + p.getNome());
+		q.setParameter(3, p.getInicio());
+		q.setParameter(4, p.getFimprevisto());
+		q.executeUpdate();
+
+		Long tarefaId = getLastInsertedId();
+		
+		sql = new StringBuilder();
+		sql.append("insert into subtarefa(tarefaid, subtarefaid) values(?1,?1)");
+		q = em.createNativeQuery(sql.toString());
+		q.setParameter(1, tarefaId);
+		q.executeUpdate();
+		// for (Stakeholder s : p.getStakeholders()) {
+		// sql = new StringBuilder();
+		// sql.append("insert into stakeholder")
+		// .append("(projetoid,usuarioid,papel)")
+		// .append("values(?,?,?)");
+		// q = em.createNativeQuery(sql.toString());
+		// q.setParameter(1, projetoId);
+		// q.setParameter(2, s.getUsuario().getId());
+		// q.setParameter(3, s.getPapel());
+		// q.executeUpdate();
+		// }
+		return projetoId;
 	}
 
 	@Override
@@ -73,30 +74,18 @@ public class ProjetoTxImpl implements ProjetoTx {
 		StringBuilder sql = new StringBuilder();
 		sql.append("update projeto set ").append("statusprojetoid = ?, ")
 				.append("gerenteprojetoid = ?, ").append("nome = ?, ")
-				.append("cliente= ?, ").append("resumo= ?, ")
-				.append("justificativa= ?, ").append("necessidades= ?, ")
-				.append("produto= ?, ").append("premissas= ?, ")
-				.append("restricoes= ?, ").append("responsabilidadesgp = ?, ")
-				.append("datacriacao= ?, ").append("inicio= ?, ")
-				.append("fimprevisto= ?, ").append("orcamento= ? ")
+				.append("cliente= ?, ").append("datacriacao= ?, ")
+				.append("inicio= ?, ").append("fimprevisto= ?, ")
 				.append("where id = ?");
 		Query q = em.createNativeQuery(sql.toString());
 		q.setParameter(1, p.getStatusprojeto().getId());
 		q.setParameter(2, p.getUsuario().getId());
 		q.setParameter(3, p.getNome());
 		q.setParameter(4, p.getCliente());
-		q.setParameter(5, p.getResumo());
-		q.setParameter(6, p.getJustificativa());
-		q.setParameter(7, p.getNecessidades());
-		q.setParameter(8, p.getProduto());
-		q.setParameter(9, p.getPremissas());
-		q.setParameter(10, p.getRestricoes());
-		q.setParameter(11, p.getResponsabilidadesgp());
-		q.setParameter(12, p.getDatacriacao());
-		q.setParameter(13, p.getInicio());
-		q.setParameter(14, p.getFimprevisto());
-		q.setParameter(15, p.getOrcamento());
-		q.setParameter(16, p.getId());
+		q.setParameter(5, p.getDatacriacao());
+		q.setParameter(6, p.getInicio());
+		q.setParameter(7, p.getFimprevisto());
+		q.setParameter(8, p.getId());
 		q.executeUpdate();
 	}
 
@@ -129,5 +118,13 @@ public class ProjetoTxImpl implements ProjetoTx {
 			q.setParameter(3, new Date());
 		}
 		q.executeUpdate();
+	}
+	
+	private Long getLastInsertedId(){
+		StringBuilder sql = new StringBuilder();
+		sql.append("select last_insert_id() from dual");
+		Query q = em.createNativeQuery(sql.toString());
+		Object r = q.getSingleResult();
+		return Long.valueOf(r.toString());
 	}
 }

@@ -61,6 +61,23 @@
 		</navigation>
 	</page>
 
+	<page view-id="/view/projetoinclude/monitoriacontrole.xhtml">
+		<navigation>
+			<rule if-outcome="aberturaprojeto">
+				<render view-id="/view/projetoinclude/aberturaprojeto.xhtml" />
+			</rule>
+			<rule if-outcome="planoprojeto">
+				<render view-id="/view/projetoinclude/planoglobal.xhtml" />
+			</rule>
+			<rule if-outcome="execucaoprojeto">
+				<render view-id="/view/projetoinclude/execucaoprojeto.xhtml" />
+			</rule>
+			<rule if-outcome="encerrarprojeto">
+				<render view-id="/view/projetoinclude/encerrarprojeto.xhtml" />
+			</rule>
+		</navigation>
+	</page>
+
 	<page view-id="/view/projetoinclude/*">
 		<navigation>
 			<rule if-outcome="voltar">

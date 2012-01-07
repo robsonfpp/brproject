@@ -25,6 +25,8 @@ import br.edu.eseg.brproject.model.Projeto;
 import br.edu.eseg.brproject.model.Statusprojeto;
 import br.edu.eseg.brproject.model.action.ArquivoHome;
 import br.edu.eseg.brproject.model.action.ArquivoList;
+import br.edu.eseg.brproject.model.action.StakeholderHome;
+import br.edu.eseg.brproject.model.action.StatusprojetoHome;
 
 @Name("fileManager")
 @Scope(ScopeType.CONVERSATION)
@@ -44,7 +46,10 @@ public class FileManagerBean {
 
 	@In(value = "#{facesContext}")
 	FacesContext facesContext;
-
+	
+	@In(create = true)
+	StatusprojetoHome statusprojetoHome;
+	
 	private List<Arquivo> arquivos = new ArrayList<Arquivo>(0);
 	private Long projetoid;
 	private Long statusprojetoid;
@@ -84,13 +89,14 @@ public class FileManagerBean {
 			tipo = "image/gif";
 		} else if ("png".equals(extension)) {
 			tipo = "image/png";
-		} else if ("doc".equals(extension) || "docx".equals(extension)){
+		} else if ("doc".equals(extension) || "docx".equals(extension)) {
 			tipo = "application/msword";
-		} else if ("pdf".equals(extension)){
+		} else if ("pdf".equals(extension)) {
 			tipo = "application/pdf";
 		}
 
-		List<Arquivo> result = findArquivos(nome,etapa, projetoid, statusprojetoid);
+		List<Arquivo> result = findArquivos(nome, etapa, projetoid,
+				statusprojetoid);
 
 		if (result.size() == 0) {
 			arquivoHome.setArquivoId(null);
@@ -138,22 +144,30 @@ public class FileManagerBean {
 		return null;
 	}
 
-	private List<Arquivo> findArquivos(String nome,String etapa, Long projetoid,
-			Long statusprojetoid) {
-		arquivoList.getArquivo().setNome(nome);
-		arquivoList.getArquivo().setEtapa(etapa);
+	private List<Arquivo> findArquivos(String nome, String etapa,
+			Long projetoid, Long statusprojetoid) {
 		arquivoList.getArquivo().setProjeto(new Projeto(projetoid));
-		arquivoList.getArquivo().setStatusprojeto(
-				new Statusprojeto(statusprojetoid));
+		if (!etapa.equals("monitoriacontrole")) {
+			arquivoList.getArquivo().setNome(nome);
+			arquivoList.getArquivo().setEtapa(etapa);
+			arquivoList.getArquivo().setStatusprojeto(
+					new Statusprojeto(statusprojetoid));
+		}
 		List<String> restrictions = Arrays
 				.asList("lower(arquivo.nome) like lower(concat(#{arquivoList.arquivo.nome},'%'))",
 						"lower(arquivo.etapa) like lower(concat(#{arquivoList.arquivo.etapa},'%'))",
 						"arquivo.projeto.id = #{arquivoList.arquivo.projeto.id}",
 						"arquivo.statusprojeto.id = #{arquivoList.arquivo.statusprojeto.id}");
 		arquivoList.setRestrictionExpressionStrings(restrictions);
+		arquivoList.setOrderColumn("etapa");
 		return arquivoList.getResultList();
 	}
 
+	public String getStatusprojetoName(Long id){
+		statusprojetoHome.setStatusprojetoId(id);
+		return statusprojetoHome.find().getNome();
+	}
+	
 	public List<Arquivo> getArquivos() {
 		return arquivos;
 	}
@@ -162,4 +176,8 @@ public class FileManagerBean {
 		this.arquivos = arquivos;
 	}
 
+	public String getEtapa() {
+		return etapa;
+	}
+	
 }

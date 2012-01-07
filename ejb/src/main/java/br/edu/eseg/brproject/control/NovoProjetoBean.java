@@ -40,44 +40,44 @@ public class NovoProjetoBean implements Serializable {
 	ProjetoHome projetoHome;
 
 	private Projeto projeto = new Projeto();
-	private Stakeholder stakeholder = new Stakeholder();
+//	private Stakeholder stakeholder = new Stakeholder();
+//
+//	@Create()
+//	public void init() {
+//		if (projetoHome.getProjetoId() != null) {
+//			projetoHome.load();
+//			projeto = projetoHome.getDefinedInstance();
+//		}
+//	}
 
-	@Create()
-	public void init() {
-		if (projetoHome.getProjetoId() != null) {
-			projetoHome.load();
-			projeto = projetoHome.getDefinedInstance();
-		}
-	}
+//	public void addStakeholder() {
+//		try {
+//			Stakeholder stk = new Stakeholder(projeto,
+//					stakeholder.getUsuario(),
+//					stakeholder.getPapel(), new HashSet(), new HashSet());
+//			if (!projeto.getStakeholders().contains(stk)) {
+//				projeto.getStakeholders().add(stk);
+//				statusMessages.add(Severity.INFO,
+//						"Stakeholder '{0}' adicionado com sucesso", stakeholder
+//								.getUsuario().getNome());
+//			} else {
+//				statusMessages.add(Severity.WARN,
+//						"Stakeholder '{0}' j� foi adicionado!", stakeholder
+//								.getUsuario().getNome());
+//			}
+//			cleanStakeholder();
+//		} catch (Exception e) {
+//			statusMessages.add(Severity.ERROR,
+//					"Erro ao adicionar o stakeholder '{0}'", e);
+//			log.error("Erro ao adicionar stakeholder!", e);
+//		}
+//	}
 
-	public void addStakeholder() {
-		try {
-			Stakeholder stk = new Stakeholder(projeto,
-					stakeholder.getUsuario(),
-					stakeholder.getPapel(), new HashSet(), new HashSet());
-			if (!projeto.getStakeholders().contains(stk)) {
-				projeto.getStakeholders().add(stk);
-				statusMessages.add(Severity.INFO,
-						"Stakeholder '{0}' adicionado com sucesso", stakeholder
-								.getUsuario().getNome());
-			} else {
-				statusMessages.add(Severity.WARN,
-						"Stakeholder '{0}' já foi adicionado!", stakeholder
-								.getUsuario().getNome());
-			}
-			cleanStakeholder();
-		} catch (Exception e) {
-			statusMessages.add(Severity.ERROR,
-					"Erro ao adicionar o stakeholder '{0}'", e);
-			log.error("Erro ao adicionar stakeholder!", e);
-		}
-	}
-
-	public void removeStakeholder(Stakeholder stakeholder) {
-		System.out.println(stakeholder.getUsuario().getNome());
-		boolean r = projeto.getStakeholders().remove(stakeholder);
-		log.info("Stakeholder {0} foi removido", r ? "" : "Não");
-	}
+//	public void removeStakeholder(Stakeholder stakeholder) {
+//		System.out.println(stakeholder.getUsuario().getNome());
+//		boolean r = projeto.getStakeholders().remove(stakeholder);
+//		log.info("Stakeholder {0} foi removido", r ? "" : "Não");
+//	}
 
 	public String salvarProjeto() {
 		projeto.setUsuario(loggedUser);
@@ -110,13 +110,13 @@ public class NovoProjetoBean implements Serializable {
 		return "salvou";
 	}
 
-	public void cleanStakeholder() {
-		stakeholder = new Stakeholder();
-	}
-
-	public void addUsuario(Usuario u) {
-		stakeholder.setUsuario(u);
-	}
+//	public void cleanStakeholder() {
+//		stakeholder = new Stakeholder();
+//	}
+//
+//	public void addUsuario(Usuario u) {
+//		stakeholder.setUsuario(u);
+//	}
 
 	public Projeto getProjeto() {
 		return projeto;
@@ -126,12 +126,12 @@ public class NovoProjetoBean implements Serializable {
 		this.projeto = projeto;
 	}
 
-	public Stakeholder getStakeholder() {
-		return stakeholder;
-	}
+//	public Stakeholder getStakeholder() {
+//		return stakeholder;
+//	}
 
-	public void setStakeholder(Stakeholder stakeholder) {
-		this.stakeholder = stakeholder;
-	}
+//	public void setStakeholder(Stakeholder stakeholder) {
+//		this.stakeholder = stakeholder;
+//	}
 
 }

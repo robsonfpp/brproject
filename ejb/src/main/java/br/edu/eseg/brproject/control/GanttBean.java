@@ -10,7 +10,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Name;
 import org.jfree.util.ObjectUtilities;
 
-import br.edu.eseg.brproject.control.transactions.GanttTx;
+import br.edu.eseg.brproject.model.Projeto;
 import br.edu.eseg.brproject.model.Tarefa;
 import br.edu.eseg.brproject.model.Utilizacaorecurso;
 import br.edu.eseg.brproject.model.action.TarefaList;
@@ -20,8 +20,8 @@ import com.google.gson.Gson;
 @Name("gantt")
 public class GanttBean {
 
-//	@In(create = true)
-//	GanttTx GantTxImpl;
+	// @In(create = true)
+	// GanttTx GantTxImpl;
 	@In(create = true)
 	TarefaList tarefaList;
 	public String tarefaId;
@@ -37,17 +37,27 @@ public class GanttBean {
 				tarefas = getTarefas(Long.valueOf(projeto_id));
 			}
 			List<Task> tasks = new ArrayList<Task>();
+			
 			for (Tarefa t : tarefas) {
+				if(tarefas.size()<=1){
+					break;
+				}
 				Task task = new Task(t.getNome(), new TimePeriod(t.getInicio(),
 						t.getFim()));
 				task.setId(t.getId());
 				task.setMilestone(t.getMilestone());
 				task.setPercentComplete(t.getPorcentcomp());
-				if (tipo.equals("visao_detalhada"))
+				if (tipo.equals("visao_detalhada")) {
 					for (Tarefa st : t.getSubtarefas()) {
 						task.addSubtask(new Task(st.getNome(), st.getInicio(),
 								st.getFim()));
 					}
+				} else if (tarefas.indexOf(t) == 0) {
+					for (Tarefa st : t.getSubtarefas()) {
+						task.addSubtask(new Task(st.getNome(), st.getInicio(),
+								st.getFim()));
+					}
+				}
 
 				for (Tarefa tp : t.getTarefaspredecessoras()) {
 					task.addPredecessor(new Task(tp.getNome(), tp.getInicio(),
@@ -64,17 +74,32 @@ public class GanttBean {
 		}
 		return ret;
 	}
-	
+
 	private List<Tarefa> getMacroTarefas(Long projetoId) {
-		Query q = tarefaList.getEntityManager().createNativeQuery("select t.* from tarefa t join projeto p on p.id = t.projetoid join subtarefa st on st.tarefaid = t.id or t.milestone where t.projetoid = ? group by t.id",Tarefa.class);
+		Query q = tarefaList
+				.getEntityManager()
+				.createNativeQuery(
+						"select t.* from tarefa t join projeto p on p.id = t.projetoid join subtarefa st on st.tarefaid = t.id or t.milestone where t.projetoid = ? group by t.id order by t.id",
+						Tarefa.class);
 		q.setParameter(1, projetoId);
 		return q.getResultList();
 	}
 
 	private List<Tarefa> getTarefas(Long projetoId) {
-		Query q = tarefaList.getEntityManager().createNativeQuery("select t.* from tarefa t join projeto p on p.id = t.projetoid where t.projetoid = ?",Tarefa.class);
+		Query q = tarefaList
+				.getEntityManager()
+				.createNativeQuery(
+						"select t.* from tarefa t where t.projetoid = ?1 order by t.id",
+						Tarefa.class);
 		q.setParameter(1, projetoId);
 		return q.getResultList();
+	}
+
+	private Projeto getProjeto(Long projetoId) {
+		Query q = tarefaList.getEntityManager().createNativeQuery(
+				"select * from projeto where id = ?", Projeto.class);
+		q.setParameter(1, projetoId);
+		return (Projeto) q.getSingleResult();
 	}
 
 	public String getTarefaId() {

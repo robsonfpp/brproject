@@ -11,10 +11,11 @@
 	width="100%">
 	<f:facet name="header">
 		<rich:panel>
-			<h:outputText value="Upload de arquivos" />
+			<h:outputText value="Gerenciador de arquivos do projeto" />
 		</rich:panel>
 	</f:facet>
-	<h:form id="upload">
+	<h:form id="upload"
+		rendered="#{!fileManager.etapa.equals('monitoriacontrole')}">
 		<rich:fileUpload fileUploadListener="#{fileManager.upload}"
 			maxFilesQuantity="10" id="upload" immediateUpload="false"
 			acceptedTypes="jpg, gif, png, bmp, pdf, doc, docx" allowFlash="true"
@@ -24,7 +25,7 @@
 	</h:form>
 	<a4j:outputPanel layout="block" ajaxRendered="true" id="info">
 		<rich:panel bodyClass="arquivos">
-			<f:facet name="header">Documentos da etapa</f:facet>
+			<f:facet name="header">Documentos registrados</f:facet>
 			<h:outputText value="Nenhum documento registrado."
 				rendered="#{fileManager.arquivos.size() == 0}" />
 			<rich:dataGrid rendered="#{fileManager.arquivos.size() gt 0}"
@@ -42,6 +43,12 @@
 						<h:outputText value="#{arquivo.tamanho/1024} KB">
 							<f:convertNumber pattern="#0.0" />
 						</h:outputText>
+						<h:outputText value="Fase do projeto:"
+							rendered="#{fileManager.etapa.equals('monitoriacontrole')}" />
+						<h:form rendered="#{fileManager.etapa == 'monitoriacontrole'}">
+							<a4j:commandLink value="#{fileManager.getStatusprojetoName(arquivo.statusprojeto.id)}"
+								action="#{fileManager.prepareArquivos(arquivo.etapa,arquivo.projeto.id,arquivo.statusprojeto.id)}"></a4j:commandLink>
+						</h:form>
 					</h:panelGrid>
 				</rich:panel>
 			</rich:dataGrid>
