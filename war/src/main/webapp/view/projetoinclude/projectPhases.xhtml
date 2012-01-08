@@ -242,7 +242,7 @@
 	<rich:jQuery selector=".next,.previous"
 		query="mouseout(function(){jQuery(this).removeClass('highlight')})" />
 
-	<h:form>
+	<h:form rendered="#{loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
 		<a4j:jsFunction name="gotoStatus" reRender="statusChange"
 			oncomplete="#{rich:component('statusChange')}.show()">
 			<a4j:actionparam name="param1" assignTo="#{projeto.changeStatusId}" />

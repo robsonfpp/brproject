@@ -44,7 +44,7 @@
 					<f:facet name="header">
 						<h2>#{_s.titulo}</h2>
 					</f:facet>
-					<h:panelGrid columns="2" columnClasses="label,value,label,value">
+					<h:panelGrid columns="2" columnClasses="label,value,label,value" width="100%">
 
 						<h:outputText value="Solicitante:" />
 						<h:outputText value="#{_s.usuario.nome}" />
@@ -58,7 +58,7 @@
 						<h:outputText value="Data Fechamento:" />
 						<h:outputText value="#{_s.datafechamento}" />
 					</h:panelGrid>
-					<h:panelGrid columnClasses="top,top">
+					<h:panelGrid columnClasses="top,top" width="100%">
 						<h:panelGrid frame="box" width="100%">
 							<f:facet name="header">Descrição da mudança</f:facet>
 							<p>#{_s.descricao}</p>

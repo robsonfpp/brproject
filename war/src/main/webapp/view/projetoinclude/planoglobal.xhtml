@@ -21,8 +21,8 @@
 
 		<a4j:commandButton value="Adicionar Tarefa" />
 	</h:form>
-	<br/>
-	<br/>
+	<br />
+	<br />
 	<applet id="visao_detalhada" name="visao_detalhada" height="1000"
 		width="1100" codebase="/brProject/applet/"
 		archive="brProject-chart-0.1.jar,gson-1.7.1.jar,jcommon-1.0.16.jar,plugin-1.0.jar"
@@ -34,53 +34,58 @@
 		<param name="script" value="editar_tarefa" />
 		<param name="heigth" value="1000" />
 	</applet>
-
-	<h:panelGrid width="100%">
-		<rich:spacer height="10" />
-		<s:link style="font-size:16px;" action="#{fileManager.download(2)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText
-				value="Ver Template do Plano de Gerenciamento de Requisitos" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(3)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText
-				value="Ver Template do  Plano de Gerenciamento das Aquisicoes" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(4)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText
-				value="Ver Template do Plano de Gerenciamento das Comunicações" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(5)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText value="Ver Template do Plano de Gerenciamento de Custo" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(6)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText
-				value="Ver Template do Plano de Gerenciamento de Escopo" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(7)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText
-				value="Ver Template do Plano de Gerenciamento de Qualidade" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(8)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText value="Ver Template do Plano de Gerenciamento de RH" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(9)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText
-				value="Ver Template do Plano de Gerenciamento de Riscos" />
-		</s:link>
-		<s:link style="font-size:16px;" action="#{fileManager.download(10)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText value="Ver Template do Plano de Gerenciamento de Tempo" />
-		</s:link>
-		<rich:spacer height="10" />
-	</h:panelGrid>
+	<br/>
+	<rich:panel rendered="#{loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
+		<f:facet name="header">Templates de documentos para o plano de gerenciamento do projeto</f:facet>
+		<h:panelGrid width="100%">
+			<rich:spacer height="10" />
+			<s:link style="font-size:16px;" action="#{fileManager.download(2)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do Plano de Gerenciamento de Requisitos" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(3)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do  Plano de Gerenciamento das Aquisicoes" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(4)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do Plano de Gerenciamento das Comunicações" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(5)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do Plano de Gerenciamento de Custo" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(6)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do Plano de Gerenciamento de Escopo" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(7)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do Plano de Gerenciamento de Qualidade" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(8)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText value="Ver Template do Plano de Gerenciamento de RH" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(9)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do Plano de Gerenciamento de Riscos" />
+			</s:link>
+			<s:link style="font-size:16px;" action="#{fileManager.download(10)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText
+					value="Ver Template do Plano de Gerenciamento de Tempo" />
+			</s:link>
+			<rich:spacer height="10" />
+		</h:panelGrid>
+	</rich:panel>
 
 
 </s:decorate>

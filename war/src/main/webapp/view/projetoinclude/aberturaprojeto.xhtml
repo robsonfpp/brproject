@@ -133,14 +133,18 @@
 
 	</h:panelGrid>
 
+	<rich:panel
+		rendered="#{loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
+		<f:facet name="header">Template de documento para a abertura do projeto</f:facet>
+		<h:panelGrid width="100%">
+			<rich:spacer height="10" />
+			<s:link style="font-size:16px;" action="#{fileManager.download(1)}">
+				<h:graphicImage value="/img/word_icon.png" width="35px" />
+				<h:outputText value="Ver Template do Termo de Abertura" />
+			</s:link>
+		</h:panelGrid>
+	</rich:panel>
 
-	<h:panelGrid width="100%">
-		<rich:spacer height="10" />
-		<s:link style="font-size:16px;" action="#{fileManager.download(1)}">
-			<h:graphicImage value="/img/word_icon.png" width="35px" />
-			<h:outputText value="Ver Template do Termo de Abertura" />
-		</s:link>
-	</h:panelGrid>
 
 </s:decorate>
 </html>

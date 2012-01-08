@@ -15,7 +15,7 @@
 		</rich:panel>
 	</f:facet>
 	<h:form id="upload"
-		rendered="#{!fileManager.etapa.equals('monitoriacontrole')}">
+		rendered="#{!fileManager.etapa.equals('monitoriacontrole') &amp;&amp; (loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id))}">
 		<rich:fileUpload fileUploadListener="#{fileManager.upload}"
 			maxFilesQuantity="10" id="upload" immediateUpload="false"
 			acceptedTypes="jpg, gif, png, bmp, pdf, doc, docx" allowFlash="true"
