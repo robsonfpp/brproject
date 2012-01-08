@@ -1,5 +1,6 @@
 package br.edu.eseg.brproject.control;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import javax.persistence.Query;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
-import org.jboss.seam.core.Expressions.ValueExpression;
 import org.jboss.seam.log.Log;
 
 import br.edu.eseg.brproject.model.Projeto;
@@ -19,7 +19,10 @@ import br.edu.eseg.brproject.model.action.ProjetoList;
 import br.edu.eseg.brproject.model.action.SolicitacaomudancaList;
 
 @Name("home")
-public class HomeBean {
+public class HomeBean implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	@Logger
 	Log log;
 	@In(create = true)

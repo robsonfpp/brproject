@@ -1,6 +1,7 @@
 package br.edu.eseg.brproject.control;
 
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,12 +26,13 @@ import br.edu.eseg.brproject.model.Projeto;
 import br.edu.eseg.brproject.model.Statusprojeto;
 import br.edu.eseg.brproject.model.action.ArquivoHome;
 import br.edu.eseg.brproject.model.action.ArquivoList;
-import br.edu.eseg.brproject.model.action.StakeholderHome;
 import br.edu.eseg.brproject.model.action.StatusprojetoHome;
 
 @Name("fileManager")
 @Scope(ScopeType.CONVERSATION)
-public class FileManagerBean {
+public class FileManagerBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Logger
 	private Log log;
@@ -46,10 +48,10 @@ public class FileManagerBean {
 
 	@In(value = "#{facesContext}")
 	FacesContext facesContext;
-	
+
 	@In(create = true)
 	StatusprojetoHome statusprojetoHome;
-	
+
 	private List<Arquivo> arquivos = new ArrayList<Arquivo>(0);
 	private Long projetoid;
 	private Long statusprojetoid;
@@ -163,11 +165,11 @@ public class FileManagerBean {
 		return arquivoList.getResultList();
 	}
 
-	public String getStatusprojetoName(Long id){
+	public String getStatusprojetoName(Long id) {
 		statusprojetoHome.setStatusprojetoId(id);
 		return statusprojetoHome.find().getNome();
 	}
-	
+
 	public List<Arquivo> getArquivos() {
 		return arquivos;
 	}
@@ -179,5 +181,5 @@ public class FileManagerBean {
 	public String getEtapa() {
 		return etapa;
 	}
-	
+
 }

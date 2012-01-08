@@ -40,10 +40,10 @@
 }
 
 .previous {
-	float: left;
+	float: left; 
 }
 </style>
-
+	
 	<h:form id="statusTable">
 		<table border="1" class="dr-table rich-table">
 			<thead class="dr-table-thead">
@@ -61,7 +61,8 @@
 						<div class="next"
 							style="#{projeto.projeto.statusprojeto.id==1?'':'display:none'}">
 							<a onclick="gotoStatus('2')" href="#">&gt;&gt;</a>
-						</div></th>
+						</div>
+					</th>
 					<th class="dr-table-headercell rich-table-headercell"><div
 							style="#{projeto.projeto.statusprojeto.id==2?'':'display:none'}"
 							class="previous">
@@ -71,7 +72,8 @@
 							style="#{projeto.projeto.statusprojeto.id==2?'':'display:none'}"
 							class="next">
 							<a onclick="gotoStatus('3')" href="#">&gt;&gt;</a>
-						</div></th>
+						</div>
+					</th>
 					<th class="dr-table-headercell rich-table-headercell"><div
 							style="#{projeto.projeto.statusprojeto.id==3?'':'display:none'}"
 							class="previous">
@@ -81,7 +83,8 @@
 							style="#{projeto.projeto.statusprojeto.id==3?'':'display:none'}"
 							class="next">
 							<a onclick="gotoStatus('4')" href="#">&gt;&gt;</a>
-						</div></th>
+						</div>
+					</th>
 					<th class="dr-table-headercell rich-table-headercell"><div
 							style="#{projeto.projeto.statusprojeto.id==4?'':'display:none'}"
 							class="previous">
@@ -94,8 +97,7 @@
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Integração</td>
 
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell"
+					<td align="left" class="dr-subtable-cell rich-subtable-cell"
 						style="color: blue"><a4j:commandLink
 							action="#{fileManager.prepareArquivos('monitoriacontrole',projeto.projeto.id,6)}"
 							value="Monitorar e Controlar o Trabalho do
@@ -108,8 +110,7 @@
 						style="color: blue"><a4j:commandLink
 							action="#{fileManager.prepareArquivos('aberturaprojeto',projeto.projeto.id,1)}"
 							value="Desenvolver o Termo de Abertura do
-						Projeto" />
-					</td>
+						Projeto" /></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2"
 						style="color: blue"><a4j:commandLink
 							disabled="#{projeto.projeto.statusprojeto.id lt 2}"
@@ -122,20 +123,17 @@
 							disabled="#{projeto.projeto.statusprojeto.id lt 3}"
 							action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"
 							value="Orientar e Gerenciar a Execução do
-						Projeto" />
-					</td>
+						Projeto" /></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"
 						style="color: blue"><a4j:commandLink
 							disabled="#{projeto.projeto.statusprojeto.id lt 4}"
 							action="#{fileManager.prepareArquivos('encerrarprojeto',projeto.projeto.id,4)}"
-							value="Encerrar o Projeto ou Fase" />
-					</td>
+							value="Encerrar o Projeto ou Fase" /></td>
 				</tr>
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Qualidade</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell">Realizar
+					<td align="left" class="dr-subtable-cell rich-subtable-cell">Realizar
 						o Controle da Qualidade</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Planejar
@@ -147,8 +145,7 @@
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Custos</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell">Controlar
+					<td align="left" class="dr-subtable-cell rich-subtable-cell">Controlar
 						os Custos</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Estimar
@@ -159,8 +156,7 @@
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Tempo</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell">Controlar
+					<td align="left" class="dr-subtable-cell rich-subtable-cell">Controlar
 						o Cronograma</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Definir
@@ -173,8 +169,7 @@
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Escopo</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell">Verificar
+					<td align="left" class="dr-subtable-cell rich-subtable-cell">Verificar
 						o Escopo<br />Controlar o Escopo</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Coletar
@@ -187,8 +182,7 @@
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Recursos
 						Humanos</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell"></td>
+					<td align="left" class="dr-subtable-cell rich-subtable-cell"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Desenvolver
 						o Plano de Recursos Humanos</td>
@@ -200,8 +194,7 @@
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Comunicação</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell">Reportar
+					<td align="left" class="dr-subtable-cell rich-subtable-cell">Reportar
 						o Desempenho</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1">Identificar
 						as Partes Interessadas</td>
@@ -215,8 +208,7 @@
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Riscos</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell">Monitorar
+					<td align="left" class="dr-subtable-cell rich-subtable-cell">Monitorar
 						e Controlar os Riscos</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Planejar
@@ -229,8 +221,7 @@
 				<tr>
 					<td align="center"
 						class="rich-table-header-continue dr-table-headercell rich-table-headercell">Aquisições</td>
-					<td align="left"
-						class="dr-subtable-cell rich-subtable-cell">Administrar
+					<td align="left" class="dr-subtable-cell rich-subtable-cell">Administrar
 						as Aquisições</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 1"></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 2">Planejar

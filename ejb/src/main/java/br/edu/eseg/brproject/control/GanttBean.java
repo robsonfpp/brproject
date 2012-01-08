@@ -1,5 +1,6 @@
 package br.edu.eseg.brproject.control;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,8 +19,10 @@ import br.edu.eseg.brproject.model.action.TarefaList;
 import com.google.gson.Gson;
 
 @Name("gantt")
-public class GanttBean {
+public class GanttBean implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	// @In(create = true)
 	// GanttTx GantTxImpl;
 	@In(create = true)

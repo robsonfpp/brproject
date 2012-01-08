@@ -24,10 +24,8 @@ import br.edu.eseg.brproject.model.action.ProjetoHome;
 @Scope(ScopeType.PAGE)
 public class NovoProjetoBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	@Logger
 	Log log;
 	@In

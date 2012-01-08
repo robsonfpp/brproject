@@ -8,7 +8,7 @@
 
 
 <h:panelGrid columns="2" columnClasses="sameWidth,sameWidth"
-	width="100%">
+	width="100%" rendered="#{!fileManager.etapa.equals('controlemudanca')}">
 	<f:facet name="header">
 		<rich:panel>
 			<h:outputText value="Gerenciador de arquivos do projeto" />

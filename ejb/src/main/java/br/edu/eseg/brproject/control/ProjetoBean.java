@@ -37,10 +37,8 @@ import br.edu.eseg.brproject.model.action.UsuarioHome;
 @Scope(ScopeType.CONVERSATION)
 public class ProjetoBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
 	@Logger
 	Log log;
 	@In
@@ -103,7 +101,7 @@ public class ProjetoBean implements Serializable {
 				linha.add(ns);
 			}
 			Collections.sort(licoes);
-			Collections.sort(solicitacaomudancas);
+			Collections.sort(solicitacaomudancas,new SolicitacaoComparator());
 		}
 	}
 
@@ -288,5 +286,15 @@ public class ProjetoBean implements Serializable {
 			return c != 0 ? c : o1.getStakeholderavaliador().getId()
 					.compareTo(o2.getStakeholderavaliador().getId());
 		}
+	}
+	
+	private class SolicitacaoComparator implements Comparator<Solicitacaomudanca>{
+
+		@Override
+		public int compare(Solicitacaomudanca o1, Solicitacaomudanca o2) {
+			// TODO Auto-generated method stub
+			return o1.getStatusmudanca().getId().compareTo(o2.getStatusmudanca().getId());
+		}
+		
 	}
 }

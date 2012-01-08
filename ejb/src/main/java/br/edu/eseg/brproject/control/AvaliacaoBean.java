@@ -1,5 +1,7 @@
 package br.edu.eseg.brproject.control;
 
+import java.io.Serializable;
+
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
@@ -15,8 +17,10 @@ import br.edu.eseg.brproject.model.action.ProjetoHome;
 
 @Name("avaliacao")
 @Scope(ScopeType.PAGE)
-public class AvaliacaoBean {
+public class AvaliacaoBean implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	@In
 	Usuario loggedUser;
 	@In

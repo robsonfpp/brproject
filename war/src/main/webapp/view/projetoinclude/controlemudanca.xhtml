@@ -5,9 +5,87 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
+<style>
+.leftsol {
+	width: 20%;
+	vertical-align: top;
+}
 
+.rightsol {
+	width: 60%;
+	font-size: 14px;
+	vertical-align: top;
+	text-align: justify;
+	text-justify: inter-word;
+}
+</style>
 <s:decorate template="/layout/projetoInclude.xhtml">
 	<ui:define name="title">Realizar o Controle Integrado de Mudanças</ui:define>
 
+	<div class="actionButtons">
+		<s:button id="novaSolicitacao" value="Criar Nova" propagation="join"
+			view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
+			includePageParams="false">
+			<f:param name="statusmudancaId" value="1" />
+			<f:param name="usuarioId" value="#{loggedUser.id}" />
+			<f:param name="projetoId" value="#{projetoId}" />
+		</s:button>
+	</div>
+	<br />
+	<rich:panel id="mudancasPanel">
+		<f:facet name="header">Solicitações de mudanças</f:facet>
+
+		<a4j:repeat value="#{projeto.solicitacaomudancas}" var="_s"
+			rendered="#{projeto.solicitacaomudancas.size() > 0}">
+			<rich:simpleTogglePanel switchType="client" opened="false">
+				<f:facet name="header">#{_s.titulo} - #{_s.statusmudanca.nome}"</f:facet>
+
+				<h:panelGrid columns="2" columnClasses="leftsol,rightsol">
+					<f:facet name="header">
+						<h2>#{_s.titulo}</h2>
+					</f:facet>
+					<h:panelGrid columns="2" columnClasses="label,value,label,value">
+
+						<h:outputText value="Solicitante:" />
+						<h:outputText value="#{_s.usuario.nome}" />
+
+						<h:outputText value="Data:" />
+						<h:outputText value="#{_s.dataabertura}" />
+
+						<h:outputText value="Status:" />
+						<h:outputText value="#{_s.statusmudanca.nome}" />
+
+						<h:outputText value="Data Fechamento:" />
+						<h:outputText value="#{_s.datafechamento}" />
+					</h:panelGrid>
+					<h:panelGrid columnClasses="top,top">
+						<h:panelGrid frame="box" width="100%">
+							<f:facet name="header">Descrição da mudança</f:facet>
+							<p>#{_s.descricao}</p>
+						</h:panelGrid>
+
+						<h:panelGrid frame="box" width="100%"
+							rendered="#{_s.statusmudanca.id gt 1}">
+							<f:facet name="header">Justificativa da #{_s.statusmudanca.id==2?'Aprovação':'Reprovação'}</f:facet>
+							<p>#{_s.justificativa}</p>
+						</h:panelGrid>
+
+					</h:panelGrid>
+
+				</h:panelGrid>
+				<div class="actionButtons">
+					<s:button view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
+						value="Aprovar/Reprovar" propagation="none"
+						id="solicitacaomudancaAprovado"
+						rendered="#{_s.statusmudanca.id == 1 &amp;&amp; loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
+						<f:param name="solicitacaomudancaId" value="#{_s.id}" /> 
+						<f:param name="usuarioId" value="#{loggedUser.id}" />
+						<f:param name="projetoId" value="#{_s.projeto.id}" />
+					</s:button>
+				</div>
+			</rich:simpleTogglePanel>
+			<br />
+		</a4j:repeat>
+	</rich:panel>
 </s:decorate>
 </html>
