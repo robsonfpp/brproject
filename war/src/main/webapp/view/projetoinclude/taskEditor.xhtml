@@ -1,0 +1,228 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	template="/layout/taskEditorTemplate.xhtml">
+	<ui:define name="head">
+		<style>
+.panelBody {
+	height: 160px;
+	overflow: auto;
+}
+
+input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
+	font-size: 16px;
+	font-weight: bold;
+	padding: 10px;
+	width: 80px;
+}
+
+.warnmsg {
+	background: no-repeat left center;
+	background-image: url(/img/msgwarn.png);
+	font-size: 14px;
+}
+
+.topRight {
+	vertical-align: top;
+	text-align: right;
+}
+</style>
+	</ui:define>
+	<ui:define name="body">
+		<rich:panel id="taskEditor">
+			<f:facet name="header">#{gantt.tarefa.id==null?'Nova':'Editar'} Tarefa</f:facet>
+			<a4j:outputPanel ajaxRendered="true">
+				<h:messages id="messages" globalOnly="true" styleClass="message"
+					errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
+					rendered="#{showGlobalMessages != 'false'}" />
+			</a4j:outputPanel>
+			<h:form id="form">
+				<h:panelGrid width="100%" columns="2" columnClasses="top,top">
+					<h:panelGrid width="100%">
+						<h:panelGrid columns="2">
+							<s:decorate id="nomePanel" template="/layout/taskEdit.xhtml">
+								<ui:define name="label">Nome:</ui:define>
+								<h:inputText value="#{gantt.tarefa.nome}" size="25"
+									required="true">
+									<a4j:support event="onblur" reRender="nomePanel"
+										ajaxSingle="true" eventsQueue="foo" />
+								</h:inputText>
+							</s:decorate>
+							<s:decorate template="/layout/taskEdit.xhtml" rendered="#{gantt.tarefa.subtarefas.size() == 0}">
+								<ui:define name="label">Marco:</ui:define>
+								<h:selectBooleanCheckbox value="#{gantt.tarefa.milestone}">
+									<a4j:support event="onchange"
+										reRender="datas,recursosPanel,tarefaPai" eventsQueue="foo"
+										ajaxSingle="true" />
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+						</h:panelGrid>
+						<h:panelGrid id="tarefaPai">
+							<s:decorate id="parentPanel" template="/layout/taskEdit.xhtml"
+								rendered="#{gantt.tarefa.milestone == null || !gantt.tarefa.milestone}">
+								<ui:define name="label">Tarefa pai:</ui:define>
+								<h:selectOneMenu value="#{gantt.tarefapaiId}">
+									<f:selectItem itemLabel="--" />
+									<f:selectItems value="#{gantt.tarefaspai}" />
+									<a4j:support event="onblur" reRender="parentPanel"
+										ajaxSingle="true" eventsQueue="foo" />
+								</h:selectOneMenu>
+							</s:decorate>
+						</h:panelGrid>
+						<h:panelGrid>
+							<s:decorate id="datas" template="/layout/taskEdit.xhtml">
+								<ui:define name="label">Data(s):</ui:define>
+								<h:panelGrid columns="2" width="100%"
+									rendered="#{gantt.tarefa.milestone == null || !gantt.tarefa.milestone}">
+									<h:outputText value="Inicio" />
+									<h:outputText value="Fim" />
+									<rich:calendar id="dInicio" inputSize="14"
+									disabled="#{gantt.tarefa.subtarefas.size() gt 0}"
+										value="#{gantt.tarefa.inicio}" datePattern="dd/MM/yyyy HH:mm"
+										required="true">
+										<a4j:support event="onchanged" reRender="datas"
+											ajaxSingle="true" eventsQueue="foo" />
+									</rich:calendar>
+									<rich:calendar id="dFim" inputSize="14"
+										disabled="#{gantt.tarefa.subtarefas.size() gt 0}"
+										value="#{gantt.tarefa.fim}" datePattern="dd/MM/yyyy HH:mm"
+										required="true">
+										<a4j:support event="onchanged" reRender="datas"
+											ajaxSingle="true" eventsQueue="foo" />
+									</rich:calendar>
+								</h:panelGrid>
+								<h:panelGrid
+									rendered="#{gantt.tarefa.milestone != null &amp;&amp; gantt.tarefa.milestone}">
+									<h:outputText value="Data do marco" />
+									<rich:calendar id="dMarco" inputSize="14"
+										value="#{gantt.tarefa.inicio}" datePattern="dd/MM/yyyy"
+										required="true">
+										<a4j:support event="onchanged" reRender="datas"
+											ajaxSingle="true" eventsQueue="foo" />
+									</rich:calendar>
+								</h:panelGrid>
+							</s:decorate>
+						</h:panelGrid>
+					</h:panelGrid>
+					<h:panelGrid width="100%" columnClasses="topRight">
+						<a4j:commandButton styleClass="salvarTarefa" reRender="taskEditor"
+							action="#{gantt.salvarTarefa()}" value="Salvar"
+							oncomplete="if('#{facesContext.maximumSeverity}' == 'INFO 0'){window.opener.initvisao_detalhada();self.close();}" />
+						<rich:spacer height="30" />
+						<a4j:commandButton styleClass="salvarTarefa"
+							onclick="#{rich:component('excluirTarefa')}.show()"
+							value="Excluir" rendered="#{gantt.tarefa.id!=null}" />
+					</h:panelGrid>
+				</h:panelGrid>
+
+				<h:panelGrid width="100%">
+					<a4j:outputPanel id="recursosPanel">
+						<rich:panel
+							rendered="#{(gantt.tarefa.milestone == null || !gantt.tarefa.milestone) &amp;&amp; (gantt.tarefa.subtarefas.size() == 0)}">
+							<f:facet name="header">Recursos</f:facet>
+							<rich:listShuttle sourceValue="#{gantt.recursos}" var="recurso"
+								targetValue="#{gantt.recursosAlocados}"
+								converter="br.edu.eseg.brproject.control.ResourceConverter"
+								sourceCaptionLabel="Recursos" listsHeight="110"
+								targetCaptionLabel="Recrusos alocados"
+								orderControlsVisible="false" fastOrderControlsVisible="false">
+								<rich:column>
+									<h:outputText value="#{recurso.nome}" />
+								</rich:column>
+								<a4j:support event="onlistchanged" reRender="form"
+									ajaxSingle="true" eventsQueue="foo" />
+							</rich:listShuttle>
+							<a4j:commandLink value="Novo recurso"
+								onclick="#{rich:component('novoRecurso')}.show()" />
+						</rich:panel>
+					</a4j:outputPanel>
+					<rich:panel>
+						<f:facet name="header">Predecessores</f:facet>
+						<rich:listShuttle sourceValue="#{gantt.tarefas}" var="tarefa"
+							targetValue="#{gantt.tarefaspredecessoras}"
+							converter="br.edu.eseg.brproject.control.TaskConverter"
+							listsHeight="110" sourceCaptionLabel="Tarefas"
+							targetCaptionLabel="Predecessores" orderControlsVisible="false"
+							fastOrderControlsVisible="false">
+							<rich:column>
+								<h:outputText value="[#{tarefa.eap}]" />
+							</rich:column>
+							<rich:column>
+								<h:outputText value="#{tarefa.nome}" />
+							</rich:column>
+							<a4j:support event="onlistchanged" reRender="form"
+								ajaxSingle="true" eventsQueue="foo" />
+						</rich:listShuttle>
+					</rich:panel>
+				</h:panelGrid>
+			</h:form>
+		</rich:panel>
+
+		<rich:modalPanel id="novoRecurso" autosized="true" resizeable="false"
+			moveable="false">
+			<h:form>
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">Nome</ui:define>
+					<h:inputText value="#{gantt.nomeRecurso}" required="true" />
+				</s:decorate>
+				<s:decorate template="/layout/edit.xhtml">
+					<ui:define name="label">Tipo</ui:define>
+					<h:selectOneMenu value="#{gantt.tipoId}">
+						<f:selectItem itemValue="1" itemLabel="Humano" />
+						<f:selectItem itemValue="2" itemLabel="Material" />
+					</h:selectOneMenu>
+				</s:decorate>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Adicionar" action="#{gantt.addRecurso}"
+						oncomplete="#{rich:component('novoRecurso')}.hide()"
+						reRender="form" />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('novoRecurso')}.hide()" />
+				</h:panelGrid>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="excluirTarefa" height="100" resizeable="false">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Excluir tarefa #{gantt.tarefa.nome}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/img/close.png" styleClass="hidelink"
+						id="hidelink" />
+					<rich:componentControl for="statusChange" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:outputText rendered="#{gantt.tarefa.subtarefas.size()==0}"
+				value="Tem certeza que deseja excluir a tarefa '#{gantt.tarefa.nome}'?"
+				styleClass="warnmsg" />
+			<h:outputText rendered="#{gantt.tarefa.subtarefas.size()>0}"
+				value="A tarefa '#{gantt.tarefa.nome}' não pode ser excluída! Primeiro exclua suas subtarefas!"
+				styleClass="warnmsg" />
+			<h:form rendered="#{gantt.tarefa.subtarefas.size()==0}">
+				<div class="actionButtons">
+					<a4j:commandButton reRender="taskEditor" value="Sim"
+						action="#{gantt.excluirTarefa()}"
+						oncomplete="if('#{facesContext.maximumSeverity}' == 'INFO 0'){window.opener.initvisao_detalhada();self.close();}" />
+					<a4j:commandButton value="Não"
+						onclick="#{rich:component('excluirTarefa')}.hide()" />
+				</div>
+			</h:form>
+			<h:form rendered="#{gantt.tarefa.subtarefas.size()>0}">
+				<div class="actionButtons">
+					<a4j:commandButton value="Ok"
+						onclick="#{rich:component('excluirTarefa')}.hide()" />
+				</div>
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

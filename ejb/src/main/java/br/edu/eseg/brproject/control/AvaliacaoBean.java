@@ -37,18 +37,12 @@ public class AvaliacaoBean implements Serializable{
 	@Create
 	public void init() {
 		projeto = projetoHome.find();
-//		if (projetoHome.getProjetoId() != null) {
-//			projetoHome.load();
-//			projeto = projetoHome.getInstance();
-//
-//		}
 	}
 
 	public void salvarNotaStakeholder() {
 		avaliacaoTx.salvarAvaliacao(loggedUser.getId(), avaliadoId,
 				projeto.getId(), notaid);
 		statusMessages.add(Severity.INFO,"Prioridade salva com sucesso!");
-		//return "salvou";
 	}
 
 	public Projeto getProjeto() {

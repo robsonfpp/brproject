@@ -34,7 +34,6 @@ public class ProjetoList extends EntityQuery<Projeto> {
 		List<SelectItem> result = new ArrayList<SelectItem>();
 		projeto.setStatusprojeto(new Statusprojeto(new Long(5)));
 		getRestrictionExpressionStrings().add("projeto.statusprojeto.id <> #{projetoList.projeto.statusprojeto.id}");
-		//getRestrictionExpressionStrings().add("exists(select stakeholder from Stakeholder stakeholder where stakeholder.projeto = projeto and stakeholder.id = #{usuarioHome.usuarioId})");
 		setMaxResults(1000);
 		for(Projeto p: getResultList()){
 			result.add(new SelectItem(p.getId(),p.getNome()));

@@ -86,6 +86,13 @@
 		</navigation>
 	</page>
 
+	<page view-id="/view/projetoinclude/taskEditor.xhtml">
+		<begin-conversation join="true" flush-mode="MANUAL" />
+		<action on-postback="false" execute="#{gantt.prepareEditor()}" />
+		<param name="tarefaId" value="#{gantt.tarefaId}" />
+		<param name="projetoId" value="#{gantt.projetoId}" />
+	</page>
+
 
 	<exception class="org.jboss.seam.framework.EntityNotFoundException">
 		<redirect view-id="/error.xhtml">

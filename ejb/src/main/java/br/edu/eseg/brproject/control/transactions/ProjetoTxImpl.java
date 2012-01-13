@@ -40,32 +40,14 @@ public class ProjetoTxImpl implements ProjetoTx {
 		Long projetoId = getLastInsertedId();
 
 		sql = new StringBuilder();
-		sql.append("insert into tarefa(projetoid,nome,inicio,fim,porcentcomp,milestone) values(?,?,?,?,0.0,0)");
+		sql.append("insert into tarefa(eap,projetoid,nome,inicio,fim,porcentcomp,milestone) values('0',?,?,?,?,0.0,0)");
 		q = em.createNativeQuery(sql.toString());
 		q.setParameter(1, projetoId);
 		q.setParameter(2, "Projeto: " + p.getNome());
 		q.setParameter(3, p.getInicio());
 		q.setParameter(4, p.getFimprevisto());
 		q.executeUpdate();
-
-		Long tarefaId = getLastInsertedId();
 		
-		sql = new StringBuilder();
-		sql.append("insert into subtarefa(tarefaid, subtarefaid) values(?1,?1)");
-		q = em.createNativeQuery(sql.toString());
-		q.setParameter(1, tarefaId);
-		q.executeUpdate();
-		// for (Stakeholder s : p.getStakeholders()) {
-		// sql = new StringBuilder();
-		// sql.append("insert into stakeholder")
-		// .append("(projetoid,usuarioid,papel)")
-		// .append("values(?,?,?)");
-		// q = em.createNativeQuery(sql.toString());
-		// q.setParameter(1, projetoId);
-		// q.setParameter(2, s.getUsuario().getId());
-		// q.setParameter(3, s.getPapel());
-		// q.executeUpdate();
-		// }
 		return projetoId;
 	}
 

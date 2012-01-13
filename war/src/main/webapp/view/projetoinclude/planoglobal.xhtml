@@ -5,22 +5,27 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
+<script>
+function editar_tarefa(id){
+	if(id == -1){
+		return;
+	}
+	var url = 'http://'+location.host+'/brProject/view/projetoinclude/taskEditor.seam?tarefaId='+id+'&amp;projetoId=#{projeto.projeto.id}';
+	window.open(url,'name','width=500,height=650,location=no,menubar=no,resizable=no,toolbar=no,status=no');
+}
 
+</script>
 <s:decorate template="/layout/projetoInclude.xhtml">
 	<ui:define name="title">Desenvolver o Plano de Gerenciamento do Projeto</ui:define>
 
 	<h:form id="frm">
 		<a4j:jsFunction name="initvisao_detalhada"
 			data="#{gantt.getTarefas(projeto.projeto.id,'visao_detalhada')}"
-			oncomplete="document.visao_detalhada.loadChart(data)" />
+			oncomplete="document.visao_detalhada.loadChart(data);" />
 
-		<a4j:jsFunction name="editar_tarefa" reRender="frm"
-			oncomplete="alert(#{gantt.tarefaId})">
-			<a4j:actionparam name="param1" assignTo="#{gantt.tarefaId}" />
-		</a4j:jsFunction>
-
-		<a4j:commandButton value="Adicionar Tarefa" />
+		<a4j:commandButton value="Adicionar Tarefa" onclick="editar_tarefa(0)" />
 	</h:form>
+	
 	<br />
 	<br />
 	<applet id="visao_detalhada" name="visao_detalhada" height="1000"
@@ -30,12 +35,14 @@
 		MAYSCRIPT="MAYSCRIPT">
 		Seu Navegador não suporta Applets!
 		<param name="action" value="visao_detalhada" />
-		<param name="width" value="1100" />
 		<param name="script" value="editar_tarefa" />
-		<param name="heigth" value="1000" />
+		<!--		<param name="width" value="1100" />-->
+		<!--		<param name="heigth" value="1000" />-->
 	</applet>
-	<br/>
-	<rich:panel rendered="#{loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
+	<br />
+	<br />
+	<rich:panel
+		rendered="#{loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
 		<f:facet name="header">Templates de documentos para o plano de gerenciamento do projeto</f:facet>
 		<h:panelGrid width="100%">
 			<rich:spacer height="10" />
@@ -86,7 +93,6 @@
 			<rich:spacer height="10" />
 		</h:panelGrid>
 	</rich:panel>
-
 
 </s:decorate>
 </html>

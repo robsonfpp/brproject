@@ -25,7 +25,7 @@ import br.edu.eseg.brproject.model.action.ProjetoHome;
 public class NovoProjetoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Logger
 	Log log;
 	@In
@@ -38,44 +38,6 @@ public class NovoProjetoBean implements Serializable {
 	ProjetoHome projetoHome;
 
 	private Projeto projeto = new Projeto();
-//	private Stakeholder stakeholder = new Stakeholder();
-//
-//	@Create()
-//	public void init() {
-//		if (projetoHome.getProjetoId() != null) {
-//			projetoHome.load();
-//			projeto = projetoHome.getDefinedInstance();
-//		}
-//	}
-
-//	public void addStakeholder() {
-//		try {
-//			Stakeholder stk = new Stakeholder(projeto,
-//					stakeholder.getUsuario(),
-//					stakeholder.getPapel(), new HashSet(), new HashSet());
-//			if (!projeto.getStakeholders().contains(stk)) {
-//				projeto.getStakeholders().add(stk);
-//				statusMessages.add(Severity.INFO,
-//						"Stakeholder '{0}' adicionado com sucesso", stakeholder
-//								.getUsuario().getNome());
-//			} else {
-//				statusMessages.add(Severity.WARN,
-//						"Stakeholder '{0}' já foi adicionado!", stakeholder
-//								.getUsuario().getNome());
-//			}
-//			cleanStakeholder();
-//		} catch (Exception e) {
-//			statusMessages.add(Severity.ERROR,
-//					"Erro ao adicionar o stakeholder '{0}'", e);
-//			log.error("Erro ao adicionar stakeholder!", e);
-//		}
-//	}
-
-//	public void removeStakeholder(Stakeholder stakeholder) {
-//		System.out.println(stakeholder.getUsuario().getNome());
-//		boolean r = projeto.getStakeholders().remove(stakeholder);
-//		log.info("Stakeholder {0} foi removido", r ? "" : "NÃ£o");
-//	}
 
 	public String salvarProjeto() {
 		projeto.setUsuario(loggedUser);
@@ -85,10 +47,11 @@ public class NovoProjetoBean implements Serializable {
 		if (projetoHome.getProjetoId() != null) {
 			try {
 				projetoTx.updateProjeto(projeto);
-				statusMessages
-						.add(Severity.INFO, "Projeto atualizado com sucesso!");
+				statusMessages.add(Severity.INFO,
+						"Projeto atualizado com sucesso!");
 			} catch (Exception e) {
-				statusMessages.add(Severity.ERROR, "Erro ao atualizar o projeto!");
+				statusMessages.add(Severity.ERROR,
+						"Erro ao atualizar o projeto!");
 				log.error("Erro ao cirar o projeto", e);
 				return "erro";
 			}
@@ -96,25 +59,16 @@ public class NovoProjetoBean implements Serializable {
 			try {
 				Long projetoId = projetoTx.createProjeto(projeto);
 				projetoHome.setProjetoId(projetoId);
-				statusMessages.add(Severity.INFO,
-						"Projeto criado com sucesso!");
+				statusMessages
+						.add(Severity.INFO, "Projeto criado com sucesso!");
 			} catch (Exception e) {
-				statusMessages.add(Severity.ERROR,
-						"Erro ao criar o projeto!");
+				statusMessages.add(Severity.ERROR, "Erro ao criar o projeto!");
 				log.error("Erro ao atualizar o projeto", e);
 				return "erro";
 			}
 		}
 		return "salvou";
 	}
-
-//	public void cleanStakeholder() {
-//		stakeholder = new Stakeholder();
-//	}
-//
-//	public void addUsuario(Usuario u) {
-//		stakeholder.setUsuario(u);
-//	}
 
 	public Projeto getProjeto() {
 		return projeto;
@@ -123,13 +77,5 @@ public class NovoProjetoBean implements Serializable {
 	public void setProjeto(Projeto projeto) {
 		this.projeto = projeto;
 	}
-
-//	public Stakeholder getStakeholder() {
-//		return stakeholder;
-//	}
-
-//	public void setStakeholder(Stakeholder stakeholder) {
-//		this.stakeholder = stakeholder;
-//	}
 
 }

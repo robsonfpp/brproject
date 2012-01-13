@@ -12,7 +12,9 @@ public class RecursoHome extends EntityHome<Recurso> {
 
 	@In(create = true)
 	TiporecursoHome tiporecursoHome;
-
+	@In(create = true)
+	ProjetoHome projetoHome;
+	
 	public void setRecursoId(Long id) {
 		setId(id);
 	}
@@ -38,6 +40,10 @@ public class RecursoHome extends EntityHome<Recurso> {
 		Tiporecurso tiporecurso = tiporecursoHome.getDefinedInstance();
 		if (tiporecurso != null) {
 			getInstance().setTiporecurso(tiporecurso);
+		}
+		Projeto projeto = projetoHome.getDefinedInstance();
+		if(projeto != null){
+			getInstance().setProjeto(projeto);
 		}
 	}
 

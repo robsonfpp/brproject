@@ -48,9 +48,13 @@ public class GanttApplet extends JApplet implements MouseListener,
 
 	public void init() {
 		try {
-			int w = Integer.parseInt(getParameter("width"));
-			int h = Integer.parseInt(getParameter("heigth"));
-			setSize(new Dimension(w, h));
+			String width = getParameter("width");
+			String height = getParameter("heigth");
+			if (width != null && height != null) {
+				int w = Integer.parseInt(width);
+				int h = Integer.parseInt(height);
+				setSize(new Dimension(w, h));
+			}
 			addMouseListener(this);
 			addMouseMotionListener(this);
 			jso = JSObject.getWindow(this);
@@ -66,8 +70,8 @@ public class GanttApplet extends JApplet implements MouseListener,
 
 	@Override
 	public void start() {
-		
-		jso.call("init"+getParameter("action"), new Object[] {});
+
+		jso.call("init" + getParameter("action"), new Object[] {});
 	}
 
 	public void loadChart(String jsonString) {
@@ -94,7 +98,7 @@ public class GanttApplet extends JApplet implements MouseListener,
 			((TaskSeriesCollection) dataset).add(series);
 			chart = ChartFactory.createGanttChart(null, // chart
 					"Tarefas", // domain axis label
-					"Data", // range axis label
+					"Tempo", // range axis label
 					dataset, // data
 					false, true, true); // include legend
 			repaint();

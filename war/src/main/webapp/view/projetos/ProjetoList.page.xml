@@ -9,13 +9,6 @@
  <param name="logic" value="#{projetoList.restrictionLogicOperator}"/>
  <param name="from"/>
  <param name="cliente" value="#{projetoList.projeto.cliente}"/>
- <param name="justificativa" value="#{projetoList.projeto.justificativa}"/>
- <param name="necessidades" value="#{projetoList.projeto.necessidades}"/>
  <param name="nome" value="#{projetoList.projeto.nome}"/>
- <param name="premissas" value="#{projetoList.projeto.premissas}"/>
- <param name="produto" value="#{projetoList.projeto.produto}"/>
- <param name="responsabilidadesgp" value="#{projetoList.projeto.responsabilidadesgp}"/>
- <param name="restricoes" value="#{projetoList.projeto.restricoes}"/>
- <param name="resumo" value="#{projetoList.projeto.resumo}"/>
  <param name="nomeGp" value="#{projetoList.projeto.usuario.nome}"/>
 </page>

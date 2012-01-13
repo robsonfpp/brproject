@@ -12,7 +12,9 @@ public class TarefaHome extends EntityHome<Tarefa> {
 
 	@In(create = true)
 	ProjetoHome projetoHome;
-
+	@In(create = true)
+	TarefaHome tarefaHome;
+	
 	public void setTarefaId(Long id) {
 		setId(id);
 	}
@@ -38,6 +40,10 @@ public class TarefaHome extends EntityHome<Tarefa> {
 		Projeto projeto = projetoHome.getDefinedInstance();
 		if (projeto != null) {
 			getInstance().setProjeto(projeto);
+		}
+		Tarefa tarefaPai = tarefaHome.getDefinedInstance();
+		if(tarefaPai != null){
+			getInstance().setTarefaPai(tarefaPai);
 		}
 	}
 

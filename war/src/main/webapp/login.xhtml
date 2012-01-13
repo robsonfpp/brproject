@@ -29,8 +29,6 @@
 							<ui:define name="label">Usuário</ui:define>
 							<h:inputText id="username" value="#{credentials.username}"
 								required="true">
-								<a:support event="onblur" reRender="usernameField"
-									bypassUpdates="true" ajaxSingle="true" />
 							</h:inputText>
 						</s:decorate>
 
@@ -38,8 +36,6 @@
 							<ui:define name="label">Senha</ui:define>
 							<h:inputSecret value="#{credentials.password}"
 								required="true">
-								<a:support event="onblur" reRender="passwordField"
-									bypassUpdates="true" ajaxSingle="true" />
 							</h:inputSecret>
 						</s:decorate>
 
@@ -47,8 +43,6 @@
 							<ui:define name="label">Lembrar usuário</ui:define>
 							<h:selectBooleanCheckbox id="rememberMe"
 								value="#{rememberMe.enabled}">
-								<a:support event="onblur" reRender="rememberField"
-									bypassUpdates="true" ajaxSingle="true" />
 							</h:selectBooleanCheckbox>
 						</s:decorate>
 

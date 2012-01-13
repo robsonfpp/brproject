@@ -72,6 +72,7 @@ public class ProjetoBean implements Serializable {
 	@Create
 	@Begin(join = true)
 	public void start() {
+		log.info("Carregando projeto: "+ projetoHome.getProjetoId());
 		if (projetoHome.getProjetoId() != null) {
 			projetoHome.load();
 			projeto = projetoHome.getDefinedInstance();

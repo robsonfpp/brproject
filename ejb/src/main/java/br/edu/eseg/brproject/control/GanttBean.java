@@ -2,35 +2,173 @@ package br.edu.eseg.brproject.control;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.jboss.seam.ScopeType;
+import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
+import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.StatusMessages;
+import org.jboss.seam.log.Log;
 import org.jfree.util.ObjectUtilities;
 
+import br.edu.eseg.brproject.control.transactions.GanttTx;
 import br.edu.eseg.brproject.model.Projeto;
+import br.edu.eseg.brproject.model.Recurso;
 import br.edu.eseg.brproject.model.Tarefa;
+import br.edu.eseg.brproject.model.Tiporecurso;
 import br.edu.eseg.brproject.model.Utilizacaorecurso;
 import br.edu.eseg.brproject.model.action.TarefaList;
 
 import com.google.gson.Gson;
 
 @Name("gantt")
-public class GanttBean implements Serializable{
+@Scope(ScopeType.CONVERSATION)
+public class GanttBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	// @In(create = true)
-	// GanttTx GantTxImpl;
+
+	@Logger
+	Log log;
+	@In
+	StatusMessages statusMessages;
+	@In(create = true)
+	GanttTx ganttTx;
 	@In(create = true)
 	TarefaList tarefaList;
-	public String tarefaId;
+	EntityManager em;
+
+	private Long projetoId;
+	private Long tarefaId;
+	private Tarefa tarefa;
+	private String nomeRecurso;
+	private Long tipoId;
+	private Long tarefapaiId;
+	// para selecionar o pai
+	private List<SelectItem> tarefaspai = new ArrayList<SelectItem>();
+	// para selecionar o predecessor
+	private List<Tarefa> tarefas = new ArrayList<Tarefa>();
+	// para selecionar os recursos
+	private List<Recurso> recursos = new ArrayList<Recurso>();
+	// predecessores selecionados
+	private List<Tarefa> tarefaspredecessoras = new ArrayList<Tarefa>();
+	// recursos selecionados
+	private List<Recurso> recursosAlocados = new ArrayList<Recurso>();
+
+	@Create
+	public void init() {
+		em = tarefaList.getEntityManager();
+	}
+
+	public void prepareEditor() {
+		log.info("iniciando o bean " + this.getClass().getName());
+		log.info("projetoid: " + projetoId);
+		log.info("tarefaid: " + tarefaId);
+
+		tarefas = getTarefas(projetoId);
+		recursos = getRecursos(projetoId);
+
+		tarefa = getTarefaById(tarefaId);
+
+		if (tarefa != null) {
+			tarefas.remove(tarefa);
+
+			tarefaspredecessoras.addAll(tarefa.getTarefaspredecessoras());
+
+			for (Utilizacaorecurso ut : tarefa.getUtilizacaorecursos()) {
+				recursosAlocados.add(ut.getRecurso());
+			}
+
+			if (tarefa.getTarefaPai() != null) {
+				tarefapaiId = tarefa.getTarefaPai().getId();
+			}
+		} else {
+			tarefa = new Tarefa();
+			tarefa.setProjeto(getProjetoById(projetoId));
+			tarefa.setInicio(tarefa.getProjeto().getInicio());
+			Calendar c = new GregorianCalendar();
+			c.setTime(tarefa.getProjeto().getInicio());
+			c.add(Calendar.DATE, 1);
+			tarefa.setFim(c.getTime());
+		}
+
+		if (tarefas.size() > 0) {
+			tarefas.remove(0);
+		}
+		for (Tarefa t : tarefas) {
+			tarefaspai.add(new SelectItem(t.getId(), "[" + t.getEap() + "] "
+					+ t.getNome()));
+		}
+		recursos.removeAll(recursosAlocados);
+		tarefas.removeAll(tarefaspredecessoras);
+	}
+
+	public void salvarTarefa() {
+		log.info("Dados da tarefa: " + tarefa);
+		log.info("predecessores: " + tarefaspredecessoras.size());
+		log.info("recursos: " + recursosAlocados.size());
+		log.info("Tarefa pai: " + tarefapaiId);
+
+		if (tarefapaiId != null) {
+			tarefa.setTarefaPai(getTarefaById(tarefapaiId));
+		} else {
+			tarefa.setTarefaPai(new Tarefa());
+		}
+		if (tarefa.getMilestone() != null && tarefa.getMilestone()) {
+			tarefa.setFim(tarefa.getInicio());
+		} else {
+			if (!tarefa.getInicio().before(tarefa.getFim())) {
+				statusMessages.add(Severity.ERROR,
+						"A data de inicio deve ser menor que a data final!");
+				return;
+			}
+		}
+		tarefa.setTarefaspredecessoras(new HashSet<Tarefa>(tarefaspredecessoras));
+		tarefa.setUtilizacaorecursos(new HashSet<Utilizacaorecurso>());
+		for (Recurso r : recursosAlocados) {
+			Utilizacaorecurso ur = new Utilizacaorecurso();
+			ur.setRecurso(r);
+			ur.setTarefa(tarefa);
+			tarefa.getUtilizacaorecursos().add(ur);
+		}
+		ganttTx.saveTarefa(tarefa);
+		statusMessages.add(Severity.INFO, "Tarefa salva com sucesso!");
+	}
+
+	public void excluirTarefa() {
+		log.info("Excluindo a tarefa: " + tarefa);
+		ganttTx.excluirTarefa(tarefa);
+		statusMessages.add(Severity.INFO, "Tarefa excluída com sucesso!");
+	}
+
+	public void addRecurso() {
+		log.info("adicionando recurso:" + nomeRecurso);
+		log.info("projetoid: " + projetoId);
+		Recurso r = new Recurso();
+		r.setNome(nomeRecurso);
+		r.setTiporecurso(new Tiporecurso(tipoId));
+		r.setProjeto(getProjetoById(projetoId));
+		Long id = ganttTx.createRecurso(r);
+		r.setId(id);
+		recursos.add(r);
+		nomeRecurso = null;
+		tipoId = null;
+	}
 
 	public String getTarefas(String projeto_id, String tipo) {
-
+		em.clear();
+		em.flush();
 		String ret = "Error";
 		try {
 			List<Tarefa> tarefas = null;
@@ -40,36 +178,79 @@ public class GanttBean implements Serializable{
 				tarefas = getTarefas(Long.valueOf(projeto_id));
 			}
 			List<Task> tasks = new ArrayList<Task>();
-			
+			log.info("carregando gantt: \n" + tarefas);
 			for (Tarefa t : tarefas) {
-				if(tarefas.size()<=1){
+				if (tarefas.size() <= 1) {
 					break;
 				}
-				Task task = new Task(t.getNome(), new TimePeriod(t.getInicio(),
-						t.getFim()));
+
+				List<Tarefa> subtarefas = getSubtarefas(t.getId());
+				List<Tarefa> predecessoras = getPredecessores(t.getId());
+				List<Utilizacaorecurso> recursos = getUtilizacaorecursos(t
+						.getId());
+
+				Task task = new Task("[" + t.getEap() + "]-" + t.getNome(),
+						new TimePeriod(t.getInicio(), t.getFim()));
 				task.setId(t.getId());
 				task.setMilestone(t.getMilestone());
 				task.setPercentComplete(t.getPorcentcomp());
 				if (tipo.equals("visao_detalhada")) {
-					for (Tarefa st : t.getSubtarefas()) {
-						task.addSubtask(new Task(st.getNome(), st.getInicio(),
-								st.getFim()));
+					for (Tarefa st : subtarefas) {
+						task.addSubtask(new Task("[" + st.getEap() + "]-"
+								+ st.getNome(), st.getInicio(), st.getFim()));
 					}
-				} else if (tarefas.indexOf(t) == 0) {
-					for (Tarefa st : t.getSubtarefas()) {
-						task.addSubtask(new Task(st.getNome(), st.getInicio(),
-								st.getFim()));
+				}
+				if (tarefas.indexOf(t) == 0) {
+					task.setDescription(t.getNome());
+					task.setId(new Long(-1));
+					for (Tarefa st : tarefas) {
+						if (st.equals(t)) {
+							continue;
+						}
+						task.addSubtask(new Task("[" + t.getEap() + "]-"
+								+ st.getNome(), st.getInicio(), st.getFim()));
 					}
 				}
 
-				for (Tarefa tp : t.getTarefaspredecessoras()) {
-					task.addPredecessor(new Task(tp.getNome(), tp.getInicio(),
-							tp.getFim()));
+				for (Tarefa tp : predecessoras) {
+					task.addPredecessor(new Task("[" + tp.getEap() + "]-"
+							+ tp.getNome(), tp.getInicio(), tp.getFim()));
 				}
-				for (Utilizacaorecurso u : t.getUtilizacaorecursos()) {
+				for (Utilizacaorecurso u : recursos) {
 					task.addRecurso(u.getRecurso().getNome());
 				}
 				tasks.add(task);
+			}
+
+			// ganbiarra para fazer o gráfico ficar bonito quando tem pouca
+			// tarefa =)
+			System.out.println("tarefas do grafico: " + tasks.size());
+			if (tasks.size() > 0) {
+				String ghostTask = " ";
+				int index = 0;
+				if (tasks.size() > 1) {
+					index = 1;
+				}
+				System.out.println("peguei o indice: " + index);
+				Date init = tasks.get(index).getDuration().getStart();
+				System.out.println("A data inicial eh: " + init);
+				if (tipo.equals("visao_detalhada")) {
+					for (int i = tasks.size(); i <= 12; i++) {
+						Task ta = new Task(ghostTask, init, init);
+						ta.addSubtask(new Task("_", init, init));
+						ta.setId(new Long(-1));
+						tasks.add(ta);
+						ghostTask += " ";
+					}
+				} else {
+					for (int i = tasks.size(); i <= 7; i++) {
+						Task ta = new Task(ghostTask, init, init);
+						ta.addSubtask(new Task("_", init, init));
+						ta.setId(new Long(-1));
+						tasks.add(ta);
+						ghostTask += " ";
+					}
+				}
 			}
 			ret = new Gson().toJson(tasks);
 		} catch (Exception e) {
@@ -78,39 +259,162 @@ public class GanttBean implements Serializable{
 		return ret;
 	}
 
-	private List<Tarefa> getMacroTarefas(Long projetoId) {
-		Query q = tarefaList
-				.getEntityManager()
-				.createNativeQuery(
-						"select t.* from tarefa t join projeto p on p.id = t.projetoid join subtarefa st on st.tarefaid = t.id or t.milestone where t.projetoid = ? group by t.id order by t.id",
-						Tarefa.class);
-		q.setParameter(1, projetoId);
-		return q.getResultList();
+	public Long getProjetoId() {
+		return projetoId;
 	}
 
-	private List<Tarefa> getTarefas(Long projetoId) {
-		Query q = tarefaList
-				.getEntityManager()
-				.createNativeQuery(
-						"select t.* from tarefa t where t.projetoid = ?1 order by t.id",
-						Tarefa.class);
-		q.setParameter(1, projetoId);
-		return q.getResultList();
+	public void setProjetoId(Long projetoId) {
+		this.projetoId = projetoId;
 	}
 
-	private Projeto getProjeto(Long projetoId) {
-		Query q = tarefaList.getEntityManager().createNativeQuery(
-				"select * from projeto where id = ?", Projeto.class);
-		q.setParameter(1, projetoId);
-		return (Projeto) q.getSingleResult();
-	}
-
-	public String getTarefaId() {
+	public Long getTarefaId() {
 		return tarefaId;
 	}
 
-	public void setTarefaId(String tarefaId) {
+	public void setTarefaId(Long tarefaId) {
 		this.tarefaId = tarefaId;
+	}
+
+	public List<Tarefa> getTarefas() {
+		return tarefas;
+	}
+
+	public void setTarefas(List<Tarefa> tarefas) {
+		this.tarefas = tarefas;
+	}
+
+	public List<SelectItem> getTarefaspai() {
+		return tarefaspai;
+	}
+
+	public void setTarefaspai(List<SelectItem> tarefaspai) {
+		this.tarefaspai = tarefaspai;
+	}
+
+	public List<Recurso> getRecursosAlocados() {
+		return recursosAlocados;
+	}
+
+	public void setRecursosAlocados(List<Recurso> recursosAlocados) {
+		this.recursosAlocados = recursosAlocados;
+	}
+
+	public Long getTarefapaiId() {
+		return tarefapaiId;
+	}
+
+	public void setTarefapaiId(Long tarefapaiId) {
+		this.tarefapaiId = tarefapaiId;
+	}
+
+	public List<Tarefa> getTarefaspredecessoras() {
+		return tarefaspredecessoras;
+	}
+
+	public void setTarefaspredecessoras(List<Tarefa> tarefaspredecessoras) {
+		this.tarefaspredecessoras = tarefaspredecessoras;
+	}
+
+	public String getNomeRecurso() {
+		return nomeRecurso;
+	}
+
+	public void setNomeRecurso(String nomeRecurso) {
+		this.nomeRecurso = nomeRecurso;
+	}
+
+	public Long getTipoId() {
+		return tipoId;
+	}
+
+	public void setTipoId(Long tipoId) {
+		this.tipoId = tipoId;
+	}
+
+	public Tarefa getTarefa() {
+		return tarefa;
+	}
+
+	public void setTarefa(Tarefa tarefa) {
+		this.tarefa = tarefa;
+	}
+
+	public List<Recurso> getRecursos() {
+		return recursos;
+	}
+
+	public void setRecursos(List<Recurso> recursos) {
+		this.recursos = recursos;
+	}
+
+	public List<Tarefa> getMacroTarefas(Long projetoId) {
+		Query q = em
+				.createNativeQuery(
+						"select * from tarefa where tarefapaiid is null and projetoid = ?1 order by eap",
+						Tarefa.class);
+		q.setParameter(1, projetoId);
+		return q.getResultList();
+	}
+
+	public List<Tarefa> getTarefas(Long projetoId) {
+		Query q = em.createNativeQuery(
+				"select * from tarefa where projetoid = ?1 order by eap",
+				Tarefa.class);
+		q.setParameter(1, projetoId);
+		return q.getResultList();
+	}
+
+	public List<Utilizacaorecurso> getUtilizacaorecursos(Long tarefaId) {
+		Query q = em.createNativeQuery(
+				"select * from utilizacaorecurso where tarefaid = ?1",
+				Utilizacaorecurso.class);
+		q.setParameter(1, tarefaId);
+		return q.getResultList();
+	}
+
+	public List<Tarefa> getSubtarefas(Long tarefaId) {
+		Query q = em.createNativeQuery(
+				"select * from tarefa where tarefapaiid = ?", Tarefa.class);
+		q.setParameter(1, tarefaId);
+		return q.getResultList();
+	}
+
+	public List<Recurso> getRecursos(Long projetoId) {
+		Query q = em.createNativeQuery(
+				"select * from recurso where projetoid = ?1", Recurso.class);
+		q.setParameter(1, projetoId);
+		return q.getResultList();
+	}
+
+	public List<Tarefa> getPredecessores(Long tarefaId) {
+		Query q = em
+				.createNativeQuery(
+						"select t.* from  tarefapredecessora p join tarefa t on p.tarefapredecessoraid = t.id where p.tarefaid = ?",
+						Tarefa.class);
+		q.setParameter(1, tarefaId);
+		return q.getResultList();
+	}
+
+	public Tarefa getTarefaById(Long tarefaId) {
+		Query q = em.createNativeQuery("select * from tarefa where id = ?",
+				Tarefa.class);
+		q.setParameter(1, tarefaId);
+		List<Tarefa> result = q.getResultList();
+		if (result.size() > 0) {
+			return result.get(0);
+		}
+		return null;
+	}
+
+	public Projeto getProjetoById(Long projetoId) {
+		Query q = em.createNativeQuery("select * from projeto where id = ?",
+				Projeto.class);
+		q.setParameter(1, projetoId);
+		List<Projeto> result = q.getResultList();
+		if (result.size() > 0) {
+			return result.get(0);
+		}
+		return null;
 	}
 
 	private class Task {
@@ -353,6 +657,10 @@ public class GanttBean implements Serializable{
 				return false;
 			}
 			return true;
+		}
+
+		public String toString() {
+			return description + ": " + duration.start + " - " + duration.end;
 		}
 
 		private void recalculatePercent() {

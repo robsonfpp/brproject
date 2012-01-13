@@ -58,7 +58,7 @@
 								<ui:param name="entityList" value="#{projetoList}" />
 								<ui:param name="propertyLabel" value="Id do Projeto" />
 								<ui:param name="propertyPath" value="projeto.id" />
-							</ui:include>
+							</ui:include> 
 						</f:facet>
 						<h:outputText value="#{_projeto.id}" />
 					</h:column>
@@ -101,16 +101,6 @@
 							</ui:include>
 						</f:facet>
 						<h:outputText value="#{_projeto.cliente}" />
-					</h:column>
-					<h:column>
-						<f:facet name="header">
-							<ui:include src="/layout/sort.xhtml">
-								<ui:param name="entityList" value="#{projetoList}" />
-								<ui:param name="propertyLabel" value="Custo Previsto" />
-								<ui:param name="propertyPath" value="projeto.custoprevisto" />
-							</ui:include>
-						</f:facet>
-						<h:outputText value="#{_projeto.custoprevisto}" />
 					</h:column>
 					<h:column>
 						<f:facet name="header">
@@ -159,16 +149,6 @@
 						<h:outputText value="#{_projeto.fimprevisto}">
 							<s:convertDateTime type="both" dateStyle="short" />
 						</h:outputText>
-					</h:column>
-					<h:column>
-						<f:facet name="header">
-							<ui:include src="/layout/sort.xhtml">
-								<ui:param name="entityList" value="#{projetoList}" />
-								<ui:param name="propertyLabel" value="Orçamento" />
-								<ui:param name="propertyPath" value="projeto.orcamento" />
-							</ui:include>
-						</f:facet>
-						<h:outputText value="#{_projeto.orcamento}" />
 					</h:column>
 					<rich:column styleClass="action">
 						<f:facet name="header">Ação</f:facet>

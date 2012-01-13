@@ -89,5 +89,10 @@ public class ProjetoHome extends EntityHome<Projeto> {
 		return getInstance() == null ? null : new ArrayList<Arquivo>(
 				getInstance().getArquivos());
 	}
+	
+	public List<Recurso> getRecursos() {
+		return getInstance() == null ? null : new ArrayList<Recurso>(
+				getInstance().getRecursos());
+	}
 
 }

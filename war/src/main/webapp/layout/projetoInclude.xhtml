@@ -18,9 +18,11 @@
 }
 </style>
 	<h:panelGrid width="100%">
+		<h:form>
+			<a4j:commandLink action="voltar"
+				value="&lt;&lt; Voltar para as Fases do Projeto" />
+		</h:form>
 
-		<s:link value="&lt;&lt; Voltar para as Fases do Projeto"
-			action="voltar" />
 		<rich:spacer height="10" />
 		<rich:panel>
 			<f:facet name="header">
@@ -33,8 +35,10 @@
 			<ui:include src="/view/projetoinclude/fileManager.xhtml" />
 		</rich:panel>
 		<rich:spacer height="10" />
-		<s:link value="&lt;&lt; Voltar para as Fases do Projeto"
-			action="voltar" />
+		<h:form>
+			<a4j:commandLink action="voltar"
+				value="&lt;&lt; Voltar para as Fases do Projeto" />
+		</h:form>
 	</h:panelGrid>
 
 </ui:composition>

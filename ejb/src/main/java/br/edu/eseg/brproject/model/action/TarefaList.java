@@ -10,11 +10,13 @@ public class TarefaList extends EntityQuery<Tarefa> {
 
 	private static final String EJBQL = "select tarefa from Tarefa tarefa";
 
-	private static final String[] RESTRICTIONS = { "lower(tarefa.nome) like lower(concat(#{tarefaList.tarefa.nome},'%'))", };
+	private static final String[] RESTRICTIONS = { "lower(tarefa.nome) like lower(concat(#{tarefaList.tarefa.nome},'%'))",
+			"tarefa.projeto.id = #{tarefaList.tarefa.projeto.id}" };
 
 	private Tarefa tarefa = new Tarefa();
 
 	public TarefaList() {
+		tarefa.setProjeto(new Projeto());
 		setEjbql(EJBQL);
 		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
 		setMaxResults(1000);

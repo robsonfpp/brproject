@@ -26,6 +26,10 @@ public class Tiporecurso implements java.io.Serializable {
 
 	public Tiporecurso() {
 	}
+	
+	public Tiporecurso(Long id) {
+		this.id = id;
+	}
 
 	public Tiporecurso(String nome, Set<Recurso> recursos) {
 		this.nome = nome;

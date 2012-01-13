@@ -2,14 +2,16 @@ package br.edu.eseg.brproject.model;
 
 // Generated May 29, 2011 12:04:47 PM by Hibernate Tools 3.4.0.CR1
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +20,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.NotNull;
 
 /**
@@ -32,20 +33,11 @@ public class Projeto implements java.io.Serializable {
 	private Statusprojeto statusprojeto;
 	private Usuario usuario;
 	private String cliente;
-	private Double custoprevisto;
 	private Date datacriacao;
 	private Date fim;
 	private Date fimprevisto;
 	private Date inicio;
-	private String justificativa;
-	private String necessidades;
 	private String nome;
-	private Double orcamento;
-	private String premissas;
-	private String produto;
-	private String responsabilidadesgp;
-	private String restricoes;
-	private String resumo;
 	private Set<Stakeholder> stakeholders = new HashSet<Stakeholder>(0);
 	private Set<Solicitacaomudanca> solicitacaomudancas = new HashSet<Solicitacaomudanca>(
 			0);
@@ -54,6 +46,7 @@ public class Projeto implements java.io.Serializable {
 	private Set<Notastakeholder> notastakeholders = new HashSet<Notastakeholder>(
 			0);
 	private Set<Arquivo> arquivos = new HashSet<Arquivo>(0);
+	private Set<Recurso> recursos = new HashSet<Recurso>(0);
 
 	public Projeto() {
 		datacriacao = new Date();
@@ -84,20 +77,11 @@ public class Projeto implements java.io.Serializable {
 		this.statusprojeto = statusprojeto;
 		this.usuario = usuario;
 		this.cliente = cliente;
-		this.custoprevisto = custoprevisto;
 		this.datacriacao = datacriacao;
 		this.fim = fim;
 		this.fimprevisto = fimprevisto;
 		this.inicio = inicio;
-		this.justificativa = justificativa;
-		this.necessidades = necessidades;
 		this.nome = nome;
-		this.orcamento = orcamento;
-		this.premissas = premissas;
-		this.produto = produto;
-		this.responsabilidadesgp = responsabilidadesgp;
-		this.restricoes = restricoes;
-		this.resumo = resumo;
 		this.stakeholders = stakeholders;
 		this.solicitacaomudancas = solicitacaomudancas;
 		this.tarefas = tarefas;
@@ -147,15 +131,6 @@ public class Projeto implements java.io.Serializable {
 		this.cliente = cliente;
 	}
 
-	@Column(name = "custoprevisto", precision = 22, scale = 0)
-	public Double getCustoprevisto() {
-		return this.custoprevisto;
-	}
-
-	public void setCustoprevisto(Double custoprevisto) {
-		this.custoprevisto = custoprevisto;
-	}
-
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "datacriacao", nullable = false, length = 19, columnDefinition = "timestamp default CURRENT_TIMESTAMP")
 	@NotNull
@@ -198,26 +173,6 @@ public class Projeto implements java.io.Serializable {
 		this.inicio = inicio;
 	}
 
-	@Column(name = "justificativa")
-	@Type(type = "text")
-	public String getJustificativa() {
-		return this.justificativa;
-	}
-
-	public void setJustificativa(String justificativa) {
-		this.justificativa = justificativa;
-	}
-
-	@Column(name = "necessidades")
-	@Type(type = "text")
-	public String getNecessidades() {
-		return this.necessidades;
-	}
-
-	public void setNecessidades(String necessidades) {
-		this.necessidades = necessidades;
-	}
-
 	@Column(name = "nome")
 	public String getNome() {
 		return this.nome;
@@ -225,65 +180,6 @@ public class Projeto implements java.io.Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	@Column(name = "orcamento", precision = 22, scale = 0)
-	public Double getOrcamento() {
-		return this.orcamento;
-	}
-
-	public void setOrcamento(Double orcamento) {
-		this.orcamento = orcamento;
-	}
-
-	@Column(name = "premissas")
-	@Type(type = "text")
-	public String getPremissas() {
-		return this.premissas;
-	}
-
-	public void setPremissas(String premissas) {
-		this.premissas = premissas;
-	}
-
-	@Column(name = "produto")
-	@Type(type = "text")
-	public String getProduto() {
-		return this.produto;
-	}
-
-	public void setProduto(String produto) {
-		this.produto = produto;
-	}
-
-	@Column(name = "responsabilidadesgp")
-	@Type(type = "text")
-	public String getResponsabilidadesgp() {
-		return this.responsabilidadesgp;
-	}
-
-	public void setResponsabilidadesgp(String responsabilidadesgp) {
-		this.responsabilidadesgp = responsabilidadesgp;
-	}
-
-	@Column(name = "restricoes")
-	@Type(type = "text")
-	public String getRestricoes() {
-		return this.restricoes;
-	}
-
-	public void setRestricoes(String restricoes) {
-		this.restricoes = restricoes;
-	}
-
-	@Column(name = "resumo")
-	@Type(type = "text")
-	public String getResumo() {
-		return this.resumo;
-	}
-
-	public void setResumo(String resumo) {
-		this.resumo = resumo;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projeto")
@@ -339,6 +235,15 @@ public class Projeto implements java.io.Serializable {
 	
 	public void setArquivos(Set<Arquivo> arquivos) {
 		this.arquivos = arquivos;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projeto")
+	public Set<Recurso> getRecursos() {
+		return recursos;
+	}
+
+	public void setRecursos(Set<Recurso> recursos) {
+		this.recursos = recursos;
 	}
 	
 }
