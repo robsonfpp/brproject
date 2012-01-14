@@ -53,7 +53,12 @@
 				<s:button view="/view/licoes/LicaoEdit.xhtml" id="edit"
 					value="Editar" />
 
-				<s:button view="/view/licoes/LicaoList.xhtml" id="done" value="OK" />
+				<s:button view="/view/licoes/LicaoList.xhtml" id="done" value="OK"
+					rendered="#{empty projetoFrom}" />
+				<s:button view="#{projetoFrom}" id="done2" value="OK"
+					rendered="#{not empty projetoFrom}" includePageParams="false">
+					<f:param name="projetoId" value="#{projetoHome.projetoId}" />
+				</s:button>
 			</h:panelGrid>
 		</div>
 

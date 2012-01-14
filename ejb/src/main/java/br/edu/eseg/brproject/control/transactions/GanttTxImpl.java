@@ -32,7 +32,7 @@ public class GanttTxImpl implements GanttTx {
 		if (tarefa.getId() == null) {
 			System.out.println("Nova tarefa!!");
 
-			tarefa.setEap(getNewEap(tarefa.getTarefaPai().getId(), tarefa
+			tarefa.setEap(getNewEap(tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null, tarefa
 					.getProjeto().getId()));
 			qTask = em
 					.createNativeQuery("insert into tarefa(eap,tarefapaiid,projetoid,nome,inicio,fim,porcentcomp,milestone) values (?1,?2,?3,?4,?5,?6,?7,?8)");
@@ -42,11 +42,12 @@ public class GanttTxImpl implements GanttTx {
 		} else {
 			System.out.println("Update de tarefa!!");
 			qTask = em
-					.createNativeQuery("update tarefa set tarefapaiid=?2,nome=?4,inicio=?5,fim=?6,milestone=?8 where id = ?9");
+					.createNativeQuery("update tarefa set tarefapaiid=?2,nome=?4,inicio=?5,fim=?6,porcentcomp=?7,milestone=?8 where id = ?9");
+			qTask.setParameter(7, tarefa.getPorcentcomp());
 			qTask.setParameter(9, tarefa.getId());
 
 			// verificando mudanca de tarefa pai
-			if (tarefa.getTarefaPai().getId() != null) {
+			if (tarefa.getTarefaPai()!=null && tarefa.getTarefaPai().getId() != null) {
 				q = em.createNativeQuery(
 						"select * from tarefa where tarefapaiid = ?1 and id = ?2",
 						Tarefa.class);
@@ -61,7 +62,7 @@ public class GanttTxImpl implements GanttTx {
 			System.out.println("Verificando se mudou de tarefa pai: " + pSize);
 			if (pSize == 0) {
 				System.out.println("mudou!");
-				tarefa.setEap(getNewEap(tarefa.getTarefaPai().getId(), tarefa
+				tarefa.setEap(getNewEap(tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null, tarefa
 						.getProjeto().getId()));
 
 				q = em.createNativeQuery(
@@ -82,6 +83,7 @@ public class GanttTxImpl implements GanttTx {
 					organizeChildren(tarefa);
 					organizeChildren(paiVelho);
 					adjustParentTime(paiVelho.getId());
+					calcPercent(paiVelho.getId());
 				} else if (paiVelho == null) {
 					q = em.createNativeQuery("update tarefa set tarefapaiid = ?, eap = ? where id = ?");
 					q.setParameter(1, paiNovo.getId());
@@ -109,10 +111,12 @@ public class GanttTxImpl implements GanttTx {
 					q.executeUpdate();
 					organizeChildren(tarefa);
 					organizeChildren(paiVelho);
+					adjustParentTime(paiVelho.getId());
+					calcPercent(paiVelho.getId());
 				}
 			}
 		}
-		qTask.setParameter(2, tarefa.getTarefaPai().getId());
+		qTask.setParameter(2, tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null);
 		qTask.setParameter(4, tarefa.getNome());
 		qTask.setParameter(5, tarefa.getInicio());
 		qTask.setParameter(6, tarefa.getFim());
@@ -155,17 +159,20 @@ public class GanttTxImpl implements GanttTx {
 		q.setParameter(1, tarefa.getId());
 		int r = q.executeUpdate();
 		System.out.println("deletou " + r + " tarefas predecessoras");
-
+		System.out.println("predecessores para inserir: "+tarefa.getTarefaspredecessoras().size());
 		for (Tarefa t : tarefa.getTarefaspredecessoras()) {
+			System.out.println("inserindo :"+t.getId()+" - "+tarefa.getId());
 			q = em.createNativeQuery("insert into tarefapredecessora(tarefapredecessoraid,tarefaid) values(?,?)");
 			q.setParameter(1, t.getId());
 			q.setParameter(2, tarefa.getId());
 			q.executeUpdate();
 		}
 
-		adjustParentTime(tarefa.getTarefaPai().getId());
+//		em.clear();
+//		em.flush();
 
-		em.flush();
+		adjustParentTime(tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null);
+		calcPercent(tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null);
 	}
 
 	@Override
@@ -203,8 +210,12 @@ public class GanttTxImpl implements GanttTx {
 				organizeChildren(p);
 			}
 		}
-		adjustParentTime(tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null);
-		em.flush();
+//		em.clear();
+//		em.flush();
+		adjustParentTime(tarefa.getTarefaPai() != null ? tarefa.getTarefaPai()
+				.getId() : null);
+		calcPercent(tarefa.getTarefaPai() != null ? tarefa.getTarefaPai()
+				.getId() : null);
 	}
 
 	@Override
@@ -222,6 +233,29 @@ public class GanttTxImpl implements GanttTx {
 	@Remove
 	public void destroy() {
 
+	}
+
+	private void calcPercent(Long parentId) {
+		if (parentId == null)
+			return;
+		Query q = em
+				.createNativeQuery("select sum(porcentcomp)/(select count(*) from tarefa where tarefapaiid = ?1) from  tarefa where tarefapaiid = ?1");
+		q.setParameter(1, parentId);
+		Object percent = q.getResultList().get(0);
+		if (percent != null) {
+			q = em.createNativeQuery("update tarefa set porcentcomp = ? where id = ?");
+			q.setParameter(1, percent);
+			q.setParameter(2, parentId);
+			q.executeUpdate();
+		}
+		q = em.createNativeQuery("select tarefapaiid from tarefa where id = ?");
+		q.setParameter(1, parentId);
+		List<BigInteger> result = q.getResultList();
+		if (result.size() > 0) {
+			if (result.get(0) != null) {
+				calcPercent(result.get(0).longValue());
+			}
+		}
 	}
 
 	private void organizeChildren(Tarefa parent) {

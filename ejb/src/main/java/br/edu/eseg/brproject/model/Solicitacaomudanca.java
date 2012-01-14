@@ -74,7 +74,7 @@ public class Solicitacaomudanca implements java.io.Serializable,
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "statusmudancaid", nullable = false)
 	@NotNull
 	public Statusmudanca getStatusmudanca() {
@@ -96,7 +96,7 @@ public class Solicitacaomudanca implements java.io.Serializable,
 		this.projeto = projeto;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usuarioid", nullable = false)
 	@NotNull
 	public Usuario getUsuario() {

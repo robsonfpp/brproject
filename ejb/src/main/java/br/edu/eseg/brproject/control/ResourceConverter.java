@@ -20,6 +20,7 @@ public class ResourceConverter implements javax.faces.convert.Converter {
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
+		if(arg2==null || arg2.equals(""))return null;
 		String[] props = arg2.split(";");
 		Recurso r = new Recurso();
 		r.setId(new Long(props[0]));
@@ -29,6 +30,7 @@ public class ResourceConverter implements javax.faces.convert.Converter {
 
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
+		if(arg2==null)return "";
 		Recurso r = (Recurso) arg2;
 		return r.getId() + ";" + r.getNome();
 	}

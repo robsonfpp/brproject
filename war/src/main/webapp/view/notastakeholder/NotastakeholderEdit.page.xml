@@ -4,5 +4,5 @@
 	login-required="true">
 
 	<param name="projetoId" value="#{projetoHome.projetoId}" />
-
+	<param name="projetoFrom"/>
 </page>

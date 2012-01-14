@@ -19,10 +19,12 @@
 
 				<s:decorate id="projetoField" template="/layout/edit.xhtml">
 					<ui:define name="label">Projeto</ui:define>
-					<h:selectOneMenu value="#{projetoHome.projetoId}" disabled="#{solicitacaomudancaHome.managed}">
+					<h:selectOneMenu value="#{projetoHome.projetoId}"
+						disabled="#{solicitacaomudancaHome.managed}">
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems value="#{projetoList.projetoSelectItem}" />
-						<a4j:support event="onchange" reRender="projetoField,buttons" ajaxSingle="true" />
+						<a4j:support event="onchange" reRender="projetoField,buttons"
+							ajaxSingle="true" />
 					</h:selectOneMenu>
 				</s:decorate>
 
@@ -33,7 +35,8 @@
 						<f:selectItem itemLabel="selecione ..." />
 						<f:selectItems
 							value="#{statusmudancaList.statusmudancaSelectItem}" />
-						<a4j:support event="onchange" reRender="statusField,buttons" ajaxSingle="true" />
+						<a4j:support event="onchange" reRender="statusField,buttons"
+							ajaxSingle="true" />
 					</h:selectOneMenu>
 				</s:decorate>
 
@@ -87,8 +90,15 @@
 						disabled="#{!projetoHome.wired || statusmudancaHome.statusmudancaId == null}"
 						rendered="#{solicitacaomudancaHome.managed}" />
 
-					<input type="button" onclick="history.go(-1)" value="Cancelar" />
+					<a4j:commandButton onclick="history.go(-1)" value="Cancelar"
+						rendered="#{empty projetoFrom}" />
 
+					<s:button value="Cancelar" view="#{projetoFrom}" propagation="none"
+						rendered="#{not empty projetoFrom}"
+						includePageParams="false"
+						type="button">
+						<f:param name="projetoId" value="#{projetoHome.projetoId}" />
+					</s:button>
 				</div>
 			</a4j:outputPanel>
 		</h:form>

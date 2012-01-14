@@ -11,10 +11,15 @@ function editar_tarefa(id){
 		return;
 	}
 	var url = 'http://'+location.host+'/brProject/view/projetoinclude/taskEditor.seam?tarefaId='+id+'&amp;projetoId=#{projeto.projeto.id}';
-	window.open(url,'name','width=500,height=650,location=no,menubar=no,resizable=no,toolbar=no,status=no');
+	window.open(url,'name1','width=500,height=650,location=no,menubar=no,resizable=no,toolbar=no,status=no');
 }
-
 </script>
+<style>
+.link {
+	font-size: 14px;
+	font-weight: bold;
+}
+</style>
 <s:decorate template="/layout/projetoInclude.xhtml">
 	<ui:define name="title">Desenvolver o Plano de Gerenciamento do Projeto</ui:define>
 
@@ -23,9 +28,10 @@ function editar_tarefa(id){
 			data="#{gantt.getTarefas(projeto.projeto.id,'visao_detalhada')}"
 			oncomplete="document.visao_detalhada.loadChart(data);" />
 
-		<a4j:commandButton value="Adicionar Tarefa" onclick="editar_tarefa(0)" />
+		<a4j:commandButton value="Adicionar Tarefa" onclick="editar_tarefa(0)" rendered="#{projeto.projeto.usuario.id == loggedUser.id &amp;&amp; projeto.projeto.statusprojeto.id lt 5}"/>
+		<br/><br/>
+		<a4j:commandLink styleClass="link" value="Ir para execução" action="execucaoprojeto" rendered="#{projeto.projeto.statusprojeto.id gt 2 &amp;&amp; projeto.projeto.usuario.id==loggedUser.id}"/>
 	</h:form>
-	
 	<br />
 	<br />
 	<applet id="visao_detalhada" name="visao_detalhada" height="1000"
@@ -35,7 +41,7 @@ function editar_tarefa(id){
 		MAYSCRIPT="MAYSCRIPT">
 		Seu Navegador não suporta Applets!
 		<param name="action" value="visao_detalhada" />
-		<param name="script" value="editar_tarefa" />
+		<param name="script" value="#{projeto.projeto.usuario.id == loggedUser.id &amp;&amp; projeto.projeto.statusprojeto.id lt 5?'editar_tarefa':'none'}" />
 		<!--		<param name="width" value="1100" />-->
 		<!--		<param name="heigth" value="1000" />-->
 	</applet>

@@ -5,20 +5,88 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
+<style>
+.leftsol {
+	width: 20%;
+	vertical-align: top;
+}
+
+.rightsol {
+	width: 60%;
+	font-size: 14px;
+	vertical-align: top;
+	text-align: justify;
+	text-justify: inter-word;
+}
+
+</style>
 
 <s:decorate template="/layout/projetoInclude.xhtml">
 	<ui:define name="title">Encerrar o Projeto ou Fase</ui:define>
-	<h:panelGrid>
+	<h:panelGrid columns="2" width="100%" columnClasses="left,right">
 		<s:button value="Nova lição Aprendida"
+			includePageParams="false"
+			rendered="#{projeto.projeto.usuario.id==loggedUser.id}"
 			view="/view/licoes/LicaoEdit.xhtml">
 			<f:param name="projetoId" value="#{projeto.projeto.id}" />
+			<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
 		</s:button>
-		<rich:spacer height="20" />
 		<a4j:commandButton onclick="#{rich:component('encerrar')}.show()"
+			rendered="#{projeto.projeto.usuario.id==loggedUser.id &amp;&amp; projeto.projeto.statusprojeto.id lt 5}"
 			value="Encerrar Projeto" />
 		<rich:spacer height="20" />
 	</h:panelGrid>
+	<br />
+	<rich:panel id="mudancasPanel">
+		<f:facet name="header">Lições aprendidas no projeto</f:facet>
 
+		<h:outputText value="Nenhuma lição aprendida foi inserida neste projeto ..." rendered="#{projeto.licoes.size()==0}" />
+		<a4j:repeat value="#{projeto.licoes}" var="licao"
+			rendered="#{projeto.licoes.size() > 0}">
+			<rich:simpleTogglePanel switchType="client" opened="false">
+				<f:facet name="header">#{licao.titulo}</f:facet>
+
+				<h:panelGrid columns="2" columnClasses="leftsol,rightsol" width="100%">
+					<f:facet name="header">
+						<h2>#{licao.titulo}</h2>
+					</f:facet>
+					<h:panelGrid columns="2" columnClasses="label,value,label,value"
+						width="100%">
+
+						<h:outputText value="Area impactada:" />
+						<h:outputText value="#{licao.areaimpactada.nome}" />
+
+						<h:outputText value="Tipo impacto:" />
+						<h:outputText value="#{licao.impactolicao.nome}" />
+
+						<h:outputText value="Prioridade" />
+						<h:outputText value="#{licao.prioridadelicao.nome}" />
+					</h:panelGrid>
+
+					<h:panelGrid frame="box" columnClasses="top" width="100%">
+						<f:facet name="header">Descrição da lição aprendida</f:facet>
+						<p>#{licao.descricao}</p>
+					</h:panelGrid>
+
+				</h:panelGrid>
+				<div class="actionButtons">
+					<s:button view="/view/licoes/LicaoEdit.xhtml"
+						value="Editar" propagation="none"
+						includePageParams="false"
+						rendered="#{projeto.projeto.usuario.id.equals(loggedUser.id)}">
+						<f:param name="licaoId" value="#{licao.id}" />
+						<f:param name="prioridadelicaoId"
+							value="#{licao.prioridadelicao.id}" />
+						<f:param name="projetoId" value="#{licao.projeto.id}" />
+						<f:param name="impactolicaoId" value="#{licao.impactolicao.id}" />
+						<f:param name="areaimpactadaId" value="#{licao.areaimpactada.id}" />
+						<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
+					</s:button>
+				</div>
+			</rich:simpleTogglePanel>
+			<br />
+		</a4j:repeat>
+	</rich:panel>
 </s:decorate>
 <rich:modalPanel id="encerrar" height="100" resizeable="false">
 	<f:facet name="header">
@@ -27,7 +95,7 @@
 		</h:panelGroup>
 	</f:facet>
 	<f:facet name="controls">
-		<h:panelGroup>
+		<h:panelGroup> 
 			<h:graphicImage value="/img/close.png" styleClass="hidelink"
 				id="hidelink" />
 			<rich:componentControl for="statusChange" attachTo="hidelink"

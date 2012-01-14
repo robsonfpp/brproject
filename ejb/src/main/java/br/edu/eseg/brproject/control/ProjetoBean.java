@@ -7,8 +7,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Begin;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Logger;
@@ -70,12 +71,11 @@ public class ProjetoBean implements Serializable {
 	private List<Nota> legenda;
 
 	@Create
-	@Begin(join = true)
 	public void start() {
 		log.info("Carregando projeto: "+ projetoHome.getProjetoId());
 		if (projetoHome.getProjetoId() != null) {
 			projetoHome.load();
-			projeto = projetoHome.getDefinedInstance();
+			projeto = projetoHome.getInstance();
 			stakeholders = new ArrayList<Stakeholder>(projeto.getStakeholders());
 			solicitacaomudancas = new ArrayList<Solicitacaomudanca>(
 					projeto.getSolicitacaomudancas());
@@ -144,10 +144,9 @@ public class ProjetoBean implements Serializable {
 
 	
 	public void encerrarProjeto(){
-		statusprojetoHome.setStatusprojetoId(new Long(5));
-		projetoHome.getInstance().setStatusprojeto(statusprojetoHome.find());
-		projetoHome.getInstance().setFim(new Date());
-		projetoHome.update();
+		changeStatusId = new Long(5);
+		changeStatus();
+		
 	}
 	
 	public double calculaTotal(Long idAvaliado) {
@@ -186,12 +185,13 @@ public class ProjetoBean implements Serializable {
 	}
 
 	public void changeStatus() {
+		Query q =projetoHome.getEntityManager().createNativeQuery("update projeto set statusprojetoid = ? where id = ?");
+		q.setParameter(1, changeStatusId);
+		q.setParameter(2, projeto.getId());
+		q.executeUpdate();
 		statusprojetoHome.setStatusprojetoId(changeStatusId);
-		projetoHome.getDefinedInstance().setStatusprojeto(
+		projetoHome.getInstance().setStatusprojeto(
 				statusprojetoHome.find());
-		projetoHome.update();
-		projetoHome.load();
-		projeto = projetoHome.getDefinedInstance();
 		statusMessages.add(Severity.INFO, "Status alterado com sucesso!");
 	}
 

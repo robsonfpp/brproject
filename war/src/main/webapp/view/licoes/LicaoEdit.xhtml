@@ -20,8 +20,7 @@
 
 				<s:decorate id="projetoField" template="/layout/edit.xhtml">
 					<ui:define name="label">Projeto</ui:define>
-					<h:selectOneMenu id="projeto"
-						value="#{projetoHome.projetoId}">
+					<h:selectOneMenu id="projeto" value="#{projetoHome.projetoId}">
 						<f:selectItem itemLabel="Selecione ..." />
 						<f:selectItems value="#{projetoList.projetoSelectItem}" />
 						<a4j:support event="onchange" reRender="projetoField" />
@@ -91,7 +90,13 @@
 					<h:commandButton id="update" value="Salvar"
 						action="#{licaoHome.update}" rendered="#{licaoHome.managed}" />
 
-					<input type="button" onclick="history.go(-1)" value="Cancelar" />
+					<a4j:commandButton onclick="history.go(-1)" value="Cancelar"
+						rendered="#{empty projetoFrom}" />
+					<s:button value="Cancelar" view="#{projetoFrom}" propagation="none"
+						rendered="#{not empty projetoFrom}" includePageParams="false"
+						type="button">
+						<f:param name="projetoId" value="#{projetoHome.projetoId}" />
+					</s:button>
 
 				</div>
 			</a4j:outputPanel>

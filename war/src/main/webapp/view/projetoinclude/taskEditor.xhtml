@@ -36,7 +36,7 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 	</ui:define>
 	<ui:define name="body">
 		<rich:panel id="taskEditor">
-			<f:facet name="header">#{gantt.tarefa.id==null?'Nova':'Editar'} Tarefa</f:facet>
+			<f:facet name="header">#{tarefa.tarefa.id==null?'Nova':'Editar'} Tarefa</f:facet>
 			<a4j:outputPanel ajaxRendered="true">
 				<h:messages id="messages" globalOnly="true" styleClass="message"
 					errorClass="errormsg" infoClass="infomsg" warnClass="warnmsg"
@@ -48,15 +48,15 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 						<h:panelGrid columns="2">
 							<s:decorate id="nomePanel" template="/layout/taskEdit.xhtml">
 								<ui:define name="label">Nome:</ui:define>
-								<h:inputText value="#{gantt.tarefa.nome}" size="25"
+								<h:inputText value="#{tarefa.tarefa.nome}" size="25"
 									required="true">
 									<a4j:support event="onblur" reRender="nomePanel"
 										ajaxSingle="true" eventsQueue="foo" />
 								</h:inputText>
 							</s:decorate>
-							<s:decorate template="/layout/taskEdit.xhtml" rendered="#{gantt.tarefa.subtarefas.size() == 0}">
+							<s:decorate template="/layout/taskEdit.xhtml" rendered="#{tarefa.tarefa.subtarefas.size() == 0}">
 								<ui:define name="label">Marco:</ui:define>
-								<h:selectBooleanCheckbox value="#{gantt.tarefa.milestone}">
+								<h:selectBooleanCheckbox value="#{tarefa.tarefa.milestone}">
 									<a4j:support event="onchange"
 										reRender="datas,recursosPanel,tarefaPai" eventsQueue="foo"
 										ajaxSingle="true" />
@@ -65,11 +65,11 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 						</h:panelGrid>
 						<h:panelGrid id="tarefaPai">
 							<s:decorate id="parentPanel" template="/layout/taskEdit.xhtml"
-								rendered="#{gantt.tarefa.milestone == null || !gantt.tarefa.milestone}">
+								rendered="#{tarefa.tarefa.milestone == null || !tarefa.tarefa.milestone}">
 								<ui:define name="label">Tarefa pai:</ui:define>
-								<h:selectOneMenu value="#{gantt.tarefapaiId}">
+								<h:selectOneMenu value="#{tarefa.tarefapaiId}">
 									<f:selectItem itemLabel="--" />
-									<f:selectItems value="#{gantt.tarefaspai}" />
+									<f:selectItems value="#{tarefa.tarefaspai}" />
 									<a4j:support event="onblur" reRender="parentPanel"
 										ajaxSingle="true" eventsQueue="foo" />
 								</h:selectOneMenu>
@@ -79,29 +79,29 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 							<s:decorate id="datas" template="/layout/taskEdit.xhtml">
 								<ui:define name="label">Data(s):</ui:define>
 								<h:panelGrid columns="2" width="100%"
-									rendered="#{gantt.tarefa.milestone == null || !gantt.tarefa.milestone}">
+									rendered="#{tarefa.tarefa.milestone == null || !tarefa.tarefa.milestone}">
 									<h:outputText value="Inicio" />
 									<h:outputText value="Fim" />
 									<rich:calendar id="dInicio" inputSize="14"
-									disabled="#{gantt.tarefa.subtarefas.size() gt 0}"
-										value="#{gantt.tarefa.inicio}" datePattern="dd/MM/yyyy HH:mm"
+									disabled="#{tarefa.tarefa.subtarefas.size() gt 0}"
+										value="#{tarefa.tarefa.inicio}" datePattern="dd/MM/yyyy HH:mm"
 										required="true">
 										<a4j:support event="onchanged" reRender="datas"
 											ajaxSingle="true" eventsQueue="foo" />
 									</rich:calendar>
 									<rich:calendar id="dFim" inputSize="14"
-										disabled="#{gantt.tarefa.subtarefas.size() gt 0}"
-										value="#{gantt.tarefa.fim}" datePattern="dd/MM/yyyy HH:mm"
+										disabled="#{tarefa.tarefa.subtarefas.size() gt 0}"
+										value="#{tarefa.tarefa.fim}" datePattern="dd/MM/yyyy HH:mm"
 										required="true">
 										<a4j:support event="onchanged" reRender="datas"
 											ajaxSingle="true" eventsQueue="foo" />
 									</rich:calendar>
 								</h:panelGrid>
 								<h:panelGrid
-									rendered="#{gantt.tarefa.milestone != null &amp;&amp; gantt.tarefa.milestone}">
+									rendered="#{tarefa.tarefa.milestone != null &amp;&amp; tarefa.tarefa.milestone}">
 									<h:outputText value="Data do marco" />
 									<rich:calendar id="dMarco" inputSize="14"
-										value="#{gantt.tarefa.inicio}" datePattern="dd/MM/yyyy"
+										value="#{tarefa.tarefa.inicio}" datePattern="dd/MM/yyyy"
 										required="true">
 										<a4j:support event="onchanged" reRender="datas"
 											ajaxSingle="true" eventsQueue="foo" />
@@ -112,22 +112,22 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 					</h:panelGrid>
 					<h:panelGrid width="100%" columnClasses="topRight">
 						<a4j:commandButton styleClass="salvarTarefa" reRender="taskEditor"
-							action="#{gantt.salvarTarefa()}" value="Salvar"
+							action="#{tarefa.salvarTarefa()}" value="Salvar"
 							oncomplete="if('#{facesContext.maximumSeverity}' == 'INFO 0'){window.opener.initvisao_detalhada();self.close();}" />
 						<rich:spacer height="30" />
 						<a4j:commandButton styleClass="salvarTarefa"
 							onclick="#{rich:component('excluirTarefa')}.show()"
-							value="Excluir" rendered="#{gantt.tarefa.id!=null}" />
+							value="Excluir" rendered="#{tarefa.tarefa.id!=null}" />
 					</h:panelGrid>
 				</h:panelGrid>
 
 				<h:panelGrid width="100%">
 					<a4j:outputPanel id="recursosPanel">
 						<rich:panel
-							rendered="#{(gantt.tarefa.milestone == null || !gantt.tarefa.milestone) &amp;&amp; (gantt.tarefa.subtarefas.size() == 0)}">
+							rendered="#{(tarefa.tarefa.milestone == null || !tarefa.tarefa.milestone) &amp;&amp; (tarefa.tarefa.subtarefas.size() == 0)}">
 							<f:facet name="header">Recursos</f:facet>
-							<rich:listShuttle sourceValue="#{gantt.recursos}" var="recurso"
-								targetValue="#{gantt.recursosAlocados}"
+							<rich:listShuttle sourceValue="#{tarefa.recursos}" var="recurso"
+								targetValue="#{tarefa.recursosAlocados}"
 								converter="br.edu.eseg.brproject.control.ResourceConverter"
 								sourceCaptionLabel="Recursos" listsHeight="110"
 								targetCaptionLabel="Recrusos alocados"
@@ -144,17 +144,17 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 					</a4j:outputPanel>
 					<rich:panel>
 						<f:facet name="header">Predecessores</f:facet>
-						<rich:listShuttle sourceValue="#{gantt.tarefas}" var="tarefa"
-							targetValue="#{gantt.tarefaspredecessoras}"
+						<rich:listShuttle sourceValue="#{tarefa.tarefas}" var="t"
+							targetValue="#{tarefa.tarefaspredecessoras}"
 							converter="br.edu.eseg.brproject.control.TaskConverter"
 							listsHeight="110" sourceCaptionLabel="Tarefas"
 							targetCaptionLabel="Predecessores" orderControlsVisible="false"
 							fastOrderControlsVisible="false">
 							<rich:column>
-								<h:outputText value="[#{tarefa.eap}]" />
+								<h:outputText value="[#{t.eap}]" />
 							</rich:column>
 							<rich:column>
-								<h:outputText value="#{tarefa.nome}" />
+								<h:outputText value="#{t.nome}" />
 							</rich:column>
 							<a4j:support event="onlistchanged" reRender="form"
 								ajaxSingle="true" eventsQueue="foo" />
@@ -169,17 +169,17 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 			<h:form>
 				<s:decorate template="/layout/edit.xhtml">
 					<ui:define name="label">Nome</ui:define>
-					<h:inputText value="#{gantt.nomeRecurso}" required="true" />
+					<h:inputText value="#{tarefa.nomeRecurso}" required="true" />
 				</s:decorate>
 				<s:decorate template="/layout/edit.xhtml">
 					<ui:define name="label">Tipo</ui:define>
-					<h:selectOneMenu value="#{gantt.tipoId}">
+					<h:selectOneMenu value="#{tarefa.tipoId}">
 						<f:selectItem itemValue="1" itemLabel="Humano" />
 						<f:selectItem itemValue="2" itemLabel="Material" />
 					</h:selectOneMenu>
 				</s:decorate>
 				<h:panelGrid columns="2">
-					<a4j:commandButton value="Adicionar" action="#{gantt.addRecurso}"
+					<a4j:commandButton value="Adicionar" action="#{tarefa.addRecurso}"
 						oncomplete="#{rich:component('novoRecurso')}.hide()"
 						reRender="form" />
 					<a4j:commandButton value="Cancelar"
@@ -191,7 +191,7 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 		<rich:modalPanel id="excluirTarefa" height="100" resizeable="false">
 			<f:facet name="header">
 				<h:panelGroup>
-					<h:outputText value="Excluir tarefa #{gantt.tarefa.nome}"></h:outputText>
+					<h:outputText value="Excluir tarefa #{tarefa.tarefa.nome}"></h:outputText>
 				</h:panelGroup>
 			</f:facet>
 			<f:facet name="controls">
@@ -202,22 +202,22 @@ input[type=button].salvarTarefa,input[type=submit].salvarTarefa {
 						operation="hide" event="onclick" />
 				</h:panelGroup>
 			</f:facet>
-			<h:outputText rendered="#{gantt.tarefa.subtarefas.size()==0}"
-				value="Tem certeza que deseja excluir a tarefa '#{gantt.tarefa.nome}'?"
+			<h:outputText rendered="#{tarefa.tarefa.subtarefas.size()==0}"
+				value="Tem certeza que deseja excluir a tarefa '#{tarefa.tarefa.nome}'?"
 				styleClass="warnmsg" />
-			<h:outputText rendered="#{gantt.tarefa.subtarefas.size()>0}"
-				value="A tarefa '#{gantt.tarefa.nome}' não pode ser excluída! Primeiro exclua suas subtarefas!"
+			<h:outputText rendered="#{tarefa.tarefa.subtarefas.size()>0}"
+				value="A tarefa '#{tarefa.tarefa.nome}' não pode ser excluída! Primeiro exclua suas subtarefas!"
 				styleClass="warnmsg" />
-			<h:form rendered="#{gantt.tarefa.subtarefas.size()==0}">
+			<h:form rendered="#{tarefa.tarefa.subtarefas.size()==0}">
 				<div class="actionButtons">
 					<a4j:commandButton reRender="taskEditor" value="Sim"
-						action="#{gantt.excluirTarefa()}"
+						action="#{tarefa.excluirTarefa()}"
 						oncomplete="if('#{facesContext.maximumSeverity}' == 'INFO 0'){window.opener.initvisao_detalhada();self.close();}" />
 					<a4j:commandButton value="Não"
 						onclick="#{rich:component('excluirTarefa')}.hide()" />
 				</div>
 			</h:form>
-			<h:form rendered="#{gantt.tarefa.subtarefas.size()>0}">
+			<h:form rendered="#{tarefa.tarefa.subtarefas.size()>0}">
 				<div class="actionButtons">
 					<a4j:commandButton value="Ok"
 						onclick="#{rich:component('excluirTarefa')}.hide()" />

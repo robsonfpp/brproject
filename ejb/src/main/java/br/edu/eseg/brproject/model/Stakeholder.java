@@ -76,7 +76,7 @@ public class Stakeholder implements java.io.Serializable {
 		this.projeto = projeto;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usuarioid", nullable = false)
 	@NotNull
 	public Usuario getUsuario() {
@@ -96,7 +96,7 @@ public class Stakeholder implements java.io.Serializable {
 		this.papel = papel;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "stakeholderavaliador")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "stakeholderavaliador")
 	public Set<Notastakeholder> getNotaavaliadores() {
 		return this.notaavaliadores;
 	}
@@ -105,7 +105,7 @@ public class Stakeholder implements java.io.Serializable {
 		this.notaavaliadores = notaavaliadores;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "stakeholderavaliado")
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "stakeholderavaliado")
 	public Set<Notastakeholder> getNotaavaliados() {
 		return this.notaavaliados;
 	}

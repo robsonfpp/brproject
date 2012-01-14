@@ -34,8 +34,10 @@
 				<div class="actionButtons">
 					<s:button value="Preencher sua priorização"
 						view="/view/notastakeholder/NotastakeholderEdit.xhtml"
+						includePageParams="false"
 						rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projeto.projeto.id,loggedUser.id).size() gt 0}">
 						<f:param name="projetoId" value="#{projeto.projeto.id}" />
+						<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
 					</s:button>
 				</div>
 			</h:panelGrid>
@@ -112,12 +114,12 @@
 				<a4j:commandLink styleClass="link"
 					rendered="#{projeto.projeto.statusprojeto.id ge 2}"
 					action="#{fileManager.prepareArquivos('planoprojeto',projeto.projeto.id,2)}"
-					value="#{loggedUser.gp?'Gerenciar':'Ver'} planejamento" />
+					value="#{projeto.projeto.usuario.id==loggedUser.id?'Gerenciar':'Ver'} planejamento" />
 
 				<rich:spacer height="10" />
 
 				<a4j:commandLink styleClass="link"
-					rendered="#{projeto.projeto.statusprojeto.id ge 3 &amp;&amp; loggedUser.gp}"
+					rendered="#{projeto.projeto.statusprojeto.id ge 3 &amp;&amp; projeto.projeto.usuario.id==loggedUser.id}"
 					action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"
 					value="Gerenciar execução" />
 			</h:panelGrid>

@@ -55,7 +55,7 @@ public class Licao implements java.io.Serializable, Comparable<Licao> {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "areaimpactadaid", nullable = false)
 	@NotNull
 	public Areaimpactada getAreaimpactada() {
@@ -77,7 +77,7 @@ public class Licao implements java.io.Serializable, Comparable<Licao> {
 		this.projeto = projeto;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "prioridadelicaoid", nullable = false)
 	@NotNull
 	public Prioridadelicao getPrioridadelicao() {
@@ -88,7 +88,7 @@ public class Licao implements java.io.Serializable, Comparable<Licao> {
 		this.prioridadelicao = prioridadelicao;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "impactolicaoid", nullable = false)
 	@NotNull
 	public Impactolicao getImpactolicao() {

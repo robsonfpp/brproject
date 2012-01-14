@@ -13,7 +13,6 @@
 		<rich:panel>
 			<f:facet name="header">Solicitação de mudança</f:facet>
 
-
 			<s:decorate id="solicitante" template="/layout/display.xhtml">
 				<ui:define name="label">Solicitante</ui:define>
 				<h:outputText
@@ -76,7 +75,11 @@
 		<div class="actionButtons">
 			<h:panelGrid columns="2">
 				<s:button view="/view/solicitacoes/SolicitacaomudancaList.xhtml"
-					id="done" value="OK" />
+					id="done" value="OK" rendered="#{empty projetoFrom}" />
+				<s:button view="#{projetoFrom}" id="done2" value="OK" includePageParams="false"
+					rendered="#{not empty projetoFrom}">
+					<f:param name="projetoId" value="#{projetoHome.projetoId}" />
+				</s:button>
 			</h:panelGrid>
 		</div>
 

@@ -5,7 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:a="http://richfaces.org/a4j"
+	xmlns:a4j="http://richfaces.org/a4j"
 	xmlns:rich="http://richfaces.org/rich"
 	template="/layout/template.xhtml">
 
@@ -58,18 +58,29 @@
 				</div>
 
 			</rich:panel>
-			<a:outputPanel styleClass="buttons"
+			<a4j:outputPanel styleClass="buttons"
 				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id).size() gt 0}">
-				<a:commandButton id="save" value="Salvar"
+				<a4j:commandButton id="save" value="Salvar"
 					reRender="notastakeholder"
 					action="#{avaliacao.salvarNotaStakeholder()}" />
 
-				<s:button value="Cancelar" view="/view/home.xhtml" />
-			</a:outputPanel>
-			<a:outputPanel styleClass="buttons"
+				<a4j:commandButton onclick="history.go(-1)" value="Cancelar"
+					rendered="#{empty projetoFrom}" />
+				<s:button value="Cancelar" view="#{projetoFrom}" propagation="none"
+					includePageParams="false" rendered="#{not empty projetoFrom}"
+					type="button">
+					<f:param name="projetoId" value="#{avaliacao.projeto.id}" />
+				</s:button>
+			</a4j:outputPanel>
+			<a4j:outputPanel styleClass="buttons"
 				rendered="#{stakeholderList.getStakeholdersNaoAvaliados(avaliacao.projeto.id,loggedUser.id).size() == 0}">
-				<s:button value="Sair" view="/view/home.xhtml" />
-			</a:outputPanel>
+				<a4j:commandButton onclick="history.go(-1)" value="Sair"
+					rendered="#{empty projetoFrom}" />
+				<s:button view="#{projetoFrom}" id="done2" value="Sair"
+					includePageParams="false" rendered="#{not empty projetoFrom}">
+					<f:param name="projetoId" value="#{avaliacao.projeto.id}" />
+				</s:button>
+			</a4j:outputPanel>
 		</h:form>
 
 	</ui:define>

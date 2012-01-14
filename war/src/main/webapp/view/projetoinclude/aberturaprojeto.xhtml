@@ -33,9 +33,15 @@
 						<h:outputText value="#{stk.usuario.nome}" />
 					</rich:column>
 					<rich:column>
+						<f:facet name="header">E-mail</f:facet>
+						<h:outputText value="#{stk.usuario.email}" />
+					</rich:column>
+					<rich:column>
 						<f:facet name="header">Papel</f:facet>
+						<h:outputText value="#{stk.papel}" rendered="#{!projeto.projeto.usuario.id.equals(loggedUser.id) || projeto.projeto.statusprojeto.id == 5}"/>
 						<rich:inplaceInput defaultLabel="Clique duplo para editar"
 							value="#{stk.papel}" showControls="true" layout="block"
+							rendered="#{projeto.projeto.usuario.id==loggedUser.id &amp;&amp; projeto.projeto.statusprojeto.id lt 5}"
 							controlsHorizontalPosition="left"
 							controlsVerticalPosition="bottom" editEvent="ondblclick"
 							id="inplaceInput">
@@ -54,7 +60,7 @@
 							</f:facet>
 						</rich:inplaceInput>
 					</rich:column>
-					<rich:column>
+					<rich:column rendered="#{projeto.projeto.usuario.id==loggedUser.id}">
 						<f:facet name="header">Ação</f:facet>
 						<a4j:commandLink value="Remover" reRender="stakeholdersPanel"
 							rendered="#{stk.notaavaliadores.size() == 0 &amp;&amp; stk.notaavaliados.size() == 0}"
@@ -65,8 +71,8 @@
 			</h:form>
 		</rich:panel>
 
-		<a4j:outputPanel id="usuarioList" ajaxRendered="true">
-			<h:form id="usrForm">
+		<a4j:outputPanel id="usuarioList" ajaxRendered="true" rendered="#{projeto.projeto.usuario.id == loggedUser.id &amp;&amp; projeto.projeto.statusprojeto.id lt 5}"> 
+			<h:form id="usrForm" >
 				<rich:simpleTogglePanel switchType="client">
 					<f:facet name="header">Adicionar um stakeholder</f:facet>
 					<h:panelGrid columns="2">

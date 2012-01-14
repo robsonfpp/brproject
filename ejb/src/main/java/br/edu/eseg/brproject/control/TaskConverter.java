@@ -20,6 +20,7 @@ public class TaskConverter implements javax.faces.convert.Converter {
 
 	@Override
 	public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
+		if(arg2==null || arg2.equals(""))return null;
 		String[] props = arg2.split(";");
 		Tarefa t = new Tarefa();
 		t.setId(new Long(props[0]));
@@ -30,6 +31,7 @@ public class TaskConverter implements javax.faces.convert.Converter {
 
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
+		if(arg2==null)return "";
 		Tarefa t = (Tarefa) arg2;
 		return t.getId() + ";" + t.getNome() + ";" + t.getEap();
 	}

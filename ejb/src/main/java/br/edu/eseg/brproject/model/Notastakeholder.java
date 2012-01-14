@@ -48,7 +48,7 @@ public class Notastakeholder implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "stakeholderavaliadoid", nullable = false)
 	@NotNull
 	public Stakeholder getStakeholderavaliado() {
@@ -59,7 +59,7 @@ public class Notastakeholder implements java.io.Serializable {
 		this.stakeholderavaliado = stakeholderavaliado;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "stakeholderavaliadorid", nullable = false)
 	@NotNull
 	public Stakeholder getStakeholderavaliador() {
@@ -70,7 +70,7 @@ public class Notastakeholder implements java.io.Serializable {
 		this.stakeholderavaliador = stakeholderavaliador;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "notaid", nullable = false)
 	@NotNull
 	public Nota getNota() {
@@ -82,7 +82,7 @@ public class Notastakeholder implements java.io.Serializable {
 		this.nota = nota;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "projetoid", nullable = false)
 	@NotNull
 	public Projeto getProjeto() {

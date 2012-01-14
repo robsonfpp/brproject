@@ -24,27 +24,32 @@
 
 	<div class="actionButtons">
 		<s:button id="novaSolicitacao" value="Criar Nova" propagation="join"
+			rendered="#{projeto.projeto.statusprojeto.id lt 5}"
 			view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
 			includePageParams="false">
 			<f:param name="statusmudancaId" value="1" />
 			<f:param name="usuarioId" value="#{loggedUser.id}" />
 			<f:param name="projetoId" value="#{projetoId}" />
+			<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
 		</s:button>
 	</div>
 	<br />
 	<rich:panel id="mudancasPanel">
 		<f:facet name="header">Solicitações de mudanças</f:facet>
-
+		<h:outputText
+			value="Nenhuma solicitação de mudança foi aberta para este projeto ..."
+			rendered="#{projeto.solicitacaomudancas.size()==0}" />
 		<a4j:repeat value="#{projeto.solicitacaomudancas}" var="_s"
 			rendered="#{projeto.solicitacaomudancas.size() > 0}">
 			<rich:simpleTogglePanel switchType="client" opened="false">
 				<f:facet name="header">#{_s.titulo} - #{_s.statusmudanca.nome}"</f:facet>
 
-				<h:panelGrid columns="2" columnClasses="leftsol,rightsol">
+				<h:panelGrid columns="2" columnClasses="leftsol,rightsol" width="100%">
 					<f:facet name="header">
 						<h2>#{_s.titulo}</h2>
 					</f:facet>
-					<h:panelGrid columns="2" columnClasses="label,value,label,value" width="100%">
+					<h:panelGrid columns="2" columnClasses="label,value,label,value"
+						width="100%">
 
 						<h:outputText value="Solicitante:" />
 						<h:outputText value="#{_s.usuario.nome}" />
@@ -77,10 +82,12 @@
 					<s:button view="/view/solicitacoes/SolicitacaomudancaEdit.xhtml"
 						value="Aprovar/Reprovar" propagation="none"
 						id="solicitacaomudancaAprovado"
-						rendered="#{_s.statusmudanca.id == 1 &amp;&amp; loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
-						<f:param name="solicitacaomudancaId" value="#{_s.id}" /> 
+						includePageParams="false"
+						rendered="#{_s.statusmudanca.id == 1 &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id) &amp;&amp; projeto.projeto.statusprojeto.id lt 5}">
+						<f:param name="solicitacaomudancaId" value="#{_s.id}" />
 						<f:param name="usuarioId" value="#{loggedUser.id}" />
 						<f:param name="projetoId" value="#{_s.projeto.id}" />
+						<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
 					</s:button>
 				</div>
 			</rich:simpleTogglePanel>

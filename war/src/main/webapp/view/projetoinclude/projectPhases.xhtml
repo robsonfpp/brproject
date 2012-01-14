@@ -119,8 +119,9 @@
 						Projeto" />
 					</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"
-						style="color: blue"><a4j:commandLink
-							disabled="#{projeto.projeto.statusprojeto.id lt 3}"
+						style="color: blue">
+						<a4j:commandLink
+							disabled="#{projeto.projeto.statusprojeto.id lt 3 &amp;&amp; !projeto.projeto.usuario.id.equals(loggedUser.id)}"
 							action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"
 							value="Orientar e Gerenciar a Execução do
 						Projeto" /></td>
@@ -242,7 +243,7 @@
 	<rich:jQuery selector=".next,.previous"
 		query="mouseout(function(){jQuery(this).removeClass('highlight')})" />
 
-	<h:form rendered="#{loggedUser.gp &amp;&amp; projeto.projeto.usuario.id.equals(loggedUser.id)}">
+	<h:form rendered="#{projeto.projeto.usuario.id.equals(loggedUser.id)}">
 		<a4j:jsFunction name="gotoStatus" reRender="statusChange"
 			oncomplete="#{rich:component('statusChange')}.show()">
 			<a4j:actionparam name="param1" assignTo="#{projeto.changeStatusId}" />

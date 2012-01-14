@@ -20,20 +20,4 @@ public interface GanttTx {
 
 	public void destroy();
 
-//	public Projeto getProjetoById(Long projetoId);
-//
-//	public Tarefa getTarefaById(Long tarefaId);
-//
-//	public List<Tarefa> getPredecessores(Long tarefaId);
-//
-//	public List<Recurso> getRecursos(Long projetoId);
-//
-//	public List<Tarefa> getSubtarefas(Long tarefaId);
-//
-//	public List<Utilizacaorecurso> getUtilizacaorecursos(Long tarefaId);
-//
-//	public List<Tarefa> getTarefas(Long projetoId);
-//
-//	public List<Tarefa> getMacroTarefas(Long projetoId);
-
 }

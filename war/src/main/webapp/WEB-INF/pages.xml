@@ -35,10 +35,12 @@
 	</page>
 
 	<page view-id="/view/projeto.xhtml">
+		<begin-conversation join="true" />
 		<param name="projetoId" value="#{projetoHome.projetoId}" />
 	</page>
 
 	<page view-id="/view/projetoinclude/projectPhases.xhtml">
+		<begin-conversation join="true" />
 		<navigation>
 			<rule if-outcome="aberturaprojeto">
 				<render view-id="/view/projetoinclude/aberturaprojeto.xhtml" />
@@ -61,7 +63,20 @@
 		</navigation>
 	</page>
 
+	<page view-id="/view/projetoinclude/aberturaprojeto.xhtml">
+		<begin-conversation join="true" />
+	</page>
+
+	<page view-id="/view/projetoinclude/controlemudanca.xhtml">
+		<begin-conversation join="true" />
+	</page>
+
+	<page view-id="/view/projetoinclude/encerrarprojeto.xhtml">
+		<begin-conversation join="true" />
+	</page>
+
 	<page view-id="/view/projetoinclude/monitoriacontrole.xhtml">
+		<begin-conversation join="true" />
 		<navigation>
 			<rule if-outcome="aberturaprojeto">
 				<render view-id="/view/projetoinclude/aberturaprojeto.xhtml" />
@@ -78,6 +93,24 @@
 		</navigation>
 	</page>
 
+	<page view-id="/view/projetoinclude/planoglobal.xhtml">
+		<begin-conversation join="true" />
+		<navigation>
+			<rule if-outcome="execucaoprojeto">
+				<render view-id="/view/projetoinclude/execucaoprojeto.xhtml" />
+			</rule>
+		</navigation>
+	</page>
+
+	<page view-id="/view/projetoinclude/execucaoprojeto.xhtml">
+		<begin-conversation join="true" />
+		<navigation>
+			<rule if-outcome="planoprojeto">
+				<render view-id="/view/projetoinclude/planoglobal.xhtml" />
+			</rule>
+		</navigation>
+	</page>
+
 	<page view-id="/view/projetoinclude/*">
 		<navigation>
 			<rule if-outcome="voltar">
@@ -87,48 +120,52 @@
 	</page>
 
 	<page view-id="/view/projetoinclude/taskEditor.xhtml">
-		<begin-conversation join="true" flush-mode="MANUAL" />
-		<action on-postback="false" execute="#{gantt.prepareEditor()}" />
-		<param name="tarefaId" value="#{gantt.tarefaId}" />
-		<param name="projetoId" value="#{gantt.projetoId}" />
+		<action on-postback="false" execute="#{tarefa.prepareEditor()}" />
+		<param name="tarefaId" value="#{tarefa.tarefaId}" />
+		<param name="projetoId" value="#{tarefa.projetoId}" />
 	</page>
 
+	<page view-id="/view/projetoinclude/percentEditor.xhtml">
+		<action on-postback="false" execute="#{tarefa.prepareEditor()}" />
+		<param name="tarefaId" value="#{tarefa.tarefaId}" />
+		<param name="projetoId" value="#{tarefa.projetoId}" />
+	</page>
 
 	<exception class="org.jboss.seam.framework.EntityNotFoundException">
 		<redirect view-id="/error.xhtml">
-			<message severity="warn">Record not found</message>
+			<message severity="warn">Registro não encontrado</message>
 		</redirect>
 	</exception>
 
 	<exception class="javax.persistence.EntityNotFoundException">
 		<redirect view-id="/error.xhtml">
-			<message severity="warn">Record not found</message>
+			<message severity="warn">Registro não encontrado</message>
 		</redirect>
 	</exception>
 
 	<exception class="javax.persistence.EntityExistsException">
 		<redirect view-id="/error.xhtml">
-			<message severity="warn">Duplicate record</message>
+			<message severity="warn">Registro duplicado</message>
 		</redirect>
 	</exception>
 
 	<exception class="javax.persistence.OptimisticLockException">
 		<end-conversation />
 		<redirect view-id="/error.xhtml">
-			<message severity="warn">Another user changed the same data, please try again</message>
+			<message severity="warn">Outro usuário alterou o mesmo dado, porfavor tente denovo</message>
 		</redirect>
 	</exception>
 
 	<exception class="javax.persistence.PersistenceException">
 		<redirect view-id="/error.xhtml">
-			<message>The operation failed, please try again</message>
+			<message>A operação falhou, porfavor tente denovo</message>
 		</redirect>
 	</exception>
 
 	<exception class="org.jboss.seam.security.AuthorizationException">
 		<end-conversation />
 		<redirect view-id="/security_error.xhtml">
-			<message severity="error">You do not have permission to access this resource</message>
+			<message severity="error">Você não tem permissão para acessar este recurso</message>
 		</redirect>
 	</exception>
 
@@ -140,7 +177,7 @@
 
 	<exception class="javax.faces.application.ViewExpiredException">
 		<redirect view-id="/error.xhtml">
-			<message severity="warn">Your session has timed out, please try again</message>
+			<message severity="warn">Sua sessão expirou, porfavor refaça o login</message>
 		</redirect>
 	</exception>
 
