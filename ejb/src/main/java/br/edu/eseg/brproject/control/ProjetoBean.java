@@ -185,13 +185,19 @@ public class ProjetoBean implements Serializable {
 	}
 
 	public void changeStatus() {
-		Query q =projetoHome.getEntityManager().createNativeQuery("update projeto set statusprojetoid = ? where id = ?");
-		q.setParameter(1, changeStatusId);
-		q.setParameter(2, projeto.getId());
-		q.executeUpdate();
 		statusprojetoHome.setStatusprojetoId(changeStatusId);
 		projetoHome.getInstance().setStatusprojeto(
 				statusprojetoHome.find());
+		projetoHome.getInstance().setFim(new Date());
+		StringBuffer sb = new StringBuffer("update projeto set statusprojetoid = ?");
+		if(changeStatusId==5){
+			sb.append(", fim = current_timestamp");
+		}
+		sb.append(" where id = ?");
+		Query q =projetoHome.getEntityManager().createNativeQuery(sb.toString());
+		q.setParameter(1, changeStatusId);
+		q.setParameter(2, projeto.getId());
+		q.executeUpdate();
 		statusMessages.add(Severity.INFO, "Status alterado com sucesso!");
 	}
 
