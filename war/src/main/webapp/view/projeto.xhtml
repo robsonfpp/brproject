@@ -17,7 +17,6 @@
 	font-weight: bold;
 	font-size: 14px;
 }
-
 </style>
 		<h1>Projeto: #{projeto.projeto.nome}</h1>
 		<h:panelGrid id="topInfo" columns="2" columnClasses="top,top">
@@ -28,6 +27,15 @@
 					rendered="#{projeto.projeto.statusprojeto.id eq 5}" />
 				<h:outputText value="#{projeto.projeto.fim}"
 					rendered="#{projeto.projeto.statusprojeto.id eq 5}" />
+
+				<h:outputText value="Inicio previsto: "
+					rendered="#{projeto.projeto.inicio != null}" />
+				<h:outputText value="#{projeto.projeto.inicio}"
+					rendered="#{projeto.projeto.inicio != null}" />
+				<h:outputText value="Fim previsto: "
+					rendered="#{projeto.projeto.fimprevisto != null}" />
+				<h:outputText value="#{projeto.projeto.fimprevisto}"
+					rendered="#{projeto.projeto.fimprevisto != null}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2" columnClasses="label,value">
 				<h:outputText value="Gerente de Projetos: " />
@@ -35,7 +43,7 @@
 			</h:panelGrid>
 		</h:panelGrid>
 
-		<a4j:include viewId="/view/projetoinclude/projectPhases.xhtml" />		
+		<a4j:include viewId="/view/projetoinclude/projectPhases.xhtml" />
 
 
 		<ui:remove>

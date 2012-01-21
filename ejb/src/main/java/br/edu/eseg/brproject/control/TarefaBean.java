@@ -91,9 +91,9 @@ public class TarefaBean {
 		} else {
 			tarefa = new Tarefa();
 			tarefa.setProjeto(getProjetoById(projetoId));
-			tarefa.setInicio(tarefa.getProjeto().getInicio());
+			tarefa.setInicio(tarefa.getProjeto().getDatacriacao());
 			Calendar c = new GregorianCalendar();
-			c.setTime(tarefa.getProjeto().getInicio());
+			c.setTime(tarefa.getProjeto().getDatacriacao());
 			c.add(Calendar.DATE, 1);
 			tarefa.setFim(c.getTime());
 			percentComp = 0;

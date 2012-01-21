@@ -18,18 +18,16 @@
 	text-align: justify;
 	text-justify: inter-word;
 }
-
 </style>
 
 <s:decorate template="/layout/projetoInclude.xhtml">
 	<ui:define name="title">Encerrar o Projeto ou Fase</ui:define>
 	<h:panelGrid columns="2" width="100%" columnClasses="left,right">
-		<s:button value="Nova lição Aprendida"
-			includePageParams="false"
+		<s:button value="Nova lição Aprendida" includePageParams="false"
 			rendered="#{projeto.projeto.usuario.id==loggedUser.id}"
 			view="/view/licoes/LicaoEdit.xhtml">
 			<f:param name="projetoId" value="#{projeto.projeto.id}" />
-			<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
+			<f:param name="projetoFrom" value="/view/projeto.xhtml" />
 		</s:button>
 		<a4j:commandButton onclick="#{rich:component('encerrar')}.show()"
 			rendered="#{projeto.projeto.usuario.id==loggedUser.id &amp;&amp; projeto.projeto.statusprojeto.id lt 5}"
@@ -40,13 +38,16 @@
 	<rich:panel id="mudancasPanel">
 		<f:facet name="header">Lições aprendidas no projeto</f:facet>
 
-		<h:outputText value="Nenhuma lição aprendida foi inserida neste projeto ..." rendered="#{projeto.licoes.size()==0}" />
+		<h:outputText
+			value="Nenhuma lição aprendida foi inserida neste projeto ..."
+			rendered="#{projeto.licoes.size()==0}" />
 		<a4j:repeat value="#{projeto.licoes}" var="licao"
 			rendered="#{projeto.licoes.size() > 0}">
 			<rich:simpleTogglePanel switchType="client" opened="false">
 				<f:facet name="header">#{licao.titulo}</f:facet>
 
-				<h:panelGrid columns="2" columnClasses="leftsol,rightsol" width="100%">
+				<h:panelGrid columns="2" columnClasses="leftsol,rightsol"
+					width="100%">
 					<f:facet name="header">
 						<h2>#{licao.titulo}</h2>
 					</f:facet>
@@ -70,9 +71,8 @@
 
 				</h:panelGrid>
 				<div class="actionButtons">
-					<s:button view="/view/licoes/LicaoEdit.xhtml"
-						value="Editar" propagation="none"
-						includePageParams="false"
+					<s:button view="/view/licoes/LicaoEdit.xhtml" value="Editar"
+						propagation="none" includePageParams="false"
 						rendered="#{projeto.projeto.usuario.id.equals(loggedUser.id)}">
 						<f:param name="licaoId" value="#{licao.id}" />
 						<f:param name="prioridadelicaoId"
@@ -80,7 +80,7 @@
 						<f:param name="projetoId" value="#{licao.projeto.id}" />
 						<f:param name="impactolicaoId" value="#{licao.impactolicao.id}" />
 						<f:param name="areaimpactadaId" value="#{licao.areaimpactada.id}" />
-						<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
+						<f:param name="projetoFrom" value="/view/projeto.xhtml" />
 					</s:button>
 				</div>
 			</rich:simpleTogglePanel>
@@ -88,17 +88,17 @@
 		</a4j:repeat>
 	</rich:panel>
 </s:decorate>
-<rich:modalPanel id="encerrar" height="100" resizeable="false">
+<rich:modalPanel id="encerrar" resizeable="false" height="250" width="500">
 	<f:facet name="header">
 		<h:panelGroup>
 			<h:outputText value="Encerrar o Projeto?"></h:outputText>
 		</h:panelGroup>
 	</f:facet>
 	<f:facet name="controls">
-		<h:panelGroup> 
+		<h:panelGroup>
 			<h:graphicImage value="/img/close.png" styleClass="hidelink"
 				id="hidelink" />
-			<rich:componentControl for="statusChange" attachTo="hidelink"
+			<rich:componentControl for="encerrar" attachTo="hidelink"
 				operation="hide" event="onclick" />
 		</h:panelGroup>
 	</f:facet>
@@ -106,12 +106,22 @@
 		value="Tem certeza que deseja encerrar o projeto '#{projeto.projeto.nome}'?"
 		style="font-size:14px" />
 	<h:form>
-		<div class="actionButtons">
-			<h:commandButton value="Sim" action="#{projeto.encerrarProjeto()}"
-				oncomplete="#{rich:component('encerrar')}.hide()" />
-			<a4j:commandButton value="Não"
-				onclick="#{rich:component('encerrar')}.hide()" />
-		</div>
+		<h:panelGrid width="100%">
+			<rich:spacer height="15"/>
+			<s:decorate id="motivo" template="/layout/edit.xhtml">
+				<ui:define name="label">Motivo:</ui:define>
+				<h:inputTextarea value="#{projeto.motivoencerrado}"  cols="35" rows="5">
+				<a4j:support event="onkeyup" reRender="btns" eventsQueue="foo" ignoreDupResponses="true" ajaxSingle="true"/>
+				</h:inputTextarea>
+			</s:decorate>
+			<h:panelGrid columns="2" id="btns">
+				<h:commandButton value="Confirmar"
+					action="#{projeto.encerrarProjeto()}"
+					disabled="#{empty projeto.motivoencerrado}" />
+				<a4j:commandButton value="Cancelar" 
+					onclick="#{rich:component('encerrar')}.hide()" />
+			</h:panelGrid>
+		</h:panelGrid>
 	</h:form>
 </rich:modalPanel>
 </html>

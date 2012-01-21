@@ -131,6 +131,12 @@
 		<param name="projetoId" value="#{tarefa.projetoId}" />
 	</page>
 
+	<page view-id="/view/projetoinclude/visaogeral.xhtml">
+		<param name="projetoId" value="#{projetoHome.projetoId}" />
+	</page>
+
+	<!-- Exceptions -->
+
 	<exception class="org.jboss.seam.framework.EntityNotFoundException">
 		<redirect view-id="/error.xhtml">
 			<message severity="warn">Registro não encontrado</message>

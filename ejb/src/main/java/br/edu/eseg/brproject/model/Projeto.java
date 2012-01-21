@@ -38,6 +38,7 @@ public class Projeto implements java.io.Serializable {
 	private Date fimprevisto;
 	private Date inicio;
 	private String nome;
+	private String motivoencerrado;
 	private Set<Stakeholder> stakeholders = new HashSet<Stakeholder>(0);
 	private Set<Solicitacaomudanca> solicitacaomudancas = new HashSet<Solicitacaomudanca>(
 			0);
@@ -60,10 +61,10 @@ public class Projeto implements java.io.Serializable {
 		this.inicio = inicio;
 	}
 
-	public Projeto(Long id){
+	public Projeto(Long id) {
 		this.id = id;
 	}
-	
+
 	public Projeto(Long id, Statusprojeto statusprojeto, Usuario usuario,
 			String cliente, Double custoprevisto, Date datacriacao, Date fim,
 			Date fimprevisto, Date inicio, String justificativa,
@@ -143,7 +144,18 @@ public class Projeto implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "fim", length = 19)
+	@Column(name = "inicio", nullable = false, length = 19)
+	@NotNull
+	public Date getInicio() {
+		return this.inicio;
+	}
+
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "fim", length = 19, nullable = true)
 	public Date getFim() {
 		return this.fim;
 	}
@@ -162,17 +174,6 @@ public class Projeto implements java.io.Serializable {
 		this.fimprevisto = fimprevisto;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "inicio", nullable = false, length = 19)
-	@NotNull
-	public Date getInicio() {
-		return this.inicio;
-	}
-
-	public void setInicio(Date inicio) {
-		this.inicio = inicio;
-	}
-
 	@Column(name = "nome")
 	public String getNome() {
 		return this.nome;
@@ -180,6 +181,15 @@ public class Projeto implements java.io.Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	@Column(name = "motivoencerrado")
+	public String getMotivoencerrado() {
+		return motivoencerrado;
+	}
+
+	public void setMotivoencerrado(String motivoencerrado) {
+		this.motivoencerrado = motivoencerrado;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projeto")
@@ -227,16 +237,16 @@ public class Projeto implements java.io.Serializable {
 	public void setNotastakeholders(Set<Notastakeholder> notastakeholders) {
 		this.notastakeholders = notastakeholders;
 	}
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projeto")
 	public Set<Arquivo> getArquivos() {
 		return arquivos;
 	}
-	
+
 	public void setArquivos(Set<Arquivo> arquivos) {
 		this.arquivos = arquivos;
 	}
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "projeto")
 	public Set<Recurso> getRecursos() {
 		return recursos;
@@ -245,5 +255,5 @@ public class Projeto implements java.io.Serializable {
 	public void setRecursos(Set<Recurso> recursos) {
 		this.recursos = recursos;
 	}
-	
+
 }

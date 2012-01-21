@@ -40,14 +40,15 @@ public class ProjetoTxImpl implements ProjetoTx {
 		Long projetoId = getLastInsertedId();
 
 		sql = new StringBuilder();
-		sql.append("insert into tarefa(eap,projetoid,nome,inicio,fim,porcentcomp,milestone) values('0',?,?,?,?,0.0,0)");
+		sql.append("insert into tarefa(eap,projetoid,nome,inicio,fim,porcentcomp,milestone) values('0',?,?,current_timestamp,current_timestamp,0.0,0)");
 		q = em.createNativeQuery(sql.toString());
 		q.setParameter(1, projetoId);
 		q.setParameter(2, "Projeto: " + p.getNome());
-		q.setParameter(3, p.getInicio());
-		q.setParameter(4, p.getFimprevisto());
+		// q.setParameter(3, p.getInicio());
+		// q.setParameter(4,
+		// p.getFimprevisto()==null?p.getInicio():p.getFimprevisto());
 		q.executeUpdate();
-		
+
 		return projetoId;
 	}
 
@@ -56,17 +57,17 @@ public class ProjetoTxImpl implements ProjetoTx {
 		StringBuilder sql = new StringBuilder();
 		sql.append("update projeto set ").append("statusprojetoid = ?, ")
 				.append("gerenteprojetoid = ?, ").append("nome = ?, ")
-				.append("cliente= ?, ").append("datacriacao= ?, ")
-				.append("inicio= ?, ").append("fimprevisto= ?, ")
+				.append("cliente= ?, ").append("inicio= ?, ")
+				.append("fimprevisto= ?, ").append("motivoencerrado = ? ")
 				.append("where id = ?");
 		Query q = em.createNativeQuery(sql.toString());
 		q.setParameter(1, p.getStatusprojeto().getId());
 		q.setParameter(2, p.getUsuario().getId());
 		q.setParameter(3, p.getNome());
 		q.setParameter(4, p.getCliente());
-		q.setParameter(5, p.getDatacriacao());
-		q.setParameter(6, p.getInicio());
-		q.setParameter(7, p.getFimprevisto());
+		q.setParameter(5, p.getInicio());
+		q.setParameter(6, p.getFimprevisto());
+		q.setParameter(7, p.getMotivoencerrado());
 		q.setParameter(8, p.getId());
 		q.executeUpdate();
 	}
@@ -101,8 +102,8 @@ public class ProjetoTxImpl implements ProjetoTx {
 		}
 		q.executeUpdate();
 	}
-	
-	private Long getLastInsertedId(){
+
+	private Long getLastInsertedId() {
 		StringBuilder sql = new StringBuilder();
 		sql.append("select last_insert_id() from dual");
 		Query q = em.createNativeQuery(sql.toString());

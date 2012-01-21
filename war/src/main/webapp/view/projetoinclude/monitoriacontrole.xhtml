@@ -37,7 +37,7 @@
 						includePageParams="false"
 						rendered="#{stakeholderList.getStakeholdersNaoAvaliados(projeto.projeto.id,loggedUser.id).size() gt 0}">
 						<f:param name="projetoId" value="#{projeto.projeto.id}" />
-						<f:param name="projetoFrom" value="/view/projeto.xhtml"/>
+						<f:param name="projetoFrom" value="/view/projeto.xhtml" />
 					</s:button>
 				</div>
 			</h:panelGrid>
@@ -106,41 +106,22 @@
 		<h:outputText rendered="#{projeto.projeto.stakeholders.size() == 0}"
 			value="Este projeto ainda não tem Stakeholders cadastrados." />
 	</rich:panel>
+	<br />
+	<h:form>
+		<h:panelGrid>
+			<a4j:commandLink styleClass="link"
+				rendered="#{projeto.projeto.statusprojeto.id ge 2}"
+				action="#{fileManager.prepareArquivos('planoprojeto',projeto.projeto.id,2)}"
+				value="#{projeto.projeto.usuario.id==loggedUser.id?'Gerenciar':'Ver'} planejamento" />
 
-	<rich:panel>
-		<f:facet name="header">Visão geral do projeto</f:facet>
-		<h:form>
-			<h:panelGrid>
-				<a4j:commandLink styleClass="link"
-					rendered="#{projeto.projeto.statusprojeto.id ge 2}"
-					action="#{fileManager.prepareArquivos('planoprojeto',projeto.projeto.id,2)}"
-					value="#{projeto.projeto.usuario.id==loggedUser.id?'Gerenciar':'Ver'} planejamento" />
+			<rich:spacer height="10" />
 
-				<rich:spacer height="10" />
+			<a4j:commandLink styleClass="link"
+				rendered="#{projeto.projeto.statusprojeto.id ge 3 &amp;&amp; projeto.projeto.usuario.id==loggedUser.id}"
+				action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"
+				value="Gerenciar execução" />
+		</h:panelGrid>
+	</h:form>
 
-				<a4j:commandLink styleClass="link"
-					rendered="#{projeto.projeto.statusprojeto.id ge 3 &amp;&amp; projeto.projeto.usuario.id==loggedUser.id}"
-					action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"
-					value="Gerenciar execução" />
-			</h:panelGrid>
-			<a4j:jsFunction name="initvisao_geral"
-				data="#{gantt.getTarefas(projeto.projeto.id,'visao_geral')}"
-				oncomplete="document.visao_geral.loadChart(data)" />
-		</h:form>
-		<br />
-		<br />
-		<applet id="visao_geral" name="visao_geral" height="500" width="1100"
-			codebase="/brProject/applet/"
-			archive="brProject-chart-0.1.jar,gson-1.7.1.jar,jcommon-1.0.16.jar,plugin-1.0.jar"
-			code="br/edu/eseg/chart/brproject/GanttApplet.class"
-			MAYSCRIPT="MAYSCRIPT">
-			Seu Navegador não suporta Applets!
-			<param name="action" value="visao_geral" />
-			<param name="script" value="none" />
-<!--			<param name="width" value="1000" />-->
-<!--			<param name="heigth" value="100" />-->
-		</applet>
-
-	</rich:panel>
 </s:decorate>
 </html>

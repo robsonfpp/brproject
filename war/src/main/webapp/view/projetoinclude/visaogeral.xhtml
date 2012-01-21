@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+<h:form>
+	<a4j:jsFunction name="initvisao_geral"
+		data="#{gantt.getTarefas(projetoHome.projetoId,'visao_geral')}"
+		oncomplete="document.visao_geral.loadChart(data)" />
+</h:form>
+<applet id="visao_geral" name="visao_geral" height="500" width="1100"
+	codebase="/brProject/applet/"
+	archive="brProject-chart-0.1.jar,gson-1.7.1.jar,jcommon-1.0.16.jar,plugin-1.0.jar"
+	code="br/edu/eseg/chart/brproject/GanttApplet.class"
+	MAYSCRIPT="MAYSCRIPT">
+	Seu Navegador não suporta Applets!
+	<param name="action" value="visao_geral" />
+	<param name="script" value="none" />
+</applet>
+
+</html>

@@ -1,11 +1,16 @@
-<a4j:outputPanel ajaxRendered="true"
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:s="http://jboss.com/products/seam/taglib"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich"
 	xmlns:a4j="http://richfaces.org/a4j">
+<script>
+function getUrl(){
+	return "http://"+location.host+"/brProject/view/projetoinclude/visaogeral.seam?projetoId=#{projeto.projeto.id}";
+}
+</script>
+<a4j:outputPanel ajaxRendered="true">
 
 	<style>
 .currentActive {
@@ -40,10 +45,10 @@
 }
 
 .previous {
-	float: left; 
+	float: left;
 }
 </style>
-	
+
 	<h:form id="statusTable">
 		<table border="1" class="dr-table rich-table">
 			<thead class="dr-table-thead">
@@ -119,15 +124,13 @@
 						Projeto" />
 					</td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 3"
-						style="color: blue">
-						<a4j:commandLink
+						style="color: blue"><a4j:commandLink
 							disabled="#{projeto.projeto.statusprojeto.id lt 3 &amp;&amp; !projeto.projeto.usuario.id.equals(loggedUser.id)}"
 							action="#{fileManager.prepareArquivos('execucaoprojeto',projeto.projeto.id,3)}"
 							value="Orientar e Gerenciar a Execução do
 						Projeto" /></td>
 					<td align="left" class="dr-subtable-cell rich-subtable-cell 4"
 						style="color: blue"><a4j:commandLink
-							disabled="#{projeto.projeto.statusprojeto.id lt 4}"
 							action="#{fileManager.prepareArquivos('encerrarprojeto',projeto.projeto.id,4)}"
 							value="Encerrar o Projeto ou Fase" /></td>
 				</tr>
@@ -234,47 +237,59 @@
 				</tr>
 			</tbody>
 		</table>
+
+		<rich:jQuery selector="td.#{projeto.projeto.statusprojeto.id}"
+			query="addClass('currentActive')" />
+		<rich:jQuery selector=".next,.previous"
+			query="mouseover(function(){jQuery(this).addClass('highlight')})" />
+		<rich:jQuery selector=".next,.previous"
+			query="mouseout(function(){jQuery(this).removeClass('highlight')})" />
+		<rich:jQuery selector="#gantt" query="attr('src',getUrl())"
+			timing="onload" />
 	</h:form>
-
-	<rich:jQuery selector="td.#{projeto.projeto.statusprojeto.id}"
-		query="addClass('currentActive')" />
-	<rich:jQuery selector=".next,.previous"
-		query="mouseover(function(){jQuery(this).addClass('highlight')})" />
-	<rich:jQuery selector=".next,.previous"
-		query="mouseout(function(){jQuery(this).removeClass('highlight')})" />
-
-	<h:form rendered="#{projeto.projeto.usuario.id.equals(loggedUser.id)}">
-		<a4j:jsFunction name="gotoStatus" reRender="statusChange"
-			oncomplete="#{rich:component('statusChange')}.show()">
-			<a4j:actionparam name="param1" assignTo="#{projeto.changeStatusId}" />
-		</a4j:jsFunction>
-	</h:form>
-
-	<rich:modalPanel id="statusChange" height="100" resizeable="false">
-		<f:facet name="header">
-			<h:panelGroup>
-				<h:outputText value="Mudar Status do projeto"></h:outputText>
-			</h:panelGroup>
-		</f:facet>
-		<f:facet name="controls">
-			<h:panelGroup>
-				<h:graphicImage value="/img/close.png" styleClass="hidelink"
-					id="hidelink" />
-				<rich:componentControl for="statusChange" attachTo="hidelink"
-					operation="hide" event="onclick" />
-			</h:panelGroup>
-		</f:facet>
-		<h:outputText
-			value="Tem certeza que deseja mover o projeto para #{projeto.changeStatusId &lt; projeto.projeto.statusprojeto.id?'Fase anterior':'a próxima Fase'}?"
-			style="font-size:14px" />
-		<h:form>
-			<div class="actionButtons">
-				<a4j:commandButton value="Sim" action="#{projeto.changeStatus()}"
-					reRender="statusTable"
-					oncomplete="#{rich:component('statusChange')}.hide()" />
-				<a4j:commandButton value="Não"
-					onclick="#{rich:component('statusChange')}.hide()" />
-			</div>
-		</h:form>
-	</rich:modalPanel>
 </a4j:outputPanel>
+<br />
+<rich:panel>
+	<f:facet name="header">Visão geral do projeto</f:facet>
+	<br />
+	<iframe id="gantt" name="gantt" src="" height="510px" width="100%"
+		scrolling="no" class="frame" />
+</rich:panel>
+
+<h:form rendered="#{projeto.projeto.usuario.id.equals(loggedUser.id)}">
+	<a4j:jsFunction name="gotoStatus" reRender="statusChange"
+		oncomplete="#{rich:component('statusChange')}.show()">
+		<a4j:actionparam name="param1" assignTo="#{projeto.changeStatusId}" />
+	</a4j:jsFunction>
+</h:form>
+
+
+<rich:modalPanel id="statusChange" height="100" resizeable="false">
+	<f:facet name="header">
+		<h:panelGroup>
+			<h:outputText value="Mudar Status do projeto"></h:outputText>
+		</h:panelGroup>
+	</f:facet>
+	<f:facet name="controls">
+		<h:panelGroup>
+			<h:graphicImage value="/img/close.png" styleClass="hidelink"
+				id="hidelink" />
+			<rich:componentControl for="statusChange" attachTo="hidelink"
+				operation="hide" event="onclick" />
+		</h:panelGroup>
+	</f:facet>
+	<h:outputText
+		value="Tem certeza que deseja mover o projeto para #{projeto.changeStatusId &lt; projeto.projeto.statusprojeto.id?'Fase anterior':'a próxima Fase'}?"
+		style="font-size:14px" />
+	<h:form>
+		<div class="actionButtons">
+			<a4j:commandButton value="Sim" action="#{projeto.changeStatus()}"
+				reRender="statusTable"
+				oncomplete="#{rich:component('statusChange')}.hide()" />
+			<a4j:commandButton value="Não"
+				onclick="#{rich:component('statusChange')}.hide()" />
+		</div>
+	</h:form>
+</rich:modalPanel>
+
+</html>

@@ -39,7 +39,7 @@ import br.edu.eseg.brproject.model.action.UsuarioHome;
 public class ProjetoBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Logger
 	Log log;
 	@In
@@ -61,6 +61,7 @@ public class ProjetoBean implements Serializable {
 	@In(create = true)
 	ArquivoList arquivoList;
 
+	private String motivoencerrado;
 	private Long solicitacaoId;
 	private Long changeStatusId;
 	private Projeto projeto;
@@ -72,7 +73,7 @@ public class ProjetoBean implements Serializable {
 
 	@Create
 	public void start() {
-		log.info("Carregando projeto: "+ projetoHome.getProjetoId());
+		log.info("Carregando projeto: " + projetoHome.getProjetoId());
 		if (projetoHome.getProjetoId() != null) {
 			projetoHome.load();
 			projeto = projetoHome.getInstance();
@@ -102,7 +103,7 @@ public class ProjetoBean implements Serializable {
 				linha.add(ns);
 			}
 			Collections.sort(licoes);
-			Collections.sort(solicitacaomudancas,new SolicitacaoComparator());
+			Collections.sort(solicitacaomudancas, new SolicitacaoComparator());
 		}
 	}
 
@@ -142,13 +143,12 @@ public class ProjetoBean implements Serializable {
 		stakeholderHome.clearInstance();
 	}
 
-	
-	public void encerrarProjeto(){
+	public void encerrarProjeto() {
 		changeStatusId = new Long(5);
 		changeStatus();
-		
+
 	}
-	
+
 	public double calculaTotal(Long idAvaliado) {
 
 		double resultado = 0;
@@ -186,19 +186,34 @@ public class ProjetoBean implements Serializable {
 
 	public void changeStatus() {
 		statusprojetoHome.setStatusprojetoId(changeStatusId);
-		projetoHome.getInstance().setStatusprojeto(
-				statusprojetoHome.find());
-		projetoHome.getInstance().setFim(new Date());
-		StringBuffer sb = new StringBuffer("update projeto set statusprojetoid = ?");
-		if(changeStatusId==5){
-			sb.append(", fim = current_timestamp");
+		projetoHome.getInstance().setStatusprojeto(statusprojetoHome.find());
+//		projetoHome.getInstance().setFim(new Date());
+//		StringBuffer sb = new StringBuffer(
+//				"update projeto set statusprojetoid = ?");
+		if (changeStatusId == 5) {
+//			sb.append(", fim = current_timestamp, motivoencerrado = ?");
+			projetoHome.getInstance().setFim(new Date());
+			projetoHome.getInstance().setMotivoencerrado(motivoencerrado);
 		}
-		sb.append(" where id = ?");
-		Query q =projetoHome.getEntityManager().createNativeQuery(sb.toString());
-		q.setParameter(1, changeStatusId);
-		q.setParameter(2, projeto.getId());
-		q.executeUpdate();
+		projetoTx.updateProjeto(projetoHome.getInstance());
+//		sb.append(" where id = ?");
+//		Query q = projetoHome.getEntityManager().createNativeQuery(
+//				sb.toString());
+//		q.setParameter(1, changeStatusId);
+//		q.setParameter(2, projeto.getId());
+//		if (changeStatusId == 5) {
+//			q.setParameter(3, motivoencerrado);
+//		}
+//		q.executeUpdate();
 		statusMessages.add(Severity.INFO, "Status alterado com sucesso!");
+	}
+
+	public String getMotivoencerrado() {
+		return motivoencerrado;
+	}
+
+	public void setMotivoencerrado(String motivoencerrado) {
+		this.motivoencerrado = motivoencerrado;
 	}
 
 	public void setSolicitacaoId(Long solicitacaoId) {
@@ -294,14 +309,16 @@ public class ProjetoBean implements Serializable {
 					.compareTo(o2.getStakeholderavaliador().getId());
 		}
 	}
-	
-	private class SolicitacaoComparator implements Comparator<Solicitacaomudanca>{
+
+	private class SolicitacaoComparator implements
+			Comparator<Solicitacaomudanca> {
 
 		@Override
 		public int compare(Solicitacaomudanca o1, Solicitacaomudanca o2) {
 			// TODO Auto-generated method stub
-			return o1.getStatusmudanca().getId().compareTo(o2.getStatusmudanca().getId());
+			return o1.getStatusmudanca().getId()
+					.compareTo(o2.getStatusmudanca().getId());
 		}
-		
+
 	}
 }
