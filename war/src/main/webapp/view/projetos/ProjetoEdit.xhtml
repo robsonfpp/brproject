@@ -34,25 +34,25 @@
 						<s:decorate id="nomeField" template="/layout/edit.xhtml">
 							<ui:define name="label">Nome do Projeto</ui:define>
 							<h:inputText id="nome" size="15" required="true"
-								value="#{novoProjeto.projeto.nome}" />
+								value="#{projeto.projeto.nome}" />
 						</s:decorate>
 
 						<s:decorate id="clienteField" template="/layout/edit.xhtml">
 							<ui:define name="label">Cliente</ui:define>
 							<h:inputText id="cliente" size="15"
-								value="#{novoProjeto.projeto.cliente}" />
+								value="#{projeto.projeto.cliente}" />
 						</s:decorate>
 						<s:decorate id="inicioField" template="/layout/edit.xhtml">
 							<ui:define name="label">Inicio Previsto</ui:define>
 							<rich:calendar id="inicio" required="true"
-								value="#{novoProjeto.projeto.inicio}"
+								value="#{projeto.projeto.inicio}"
 								datePattern="MM/dd/yyyy hh:mm a" />
 						</s:decorate>
 
 						<s:decorate id="fimprevistoField" template="/layout/edit.xhtml">
 							<ui:define name="label">Fim Previsto</ui:define>
 							<rich:calendar id="fimprevisto"
-								value="#{novoProjeto.projeto.fimprevisto}"
+								value="#{projeto.projeto.fimprevisto}"
 								datePattern="MM/dd/yyyy hh:mm a" />
 						</s:decorate>
 					</h:panelGrid>
@@ -63,7 +63,7 @@
 					<div class="actionButtons">
 
 						<h:commandButton id="save" value="Salvar"
-							action="#{novoProjeto.salvarProjeto()}" />
+							action="#{projeto.salvarProjeto()}" />
 
 						<input type="button" onclick="history.go(-1)" value="Cancelar" />
 					</div>

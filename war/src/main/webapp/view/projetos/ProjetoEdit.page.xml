@@ -25,7 +25,7 @@
 		</rule>
 	</navigation>
 
-	<navigation from-action="#{novoProjeto.salvarProjeto()}">
+	<navigation from-action="#{projeto.salvarProjeto()}">
 		<rule if-outcome="salvou">
 			<redirect view-id="/view/projeto.xhtml">
 				<param name="projetoId" value="#{projetoHome.projetoId}" />

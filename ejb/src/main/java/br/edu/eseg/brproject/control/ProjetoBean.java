@@ -15,6 +15,7 @@ import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.core.Conversation;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.Log;
@@ -26,6 +27,8 @@ import br.edu.eseg.brproject.model.Notastakeholder;
 import br.edu.eseg.brproject.model.Projeto;
 import br.edu.eseg.brproject.model.Solicitacaomudanca;
 import br.edu.eseg.brproject.model.Stakeholder;
+import br.edu.eseg.brproject.model.Statusprojeto;
+import br.edu.eseg.brproject.model.Usuario;
 import br.edu.eseg.brproject.model.action.ArquivoList;
 import br.edu.eseg.brproject.model.action.NotaList;
 import br.edu.eseg.brproject.model.action.NotastakeholderList;
@@ -44,6 +47,8 @@ public class ProjetoBean implements Serializable {
 	Log log;
 	@In
 	StatusMessages statusMessages;
+	@In
+	Usuario loggedUser;
 	@In(create = true)
 	NotaList notaList;
 	@In(create = true)
@@ -74,37 +79,79 @@ public class ProjetoBean implements Serializable {
 	@Create
 	public void start() {
 		log.info("Carregando projeto: " + projetoHome.getProjetoId());
-		if (projetoHome.getProjetoId() != null) {
-			projetoHome.load();
-			projeto = projetoHome.getInstance();
-			stakeholders = new ArrayList<Stakeholder>(projeto.getStakeholders());
-			solicitacaomudancas = new ArrayList<Solicitacaomudanca>(
-					projeto.getSolicitacaomudancas());
-			licoes = new ArrayList<Licao>(projeto.getLicoes());
-			legenda = notaList.getResultList();
+		try {
+			if (projetoHome.getProjetoId() != null) {
+				projetoHome.load();
+				projeto = projetoHome.getInstance();
+				stakeholders = new ArrayList<Stakeholder>(
+						projeto.getStakeholders());
+				solicitacaomudancas = new ArrayList<Solicitacaomudanca>(
+						projeto.getSolicitacaomudancas());
+				licoes = new ArrayList<Licao>(projeto.getLicoes());
+				legenda = notaList.getResultList();
 
-			int size = projeto.getNotastakeholders().size();
-			log.info("Numero de notas '{0}'", size);
+				int size = projeto.getNotastakeholders().size();
+				log.info("Numero de notas '{0}'", size);
 
-			ArrayList<Notastakeholder> notastakeholders = new ArrayList<Notastakeholder>(
-					projeto.getNotastakeholders());
-			Collections.sort(notastakeholders, new NotastakeholderComparator());
-			matriz = new ArrayList<List<Notastakeholder>>();
-			ArrayList<Notastakeholder> linha = null;
-			Long idAnt = new Long(0);
-			System.out.println(notastakeholders.size());
-			for (Notastakeholder ns : notastakeholders) {
-				Long id = ns.getStakeholderavaliado().getId();
-				if (!idAnt.equals(id)) {
-					linha = new ArrayList<Notastakeholder>();
-					matriz.add(linha);
-					idAnt = id;
+				ArrayList<Notastakeholder> notastakeholders = new ArrayList<Notastakeholder>(
+						projeto.getNotastakeholders());
+				Collections.sort(notastakeholders,
+						new NotastakeholderComparator());
+				matriz = new ArrayList<List<Notastakeholder>>();
+				ArrayList<Notastakeholder> linha = null;
+				Long idAnt = new Long(0);
+				System.out.println(notastakeholders.size());
+				for (Notastakeholder ns : notastakeholders) {
+					Long id = ns.getStakeholderavaliado().getId();
+					if (!idAnt.equals(id)) {
+						linha = new ArrayList<Notastakeholder>();
+						matriz.add(linha);
+						idAnt = id;
+					}
+					linha.add(ns);
 				}
-				linha.add(ns);
+				Collections.sort(licoes);
+				Collections.sort(solicitacaomudancas,
+						new SolicitacaoComparator());
+			} else {
+				projeto = new Projeto();
 			}
-			Collections.sort(licoes);
-			Collections.sort(solicitacaomudancas, new SolicitacaoComparator());
+		} catch (Exception e) {
+			statusMessages.add(Severity.ERROR,
+					"Erro ao carregar projeto! " + e.getMessage());
 		}
+	}
+
+	public String salvarProjeto() {
+		projeto.setUsuario(loggedUser);
+		Statusprojeto s = new Statusprojeto();
+		s.setId(new Long(1));
+		projeto.setStatusprojeto(s);
+		if (projetoHome.getProjetoId() != null) {
+			try {
+				projetoTx.updateProjeto(projeto);
+				statusMessages.add(Severity.INFO,
+						"Projeto atualizado com sucesso!");
+			} catch (Exception e) {
+				statusMessages.add(Severity.ERROR,
+						"Erro ao atualizar o projeto!");
+				log.error("Erro ao cirar o projeto", e);
+				return "erro";
+			}
+		} else {
+			try {
+				Long projetoId = projetoTx.createProjeto(projeto);
+				projetoHome.setProjetoId(projetoId);
+				statusMessages
+						.add(Severity.INFO, "Projeto criado com sucesso!");
+			} catch (Exception e) {
+				statusMessages.add(Severity.ERROR, "Erro ao criar o projeto!");
+				log.error("Erro ao atualizar o projeto", e);
+				return "erro";
+			}
+		}
+		Conversation.instance().endBeforeRedirect();
+		return "salvou";
 	}
 
 	public void updateStakeholder(Long id) {
@@ -187,24 +234,11 @@ public class ProjetoBean implements Serializable {
 	public void changeStatus() {
 		statusprojetoHome.setStatusprojetoId(changeStatusId);
 		projetoHome.getInstance().setStatusprojeto(statusprojetoHome.find());
-//		projetoHome.getInstance().setFim(new Date());
-//		StringBuffer sb = new StringBuffer(
-//				"update projeto set statusprojetoid = ?");
 		if (changeStatusId == 5) {
-//			sb.append(", fim = current_timestamp, motivoencerrado = ?");
 			projetoHome.getInstance().setFim(new Date());
 			projetoHome.getInstance().setMotivoencerrado(motivoencerrado);
 		}
 		projetoTx.updateProjeto(projetoHome.getInstance());
-//		sb.append(" where id = ?");
-//		Query q = projetoHome.getEntityManager().createNativeQuery(
-//				sb.toString());
-//		q.setParameter(1, changeStatusId);
-//		q.setParameter(2, projeto.getId());
-//		if (changeStatusId == 5) {
-//			q.setParameter(3, motivoencerrado);
-//		}
-//		q.executeUpdate();
 		statusMessages.add(Severity.INFO, "Status alterado com sucesso!");
 	}
 
@@ -315,7 +349,6 @@ public class ProjetoBean implements Serializable {
 
 		@Override
 		public int compare(Solicitacaomudanca o1, Solicitacaomudanca o2) {
-			// TODO Auto-generated method stub
 			return o1.getStatusmudanca().getId()
 					.compareTo(o2.getStatusmudanca().getId());
 		}
