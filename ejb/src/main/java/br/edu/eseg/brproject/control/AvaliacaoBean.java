@@ -5,10 +5,12 @@ import java.io.Serializable;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
+import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
 import org.jboss.seam.international.StatusMessage.Severity;
 import org.jboss.seam.international.StatusMessages;
+import org.jboss.seam.log.Log;
 
 import br.edu.eseg.brproject.control.transactions.AvaliacaoTx;
 import br.edu.eseg.brproject.model.Projeto;
@@ -25,6 +27,7 @@ public class AvaliacaoBean implements Serializable{
 	Usuario loggedUser;
 	@In
 	StatusMessages statusMessages;
+	@Logger Log log;
 	@In(create = true)
 	ProjetoHome projetoHome;
 	@In(create = true)
@@ -36,6 +39,7 @@ public class AvaliacaoBean implements Serializable{
 
 	@Create
 	public void init() {
+		log.info("Criando o bean AvaliacaoBean");
 		projeto = projetoHome.find();
 	}
 

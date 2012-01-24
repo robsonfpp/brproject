@@ -7,17 +7,15 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.jboss.seam.ScopeType;
-import org.jboss.seam.annotations.Create;
 import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Logger;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
-import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.international.StatusMessage.Severity;
+import org.jboss.seam.international.StatusMessages;
 import org.jboss.seam.log.Log;
 
 import br.edu.eseg.brproject.control.transactions.GanttTx;

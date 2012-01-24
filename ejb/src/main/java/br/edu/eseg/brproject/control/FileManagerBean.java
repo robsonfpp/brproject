@@ -127,12 +127,16 @@ public class FileManagerBean implements Serializable {
 		System.out.println("Procurando " + arquivoId);
 		arquivoHome.setArquivoId(arquivoId);
 		Arquivo arquivo = arquivoHome.find();
+		System.out.println(arquivo.getNome());
+
+		System.out.println(extCtx.getResponse().getClass().getName());
 		HttpServletResponse response = (HttpServletResponse) extCtx
 				.getResponse();
 		response.setContentType(arquivo.getTipo());
 		response.addHeader("Content-disposition", "attachment; filename=\""
 				+ arquivo.getNome() + "\"");
 		try {
+
 			ServletOutputStream os = response.getOutputStream();
 			os.write(arquivo.getDados());
 			os.flush();

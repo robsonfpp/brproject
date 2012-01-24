@@ -177,7 +177,7 @@ public class ProjetoBean implements Serializable {
 	public void addStakeholder(Long usuarioId) {
 		for (Stakeholder s : projeto.getStakeholders()) {
 			if (s.getUsuario().getId() == usuarioId) {
-				statusMessages.add(Severity.INFO, "Stakeholder já adicionado!");
+				statusMessages.add(Severity.WARN, "Stakeholder já adicionado!");
 				return;
 			}
 		}

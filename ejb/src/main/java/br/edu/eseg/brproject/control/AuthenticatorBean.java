@@ -57,7 +57,7 @@ public class AuthenticatorBean implements Authenticator {
 			log.info("Usuario '{0}' autenticado com sucesso!", credentials.getUsername());
 			return true;
 		}
-		log.info("Usuario '{0}' n√£o autenticado.", credentials.getUsername());
+		log.error("Usuario '{0}' n„o autenticado.", credentials.getUsername());
 		return false;
 	}
 }

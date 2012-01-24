@@ -61,6 +61,7 @@ public class HomeBean implements Serializable{
 	}
 	
 	public List getAvaliacoes(){
+		log.info("Fazendo query de avaliacoes");
 		Query q = notastakeholderList.getEntityManager().createNativeQuery("select p.id,p.nome from stakeholder s1 join stakeholder s2 on s1.projetoid = s2.projetoid join usuario u1 on u1.id = s1.usuarioid join usuario u2 on u2.id = s2.usuarioid join projeto p on p.id = s2.projetoid left join notastakeholder ns on ns.stakeholderavaliadoid = s1.id and ns.stakeholderavaliadorid = s2.id where u1.nome <> u2.nome and ns.id is null and u2.id = ?1 and p.statusprojetoid < 5 group by p.id order by p.id");
 		q.setParameter(1, loggedUser.getId());
 		return q.getResultList();

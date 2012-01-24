@@ -3,3 +3,4 @@
 *.settings
 */target/*
 *.pages.xml.spdia*
+*/test-output/*

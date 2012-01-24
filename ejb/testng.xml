@@ -1,28 +1,38 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-
-<suite name="brProject" verbose="2" parallel="false">
-
-	<test name="Authenticator">
+<suite name="Testes_Integracao" verbose="2" parallel="false">
+	<test name="AuthenticatorBean">
 		<classes>
-			<class name="br.edu.eseg.brproject.control.AuthenticatorTest" />
+			<class name="br.edu.eseg.brproject.control.AuthenticatorBeanTest" />
 		</classes>
 	</test>
-
+	<test name="AvaliacaoBean">
+		<classes>
+			<class name="br.edu.eseg.brproject.control.AvaliacaoBeanTest" />
+		</classes>
+	</test>
+	<test name="FileManagerBean">
+		<classes>
+			<class name="br.edu.eseg.brproject.control.FileManagerBeanTest" />
+		</classes>
+	</test>
+	<test name="GanttBean">
+		<classes>
+			<class name="br.edu.eseg.brproject.control.GanttBeanTest" />
+		</classes>
+	</test>
 	<test name="HomeBean">
 		<classes>
 			<class name="br.edu.eseg.brproject.control.HomeBeanTest" />
 		</classes>
 	</test>
-
+	<test name="TarefaBean">
+		<classes>
+			<class name="br.edu.eseg.brproject.control.TarefaBeanTest" />
+		</classes>
+	</test>
 	<test name="ProjetoBean">
 		<classes>
 			<class name="br.edu.eseg.brproject.control.ProjetoBeanTest" />
-		</classes>
-	</test>
-	
-	<test name="FileManagerBean">
-		<classes>
-			<class name="br.edu.eseg.brproject.control.FileManagerBeanTest" />
 		</classes>
 	</test>
 </suite>

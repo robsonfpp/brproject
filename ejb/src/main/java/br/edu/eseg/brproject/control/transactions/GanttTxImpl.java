@@ -168,9 +168,6 @@ public class GanttTxImpl implements GanttTx {
 			q.executeUpdate();
 		}
 
-//		em.clear();
-//		em.flush();
-
 		adjustParentTime(tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null);
 		calcPercent(tarefa.getTarefaPai()!=null?tarefa.getTarefaPai().getId():null);
 	}
@@ -210,8 +207,6 @@ public class GanttTxImpl implements GanttTx {
 				organizeChildren(p);
 			}
 		}
-//		em.clear();
-//		em.flush();
 		adjustParentTime(tarefa.getTarefaPai() != null ? tarefa.getTarefaPai()
 				.getId() : null);
 		calcPercent(tarefa.getTarefaPai() != null ? tarefa.getTarefaPai()

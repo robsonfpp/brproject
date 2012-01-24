@@ -44,9 +44,6 @@ public class ProjetoTxImpl implements ProjetoTx {
 		q = em.createNativeQuery(sql.toString());
 		q.setParameter(1, projetoId);
 		q.setParameter(2, "Projeto: " + p.getNome());
-		// q.setParameter(3, p.getInicio());
-		// q.setParameter(4,
-		// p.getFimprevisto()==null?p.getInicio():p.getFimprevisto());
 		q.executeUpdate();
 
 		return projetoId;
